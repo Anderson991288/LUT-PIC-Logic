@@ -194,9 +194,9 @@
 | `design/lut4v2/_logs/solve_demo.log` | 0.2 KB | ？ | 共用 |
 | `design/lut4v2/_logs/system.log` | 2.7 KB | ？ | 共用 |
 | `design/lut4v2/_logs/try_one.log` | 2.8 KB | ？ | 共用 |
-| `design/lut4v2/build_study.py` | 163.9 KB | 組裝 report/LUT4v2_study.html（v2：資料輸入改為 E+／E− 二相位光）：沿用原課程頁的版型與 M1 s1，新增 M1 s1b（二相位輸入與讀出方式），M1 s2 起為 Model-7a＋雙差值判讀。 | 共用 |
+| `design/lut4v2/build_study.py` | 165.5 KB | 組裝 report/LUT4v2_study.html（v2：資料輸入改為 E+／E− 二相位光）：沿用原課程頁的版型與 M1 s1，新增 M1 s1b（二相位輸入與讀出方式），M1 s2 起為 Model-7a＋雙差值判讀。 | 共用 |
 | `design/lut4v2/epm_section.py` | 10.4 KB | LUT4 v2 課程：M1 s1b「E+／E− 二相位輸入與讀出方式」的內容（由 build_study.py 呼叫）。 | 共用 |
-| `design/lut4v2/HISTORY.md` | 9.6 KB | 修改歷史（人工維護，組裝時帶入附錄 B） | 共用 |
+| `design/lut4v2/HISTORY.md` | 9.8 KB | 修改歷史（人工維護，組裝時帶入附錄 B） | 共用 |
 | `design/lut4v2/s0_algebra/algebra.py` | 5.4 KB | LUT4 v2 s0（輸入 E+／E−）：3142132 的矩陣運算——沿路徑求 U 的元素、逐層光場、雙差值的二次式。 | 共用 |
 | `design/lut4v2/s0_algebra/out/algebra.json` | 5.5 KB | 產生者：algebra.py | 共用 |
 | `design/lut4v2/s0_basics/basics.py` | 6.5 KB | LUT4 s0（M1 s2 ①②）：E+／E− 輸入下，單顆 MZI、二顆 MZI＋R 以一組差動對判讀能實現哪些二輸入邏輯。 | 共用 |
@@ -284,7 +284,7 @@
 | `design/lut4v2/s7_delivery/check_delivery.py` | 54.9 KB | 交付檢查（LUT4 E± s7）：拿到交付包的人，用這支程式確認檔案完整、彼此一致、結果可以重算。 | 共用 |
 | `design/lut4v2/s7_delivery/out/delivery_check.json` | 30.7 KB | 產生者：check_delivery.py、package.py | 共用 |
 | `design/lut4v2/s7_delivery/out/package.json` | 0.2 KB | 產生者：package.py | 共用 |
-| `design/lut4v2/s7_delivery/package.py` | 17.8 KB | LUT4 s7：交付包——把佈局、介面、功能設定與驗證結果整理成一包，並附 SHA-256 清單。 | 共用 |
+| `design/lut4v2/s7_delivery/package.py` | 19.2 KB | LUT4 s7：交付包——把佈局、介面、功能設定與驗證結果整理成一包，並附 SHA-256 清單。 | 共用 |
 | `design/lut4v2/s8_commercial/_logs/commercial_evidence.log` | 2.7 KB | ？ | 共用 |
 | `design/lut4v2/s8_commercial/_logs/commercial_noflag.log` | 0.4 KB | ？ | 共用 |
 | `design/lut4v2/s8_commercial/_logs/commercial_script_only.log` | 0.4 KB | ？ | 共用 |
@@ -357,10 +357,10 @@
 | `design/lut4v2/s9_system/gain_robust.py` | 6.1 KB | LUT4 s9：TIA 增益失配的補強——(A) 量測增益後重新求相位；(B) 合成時挑耐增益誤差的相位解。 | 共用 |
 | `design/lut4v2/s9_system/out/gain_box.json` | 8.5 KB | 產生者：gain_box.py | 共用 |
 | `design/lut4v2/s9_system/out/gain_robust.json` | 3.4 KB | 產生者：gain_robust.py | 共用 |
-| `design/lut4v2/s9_system/out/system.json` | 7.3 KB | 產生者：system.py | 共用 |
+| `design/lut4v2/s9_system/out/system.json` | 14.0 KB | 產生者：system.py | 共用 |
 | `design/lut4v2/s9_system/reference/chip_info.json` | 18.2 KB | ？ | 共用 |
 | `design/lut4v2/s9_system/reference/review_checks.json` | 5.1 KB | ？ | 共用 |
-| `design/lut4v2/s9_system/system.py` | 10.4 KB | LUT4 v2 s9（輸入 E+／E−）：系統層級分析——晶片走線損耗、TIA 三路同時偏差、波長與溫度、二相位誤差、光功率預算。 | 共用 |
+| `design/lut4v2/s9_system/system.py` | 17.2 KB | LUT4 v2 s9（輸入 E+／E−）：系統層級分析——晶片走線損耗、TIA 三路同時偏差、波長與溫度、二相位誤差、光功率預算。 | 共用 |
 | `design/lut4v2/synth4.py` | 7.7 KB | （v2：輸入為 E+／E− 二相位光，R＝+E）加速版合成：批次向量化的光路計算與批次數值梯度。 | 共用 |
 | `design/m0_env/concept.py` | 4.2 KB | M0 各步的概念圖（每步開頭「本步概念」）。 | 共用 |
 | `design/m0_env/s1_check/check_env.py` | 9.3 KB | M0 s1：環境確認——這台電腦能不能跑 IPKISS、CORNERSTONE PDK 與 KLayout DRC。 | M0 s1 |

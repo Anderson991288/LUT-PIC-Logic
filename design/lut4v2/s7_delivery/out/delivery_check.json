@@ -57,8 +57,8 @@
       "detail": "112/112"
     },
     "K15 重跑 DRC": {
-      "ok": true,
-      "detail": "違規 0，30 條規則都有跑"
+      "ok": null,
+      "detail": "略過（未提供 KLayout 與平台 deck）"
     }
   },
   "self_test": {

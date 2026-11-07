@@ -3,8 +3,9 @@
 需要的軟體：Python 3 與 numpy。
 執行方式：python verify_phase_bank.py
 
-這支程式獨立運作，只讀 design/lut4*/s0_coverage/out/merged_phases.npz 這兩份相位資料，
-再用光路的數學模型算出每組輸入的光功率，比較結果與目標真值表。
+這支程式獨立運作，只讀 design/lut4*/s0_coverage/out/merged_phases.npz 這兩份相位資料。
+程式先確認資料完整：65,536 個真值表編號各出現一次，每張表有 14 個有效的相位。
+接著用光路的數學模型算出每組輸入的光功率，比較結果與目標真值表。
 """
 import sys
 from pathlib import Path
@@ -18,6 +19,8 @@ H = np.array([[1, 1j], [1j, 1]]) / np.sqrt(2)   # 50:50 分光器
 ROWS = np.arange(16)                        # 四個輸入的 16 種組合
 BITS = np.stack([(ROWS >> j) & 1 for j in range(4)]).astype(float)
 TOLERANCE = 1e-8
+N_TABLES = 1 << 16                          # 四個輸入的全部真值表
+N_PHASES = 14                               # 每張真值表的相位數
 
 
 def input_fields(encoding):
@@ -42,9 +45,31 @@ def output_power(phases, encoding):
     return np.abs(field) ** 2
 
 
+def bank_problems(masks, phases):
+    """列出相位資料需要修正的地方；資料完整時回傳空清單。"""
+    if masks.shape != (N_TABLES,):
+        return [f"真值表編號的形狀是 {masks.shape}，應為 ({N_TABLES},)"]
+    if phases.shape != (N_TABLES, N_PHASES):
+        return [f"相位資料的形狀是 {phases.shape}，應為 ({N_TABLES}, {N_PHASES})"]
+    problems = []
+    if not np.issubdtype(masks.dtype, np.integer):
+        problems.append(f"真值表編號的型別是 {masks.dtype}，應為整數")
+    elif not np.array_equal(np.sort(masks), np.arange(N_TABLES)):
+        problems.append(f"真值表編號應涵蓋 0～{N_TABLES - 1}，各出現一次")
+    if not np.isfinite(phases).all():
+        problems.append("相位資料含有 NaN 或無限大")
+    return problems
+
+
 def check(name, path, encoding):
     bank = np.load(ROOT / path)
     masks, phases = bank["masks"], bank["phases"]
+    problems = bank_problems(masks, phases)
+    if problems:
+        print(f"{name}：資料需要修正")
+        for problem in problems:
+            print(f"  {problem}")
+        return False
     worst, wrong = np.inf, 0
     margins = np.empty(len(masks))
     for start in range(0, len(masks), 2048):
@@ -60,6 +85,7 @@ def check(name, path, encoding):
     worst = margins.min()
     passed = int(((margins > TOLERANCE)).sum())
     print(f"{name}：檢查 {len(masks):,} 張真值表、{16 * len(masks):,} 列")
+    print(f"  資料完整：{N_TABLES:,} 個編號各出現一次，每張 {N_PHASES} 個相位")
     print(f"  判讀正確的真值表：{passed:,} 張")
     print(f"  判讀錯誤的列數：{wrong:,}")
     print(f"  最小 margin：{worst:.4f}（真值表 0x{int(masks[int(margins.argmin())]):04X}）")

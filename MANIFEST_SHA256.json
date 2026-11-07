@@ -1,5 +1,5 @@
 {
- "count": 634,
+ "count": 636,
  "files": [
   {
    "path": ".gitignore",
@@ -8,8 +8,8 @@
   },
   {
    "path": "ACCEPTANCE.md",
-   "bytes": 4985,
-   "sha256": "df1fd9a591ce4b428f58331195ff3db479e12651e9b97cd7c08100a593484248"
+   "bytes": 5251,
+   "sha256": "96c78edafbb313a664c3194c328f2558349dc87f8d72ce75a9fe48934a33f4f9"
   },
   {
    "path": "delivery/check_delivery.py",
@@ -258,18 +258,18 @@
   },
   {
    "path": "delivery_lut4v2/interfaces/spec.json",
-   "bytes": 10516,
-   "sha256": "b079f5d91727698a1b73da4bad863ab090b447c06321c2826ec7a6d6a91813a7"
+   "bytes": 11012,
+   "sha256": "cfe984d397774a8bbf2c6e611b232d6bced7218a4e2ead492401b5f377aa98f6"
   },
   {
    "path": "delivery_lut4v2/interfaces/system_requirements.json",
-   "bytes": 2099,
-   "sha256": "f864a33c6e3b09901c1299fb0f9d4351beccbdf34df0e3dbc14f00ae5a977f1b"
+   "bytes": 3882,
+   "sha256": "7d8f1b6505cb55c94f2be7d6a73ee6a01299740538e227067a611cdf330df699"
   },
   {
    "path": "delivery_lut4v2/MANIFEST.json",
    "bytes": 3602,
-   "sha256": "7fa80e98f455b16c3dab08aec37a214aa9043a15bed7781507bf8a0c15473209"
+   "sha256": "b60141f78ad6bb54a07d3706465673b190137e1ac4e54bf7acf6959e7e4e6ef7"
   },
   {
    "path": "delivery_lut4v2/README.md",
@@ -358,8 +358,8 @@
   },
   {
    "path": "design/INDEX.md",
-   "bytes": 102872,
-   "sha256": "8e0c46885caaad775e014975489331c7b3fba1040a46087bb7a43a4278e839ff"
+   "bytes": 102873,
+   "sha256": "191562992b6bd303c01c5577c243ecc74e4ae0a2060d653129e1b1c0de81c06c"
   },
   {
    "path": "design/lut4/build_study.py",
@@ -748,8 +748,8 @@
   },
   {
    "path": "design/lut4v2/build_study.py",
-   "bytes": 167847,
-   "sha256": "69e1d8ccf4117b3b8a6d413cef9af23c759a78a573c2bd8ced4c1b97fb8dad06"
+   "bytes": 169463,
+   "sha256": "8d7b7e05bb2966a0d660a20cbc5b03634261fe5fbbdc0fe97ca8fcfc315fc0e1"
   },
   {
    "path": "design/lut4v2/epm_section.py",
@@ -758,8 +758,8 @@
   },
   {
    "path": "design/lut4v2/HISTORY.md",
-   "bytes": 9799,
-   "sha256": "e856401fa164811d6e9199033ec707de14a83cbadfc16e9021b0a36f74d9aa97"
+   "bytes": 10073,
+   "sha256": "2c0d034e8888409a8ef6bf71f05917ee85b39213138deb92b0d4aeb71f01ad2d"
   },
   {
    "path": "design/lut4v2/s0_algebra/algebra.py",
@@ -1053,18 +1053,18 @@
   },
   {
    "path": "design/lut4v2/s7_delivery/out/delivery_check.json",
-   "bytes": 31432,
-   "sha256": "e221b74492979d97a02ef866a71bcf155aa6e14ba4f7d613e9a30c7770a5fc42"
+   "bytes": 31444,
+   "sha256": "570d36b81a421a31f2ae87a468324b108d55af02d42c7f7e3503ba4479afa393"
   },
   {
    "path": "design/lut4v2/s7_delivery/out/package.json",
    "bytes": 228,
-   "sha256": "411353983f1f4465c97ec81296359167fe81a5dbe89fbe2cfb8ca195854dabf6"
+   "sha256": "ea8d8079e6c8f9821a929dc44448c611641a99c0873fe41b84560b3cb6bde9cb"
   },
   {
    "path": "design/lut4v2/s7_delivery/package.py",
-   "bytes": 18235,
-   "sha256": "5fa27d9600f54ad3ff88472593849d7020732dc73bac8be92198e08facbe37c2"
+   "bytes": 19687,
+   "sha256": "bb455e22643c212cfce6cc30dc5027a4f1b299bb86e40e2c72ec7f924e744653"
   },
   {
    "path": "design/lut4v2/s8_commercial/commercial.py",
@@ -1118,13 +1118,13 @@
   },
   {
    "path": "design/lut4v2/s9_system/out/system.json",
-   "bytes": 7459,
-   "sha256": "2d2b96db851c2b98ab1bd9aa7477cca70e9813f93dd089e9264d1d2c59959c18"
+   "bytes": 14287,
+   "sha256": "a434a0aa6883a225f4de26b857a00c2580a08ea6a3a1be75f31cbfaa9cb34227"
   },
   {
    "path": "design/lut4v2/s9_system/system.py",
-   "bytes": 10675,
-   "sha256": "c167f3751b854ca663a7a82433b425b11441b79e3cc2b33e207c5f5814b4d43a"
+   "bytes": 17583,
+   "sha256": "2a3841b12c1f0efdb75920e02b30a4b3697e03f33b3e36809166239fd1626664"
   },
   {
    "path": "design/lut4v2/synth4.py",
@@ -2248,13 +2248,18 @@
   },
   {
    "path": "docs/img/how-it-works.svg",
-   "bytes": 2725,
-   "sha256": "b9d17a764cf3bdecbd1f6fc706a65dc5eaf2ed32f83270006febf4152aa730b6"
+   "bytes": 3291,
+   "sha256": "7b429534d5bbde26d4d145555c93467cabda1e5077dc88c0cdec7fbda34e424c"
   },
   {
    "path": "docs/img/lookup-table.svg",
    "bytes": 2165,
    "sha256": "ccaee18b400c3437cd0367a96d83c9ddcad62b4981908cbe784406b855d9c986"
+  },
+  {
+   "path": "example_and.py",
+   "bytes": 1536,
+   "sha256": "45a153aa21e5accdac000def956e5fa864626c9164faef8f61ce1f72e2722507"
   },
   {
    "path": "figures/lut4/s1_core.png",
@@ -2933,8 +2938,8 @@
   },
   {
    "path": "README.md",
-   "bytes": 8067,
-   "sha256": "cd0029c04bd919868aae800da4de2502c11e8f79806fd34953e43f5f69be273e"
+   "bytes": 14132,
+   "sha256": "9197e6b4d1378791da4e839bbc53500449b3aed3cf3f6163e7af2c09ae9a76e6"
   },
   {
    "path": "report/src/index/a_overview.html",
@@ -3137,6 +3142,11 @@
    "sha256": "587e913d553c311594434a653747b6da261acf442e41bf06f2cfd21327fbad20"
   },
   {
+   "path": "test_verify_phase_bank.py",
+   "bytes": 2700,
+   "sha256": "e5dbfb74b5786910a5378c3d0c079796e14a941ec1dfeed1f0bed1e07adcfc9c"
+  },
+  {
    "path": "tools/build_page.py",
    "bytes": 2600,
    "sha256": "9b78ff02445dc2e70b219692ce5856799c5b65e8f24f02e47cf22594b9b207b5"
@@ -3168,8 +3178,8 @@
   },
   {
    "path": "verify_phase_bank.py",
-   "bytes": 3695,
-   "sha256": "6a1250fc04c94ae7d8a3b9f6cbe24c63810078f3663dcf4d95fa871e4aa94b75"
+   "bytes": 5092,
+   "sha256": "2f70d9e53ba8f7c8f10a1766708a86c62288874adc7550b4a5ac361f0b605c11"
   }
  ]
 }

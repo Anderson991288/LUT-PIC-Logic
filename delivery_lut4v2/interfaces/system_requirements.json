@@ -18,7 +18,104 @@
   "XOR4": 22.4,
   "MUX": 39.6
  },
- "dphi_max_deg": 20,
+ "dphi_spec": {
+  "model": "位元 1 的光場為 −E·e^(iδ)，相位固定，其他條件標稱；只判對錯，未計其他誤差同時發生",
+  "step_deg": 0.25,
+  "scan_max_deg": 60.0,
+  "independent_method": "16 個正負組合加 256 個隨機組合（種子 904）",
+  "examples": {
+   "common_deg": [
+    -11.5,
+    21.0
+   ],
+   "independent_deg": 7.75,
+   "per_function": {
+    "AND2": {
+     "common_deg": [
+      -60.0,
+      60.0
+     ],
+     "independent_deg": 35.0
+    },
+    "OR2": {
+     "common_deg": [
+      -60.0,
+      60.0
+     ],
+     "independent_deg": 29.25
+    },
+    "XOR2": {
+     "common_deg": [
+      -34.0,
+      38.25
+     ],
+     "independent_deg": 15.25
+    },
+    "NAND2": {
+     "common_deg": [
+      -56.0,
+      56.0
+     ],
+     "independent_deg": 56.0
+    },
+    "AND4": {
+     "common_deg": [
+      -59.5,
+      59.5
+     ],
+     "independent_deg": 43.5
+    },
+    "XOR4": {
+     "common_deg": [
+      -11.5,
+      21.0
+     ],
+     "independent_deg": 7.75
+    },
+    "MUX": {
+     "common_deg": [
+      -24.5,
+      55.0
+     ],
+     "independent_deg": 24.5
+    }
+   }
+  },
+  "library": {
+   "n_tables": 65536,
+   "common_deg": [
+    -3.5,
+    3.5
+   ],
+   "independent_deg": 3.0,
+   "fail_common": {
+    "-30": 54731,
+    "-20": 35557,
+    "-15": 18690,
+    "-10": 3399,
+    "-5": 11,
+    "-2": 0,
+    "2": 0,
+    "5": 12,
+    "10": 3355,
+    "15": 18545,
+    "20": 35367,
+    "30": 54430
+   },
+   "fail_independent": {
+    "2": 0,
+    "5": 135,
+    "10": 19780
+   }
+  }
+ },
+ "input_phase_sigma": {
+  "library": 0.015,
+  "examples": 0.03,
+  "model": "5 路各加 N(0, σ²) 相位誤差，相位固定",
+  "draws_library": 100,
+  "trials_examples": 20000
+ },
  "tia_sigma_ok_scope": "七個範例函數、各 σ 2,000 次全對的最大 σ；統計觀察，不是通用規格；確定性 ε 見 verification/gain_box.json",
  "budget": {
   "assumptions": {

@@ -68,13 +68,13 @@
   },
   {
    "path": "interfaces/spec.json",
-   "sha256": "b079f5d91727698a1b73da4bad863ab090b447c06321c2826ec7a6d6a91813a7",
-   "bytes": 10516
+   "sha256": "cfe984d397774a8bbf2c6e611b232d6bced7218a4e2ead492401b5f377aa98f6",
+   "bytes": 11012
   },
   {
    "path": "interfaces/system_requirements.json",
-   "sha256": "f864a33c6e3b09901c1299fb0f9d4351beccbdf34df0e3dbc14f00ae5a977f1b",
-   "bytes": 2099
+   "sha256": "7d8f1b6505cb55c94f2be7d6a73ee6a01299740538e227067a611cdf330df699",
+   "bytes": 3882
   },
   {
    "path": "layout/LUT4_chip.gds",

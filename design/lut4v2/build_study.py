@@ -632,8 +632,9 @@ def m2s1():
         m = NET["mzis"][k - 1]
         chrows.append([f"MZI-{k}", f"{m['waveguides'][0]}–{m['waveguides'][1]}／第 {m['layer']} 層", f"θ{k} → {a['heater']} → {a['pad']}", f"φ{k} → {b['heater']} → {b['pad']}"])
     # R2 以交付包的觀察性敘述為準（交接時的 R2 只是佔位，由 LUT4 s9 取代）
-    d_r2 = next(r for r in json.loads((paths.ROOT / "delivery_lut4v2" / "interfaces" / "spec.json").read_text(encoding="utf-8"))["requirements"] if r["id"] == "R2")
-    req = [[r["id"], r["item"], d_r2["value"] + "統計成功率見 ⑤，確定性增益盒見附錄 E-5。" if r["id"] == "R2" else r["value"]] for r in SPEC["requirements"]]
+    d_req = {r["id"]: r for r in json.loads((paths.ROOT / "delivery_lut4v2" / "interfaces" / "spec.json").read_text(encoding="utf-8"))["requirements"]}
+    d_r2 = d_req["R2"]
+    req = [[r["id"], r["item"], d_r2["value"] + "統計成功率見 ⑤，確定性增益盒見附錄 E-5。" if r["id"] == "R2" else d_req["O3"]["value"] + "（⑤）" if r["id"] == "O3" else r["value"]] for r in SPEC["requirements"]]
     t = TOL
     names = list(FN)
     in_rows = [[f"σ＝{s} rad"] + [f"{t['input_phase_pass'][s][n] * 100:.1f}%" for n in names] for s in t["input_phase_pass"]]
@@ -664,7 +665,7 @@ def m2s1():
 {table("tol", "各範例函數的容許量：R 振幅、TIA 增益、heater 功率", ["函數", "R 範圍", "o2 增益", "o4 增益", "o3 增益", "heater 總功率（mW）"], g_rows)}
 {table("inph", f"輸入相對相位誤差（5 路各加常態誤差，{t['trials']} 次）下真值表全對的比例", ["誤差"] + names, in_rows)}
 {table("htph", f"heater 相位誤差（14 個各加常態誤差，{t['trials']} 次）下真值表全對的比例", ["誤差"] + names, ph_rows)}
-<p><b>表格說明：</b>R 在 {t["R_range_all"][0]:g}–{t["R_range_all"][1]:g}（功率 {t["R_power_range_pct"][0]:+g}%～{t["R_power_range_pct"][1]:+g}%）內七個函數都對。單獨偏一路 TIA 增益時，容許量最小為 ±{gmin * 100:.1f}%（XOR4 的 o4 通道）；三路同時偏差的容許量更小，見 ⑤。XOR4 裕量 {FN["XOR4"]["margin"]:.3f} Pᵤ 是七個範例中最小的：輸入相位誤差 σ ≤ {t["input_phase_sigma_ok"]:g} rad、heater 相位誤差 σ ≤ {t["heater_phase_sigma_ok"]:g} rad 時七個函數 {t["trials"]} 次都全對。P_π 是使相位改變 π 所需的 heater 功率。heater 功率依 P_π≈{t["P_pi_mW"]:g} mW 估計，最壞情況為 14 個都接近 2π，約 {t["worst_mW"]:g} mW。</p>
+<p><b>表格說明：</b>R 在 {t["R_range_all"][0]:g}–{t["R_range_all"][1]:g}（功率 {t["R_power_range_pct"][0]:+g}%～{t["R_power_range_pct"][1]:+g}%）內七個函數都對。單獨偏一路 TIA 增益時，容許量最小為 ±{gmin * 100:.1f}%（XOR4 的 o4 通道）；三路同時偏差的容許量更小，見 ⑤。XOR4 裕量 {FN["XOR4"]["margin"]:.3f} Pᵤ 是七個範例中最小的：輸入相位誤差 σ ≤ {t["input_phase_sigma_ok"]:g} rad、heater 相位誤差 σ ≤ {t["heater_phase_sigma_ok"]:g} rad 時七個函數 {t["trials"]} 次都全對；輸入相位誤差的較大樣本與全部真值表結果見 ⑤。P_π 是使相位改變 π 所需的 heater 功率。heater 功率依 P_π≈{t["P_pi_mW"]:g} mW 估計，最壞情況為 14 個都接近 2π，約 {t["worst_mW"]:g} mW。</p>
 <h3 id="m2s1-sysreq">⑤ 系統層級的容許量與光功率</h3>
 {system_sec()}
 <h3 id="m2s1-check">⑥ 本步驗收與後續流程</h3>
@@ -683,6 +684,12 @@ def system_sec():
     wl = [["雷射波長偏移 Δλ（nm）"] + [("≥ " if y["dlambda_tol_nm"][n] >= 2 else "") + f"±{y['dlambda_tol_nm'][n]:g}" for n in names],
           ["晶片溫度偏移 ΔT（K）"] + [("≥ " if y["dT_tol_K"][n] >= 40 else "") + f"±{y['dT_tol_K'][n]:g}" for n in names]]
     er = [[f"{e}°"] + [("✓ " if y["dphi"][e][n]["pass"] else "✗ ") + f"{y['dphi'][e][n]['margin']:.3f}" for n in names] for e in y["dphi"]]
+    ds, ip = y["dphi_spec"], y["input_phase"]
+    dl, de = ds["library"], ds["examples"]
+    span = lambda r: f"{r[0]:+g}°～{r[1]:+g}°"
+    ps = [["七個範例函數", span(de["common_deg"]), f"±{de['independent_deg']:g}°", f"σ ≤ {ip['examples_sigma_ok']:g} rad（各 {ip['trials_examples']:,} 次）"],
+          [f"全部 {dl['n_tables']:,} 張", span(dl["common_deg"]), f"±{dl['independent_deg']:g}°", f"σ ≤ {ip['library_sigma_ok']:g} rad（各 {ip['draws_library']} 次）"]]
+    pf = [[f"{e:+d}°", f"{dl['fail_common'][str(e)]:,}"] for e in (-20, -10, -5, -2, 2, 5, 10, 20)]
     b = y["budget"]
     a = b["assumptions"]
     brow = [[k, n, f"{v['margin']:.3f}", f"{v['Pu_uW']:.3g}", f"{v['per_data_fiber_dBm']:+.1f}", f"{v['R_fiber_dBm']:+.1f}", f"{v['total_mW']:.3g}"]
@@ -693,10 +700,13 @@ def system_sec():
 {table("wlt", "波長與溫度的容許範圍（光走 MZI 比走同層直波導多出的長度造成共同相位；正負兩方向都掃描）", ["項目"] + names, wl)}
 <p>光走一顆 MZI 比走同層的直波導多 {REV["mzi_extra_gds_um"]:.2f} µm。波長偏移時，這段長度使每顆 MZI 多 {y["k_lambda_rad_per_nm"]:.3f} rad/nm 的共同相位；溫度偏移時多 {REV["dphi_dT_rad_K"]:.4f} rad/K。最嚴的是 XOR4：雷射波長要穩定在 ±{y["dlambda_tol_nm"]["XOR4"]:g} nm、晶片溫度 ±{y["dT_tol_K"]["XOR4"]:g} K 以內（掃描上限 2 nm、40 K）。此模型不含 MMI 分光比與 heater 效率隨波長、溫度的變化，實際容許量會更小；晶片需溫控。</p>
 {table("er", "二相位調變的 π 誤差（位元 1 的光場＝−E·e^(iδ)）：判讀全對（✓）與最小裕量", ["δ"] + names, er)}
-<p>E± 每路功率固定，主要的不理想是片外調變器的兩個相位差不等於 π，偏差記為 δ：δ ≤ {y["dphi_max_deg"]}° 時七個函數都全對（XOR4 在 {y["dphi_max_deg"]}° 時剩 {y["dphi"][str(y["dphi_max_deg"])]["XOR4"]["margin"]:.3f} Pᵤ）。</p>
+<p>E± 每路功率固定，主要的不理想是片外調變器的兩個相位差不等於 π，偏差記為 δ。上表是四路 δ 相同時的結果，正負兩方向的容許量不對稱：XOR4 在 {span(de["per_function"]["XOR4"]["common_deg"])} 內全對。實際的四路調變器各有自己的誤差，全部真值表的容許量也比七個範例小，所以規格 S1、S4 先列全部真值表的數字。</p>
+{table("phspec", "相位誤差的容許量（相位固定，每次只改這一項）", ["範圍", "π 誤差：四路相同", "π 誤差：四路各自", "輸入相對相位誤差"], ps)}
+{table("phfail", f"四路 π 誤差相同時，全部 {dl['n_tables']:,} 張中判錯的張數", ["δ", "判錯張數"], pf)}
+<p class="muted">四路各自的誤差用 {ds["independent_method"]}檢查。這些都是模型值：只看判讀對錯，沒有計入其他誤差同時發生；調變器誤差固定時，能否依量測重新求相位來放寬，本課程未驗證。</p>
 {table("budget", "光功率預算（只計 TIA 雜訊；裕量 ≥ 7 倍差值雜訊）", ["頻寬", "函數", "裕量（Pᵤ）", "Pᵤ（µW，macro 入口）", "每根資料光纖（dBm）", "R 光纖（dBm）", "5 路合計（mW）"], brow)}
 <p class="muted">假設：PD 響應度 {a["PD_A_per_W"]:g} A/W、TIA 輸入雜訊 {a["TIA_pA_rtHz"]:g} pA/√Hz、EC 每端 2 dB（輸入側含扇出，即拉開波導間距的彎曲段，共 {a["in_loss_db"]:g} dB、輸出側 {a["out_loss_db"]:g} dB）；shot 雜訊（光電流的統計起伏）、RIN（雷射的相對強度雜訊）與比較器偏移未計。dBm 是以 1 mW 為基準的功率單位，0 dBm＝1 mW。靜態讀取（1 MHz）時每根資料光纖約 {b["cases"]["1 MHz"]["XOR4"]["per_data_fiber_dBm"]:+.0f} dBm 即可；若要 10 GHz，XOR4 需要每根約 {b["cases"]["10 GHz"]["XOR4"]["per_data_fiber_dBm"]:+.0f} dBm、R 約 {b["cases"]["10 GHz"]["XOR4"]["R_fiber_dBm"]:+.0f} dBm。</p>
-<div class="notice"><b>五路輸入的相干與相位穩定（最主要的系統限制，屬於片外系統）：</b>相干指五路光來自同一顆雷射，彼此的相位關係固定，因此能穩定干涉。五路從 5 根光纖進入，光纖之間的相對相位會隨溫度與振動漂移，而 XOR4 要求輸入相位誤差 σ ≤ {TOL["input_phase_sigma_ok"]:g} rad（七個範例全對的上限）。本課程未實作相位穩定。量測時需要下列其中一種做法，三者都不是這顆晶片已有的功能：片外相位鎖定（量測相位漂移並回授修正）；改用保偏光纖陣列並加溫控，以減少漂移；以監看埠 o1、o5 搭配 heater 擾動與同步偵測追蹤相位。此外，五路輸入須為同一偏振（TE，晶片波導使用的偏振），由片外設定；晶片上沒有偏振控制元件。</div>"""
+<div class="notice"><b>五路輸入的相干與相位穩定（最主要的系統限制，屬於片外系統）：</b>相干指五路光來自同一顆雷射，彼此的相位關係固定，因此能穩定干涉。五路從 5 根光纖進入，光纖之間的相對相位會隨溫度與振動漂移，而輸入相位誤差在模型中的上限是全部真值表 σ ≤ {SYS["input_phase"]["library_sigma_ok"]:g} rad、七個範例 σ ≤ {SYS["input_phase"]["examples_sigma_ok"]:g} rad（規格 S1）。本課程未實作相位穩定。量測時需要下列其中一種做法，三者都不是這顆晶片已有的功能：片外相位鎖定（量測相位漂移並回授修正）；改用保偏光纖陣列並加溫控，以減少漂移；以監看埠 o1、o5 搭配 heater 擾動與同步偵測追蹤相位。此外，五路輸入須為同一偏振（TE，晶片波導使用的偏振），由片外設定；晶片上沒有偏振控制元件。</div>"""
 
 
 # ---------------------------------------------------------------- M2 s2
@@ -932,7 +942,7 @@ def m2s7():
 <p>此程式隨交付包提供，收件者可自行執行。檢查所用的檔案、PAD、EC、函數、故障案例與審查項目皆為程式內的固定清單，不由受檢檔案推得，因此缺列、重複列、空集合與鍵名錯誤都不會通過。真值表由 phases.json 獨立重算（E± 的資料光場為 1−2x）。DRC、LVS、光學連通、故障注入、佈局審查與電路模擬僅核對結果檔的紀錄，並未重新執行；重新執行 DRC 需另備 KLayout 與平台規則檔。</p>
 <h3 id="m2s7-handoff">⑤ 完成課程設計，銜接實體驗證</h3>
 <ul><li><b>量測校正：</b>以監看埠與三個讀取埠量測 MMI 損耗與分光、heater P_π、各軌固定相位差，再重新求 14 個相位；容許量在校正後重算。共地壓降隨同組其他 heater 改變，只做單路校正會留下 M2 s5 ④ 的殘差，需以 14 路同時驅動的條件校正。</li>
-<li><b>接收端：</b>三路 TIA（含 PD、EC）增益由出廠修整調整，容許量依函數而定。確定性增益盒半寬（相位固定的模型值）：XOR4 ±{GB["functions"]["XOR4"]["eps_pct"]:.2f}%、0x0069 ±{GB["functions"]["0x0069"]["eps_pct"]:.2f}%，全表相位庫逐表最小 ±{GB["library"]["eps_min_pct"]:.2f}%；裕量不足的真值表以量測增益重求相位或耐增益誤差的相位解補強（附錄 E-5）；比較器門檻 0；二相位調變的 π 誤差 ≤ {SYS["dphi_max_deg"]}°。</li>
+<li><b>接收端：</b>三路 TIA（含 PD、EC）增益由出廠修整調整，容許量依函數而定。確定性增益盒半寬（相位固定的模型值）：XOR4 ±{GB["functions"]["XOR4"]["eps_pct"]:.2f}%、0x0069 ±{GB["functions"]["0x0069"]["eps_pct"]:.2f}%，全表相位庫逐表最小 ±{GB["library"]["eps_min_pct"]:.2f}%；裕量不足的真值表以量測增益重求相位或耐增益誤差的相位解補強（附錄 E-5）；比較器門檻 0；二相位調變的 π 誤差：全部真值表在四路各自 ±{SYS["dphi_spec"]["library"]["independent_deg"]:g}° 內全對（規格 S4）。</li>
 <li><b>片外系統需求：</b>五路輸入相干、同一偏振、相對相位穩定（需片外相位鎖定或追蹤，本課程未實作）；雷射波長 ±{SYS["dlambda_tol_nm"]["XOR4"]:g} nm、晶片溫度 ±{SYS["dT_tol_K"]["XOR4"]:g} K 以內（XOR4，模型值）。</li>
 <li><b>尚未完成（以下均未實作）：</b>五路輸入的相位穩定方案；只靠 o1–o5 量測時如何辨識每顆 MZI 的參數、14×14 熱串擾矩陣與電性傳輸矩陣的校正；熱串擾的溫度分布模擬；完整雜訊預算（shot、RIN、比較器偏移）；MMI 與 heater 的波長、溫度相依；高速時序；晶圓廠驗證過的 Calibre 規則檔（本課程只移植線寬與間距）；打線、探針、ESD 與電遷移上限。</li></ul>
 {commercial()}

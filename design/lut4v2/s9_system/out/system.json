@@ -210,6 +210,186 @@
   "MUX": 39.6
  },
  "dphi": {
+  "-30": {
+   "AND2": {
+    "pass": true,
+    "margin": 1.57586941670507
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 0.9534576472843463
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 0.19865270665141033
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 0.6414948744959696
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 1.3744811914748696
+   },
+   "XOR4": {
+    "pass": false,
+    "margin": -0.7396938081555944
+   },
+   "MUX": {
+    "pass": false,
+    "margin": -0.3142040982721177
+   }
+  },
+  "-20": {
+   "AND2": {
+    "pass": true,
+    "margin": 1.8247374915456496
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 1.183258228611873
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 0.6418806143320723
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 0.9689443445586021
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 1.656187351983589
+   },
+   "XOR4": {
+    "pass": false,
+    "margin": -0.33158588656183574
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 0.2576979466549849
+   }
+  },
+  "-15": {
+   "AND2": {
+    "pass": true,
+    "margin": 1.8813356997841242
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 1.307268013229951
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 0.8456280641725145
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 1.14474846863398
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 1.756503964877342
+   },
+   "XOR4": {
+    "pass": false,
+    "margin": -0.13193057128945407
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 0.541761174793046
+   }
+  },
+  "-10": {
+   "AND2": {
+    "pass": true,
+    "margin": 1.9519270267001019
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 1.4361070534834846
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 1.0353653817703181
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 1.326840898223097
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 1.8287089274796533
+   },
+   "XOR4": {
+    "pass": true,
+    "margin": 0.06275757066248966
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 0.8216783161581547
+   }
+  },
+  "-5": {
+   "AND2": {
+    "pass": true,
+    "margin": 2.0359742296715417
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 1.5687948064810024
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 1.2096485515720414
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 1.5138357999863628
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 1.8722527164265714
+   },
+   "XOR4": {
+    "pass": true,
+    "margin": 0.2405844223544753
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 1.0923970033678037
+   }
+  },
+  "-2": {
+   "AND2": {
+    "pass": true,
+    "margin": 2.059819040938281
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 1.649835739089749
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 1.3062434782698373
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 1.6277951290637702
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 1.8844746049074517
+   },
+   "XOR4": {
+    "pass": true,
+    "margin": 0.28455822080295845
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 1.2382484655483446
+   }
+  },
   "2": {
    "AND2": {
     "pass": true,
@@ -391,7 +571,207 @@
    }
   }
  },
- "dphi_max_deg": 20,
+ "dphi_spec": {
+  "model": "位元 1 的光場為 −E·e^(iδ)，相位固定，其他條件標稱；只判對錯，未計其他誤差同時發生",
+  "step_deg": 0.25,
+  "scan_max_deg": 60.0,
+  "independent_method": "16 個正負組合加 256 個隨機組合（種子 904）",
+  "examples": {
+   "common_deg": [
+    -11.5,
+    21.0
+   ],
+   "independent_deg": 7.75,
+   "per_function": {
+    "AND2": {
+     "common_deg": [
+      -60.0,
+      60.0
+     ],
+     "independent_deg": 35.0
+    },
+    "OR2": {
+     "common_deg": [
+      -60.0,
+      60.0
+     ],
+     "independent_deg": 29.25
+    },
+    "XOR2": {
+     "common_deg": [
+      -34.0,
+      38.25
+     ],
+     "independent_deg": 15.25
+    },
+    "NAND2": {
+     "common_deg": [
+      -56.0,
+      56.0
+     ],
+     "independent_deg": 56.0
+    },
+    "AND4": {
+     "common_deg": [
+      -59.5,
+      59.5
+     ],
+     "independent_deg": 43.5
+    },
+    "XOR4": {
+     "common_deg": [
+      -11.5,
+      21.0
+     ],
+     "independent_deg": 7.75
+    },
+    "MUX": {
+     "common_deg": [
+      -24.5,
+      55.0
+     ],
+     "independent_deg": 24.5
+    }
+   }
+  },
+  "library": {
+   "n_tables": 65536,
+   "common_deg": [
+    -3.5,
+    3.5
+   ],
+   "independent_deg": 3.0,
+   "fail_common": {
+    "-30": 54731,
+    "-20": 35557,
+    "-15": 18690,
+    "-10": 3399,
+    "-5": 11,
+    "-2": 0,
+    "2": 0,
+    "5": 12,
+    "10": 3355,
+    "15": 18545,
+    "20": 35367,
+    "30": 54430
+   },
+   "fail_independent": {
+    "2": 0,
+    "5": 135,
+    "10": 19780
+   }
+  }
+ },
+ "input_phase": {
+  "model": "5 路各加 N(0, σ²) 相位誤差，相位固定",
+  "seed": 904,
+  "trials_examples": 20000,
+  "draws_library": 100,
+  "examples": {
+   "0.005": {
+    "AND2": 1.0,
+    "OR2": 1.0,
+    "XOR2": 1.0,
+    "NAND2": 1.0,
+    "AND4": 1.0,
+    "XOR4": 1.0,
+    "MUX": 1.0
+   },
+   "0.01": {
+    "AND2": 1.0,
+    "OR2": 1.0,
+    "XOR2": 1.0,
+    "NAND2": 1.0,
+    "AND4": 1.0,
+    "XOR4": 1.0,
+    "MUX": 1.0
+   },
+   "0.015": {
+    "AND2": 1.0,
+    "OR2": 1.0,
+    "XOR2": 1.0,
+    "NAND2": 1.0,
+    "AND4": 1.0,
+    "XOR4": 1.0,
+    "MUX": 1.0
+   },
+   "0.02": {
+    "AND2": 1.0,
+    "OR2": 1.0,
+    "XOR2": 1.0,
+    "NAND2": 1.0,
+    "AND4": 1.0,
+    "XOR4": 1.0,
+    "MUX": 1.0
+   },
+   "0.03": {
+    "AND2": 1.0,
+    "OR2": 1.0,
+    "XOR2": 1.0,
+    "NAND2": 1.0,
+    "AND4": 1.0,
+    "XOR4": 1.0,
+    "MUX": 1.0
+   },
+   "0.04": {
+    "AND2": 1.0,
+    "OR2": 1.0,
+    "XOR2": 1.0,
+    "NAND2": 1.0,
+    "AND4": 1.0,
+    "XOR4": 0.99995,
+    "MUX": 1.0
+   },
+   "0.05": {
+    "AND2": 1.0,
+    "OR2": 1.0,
+    "XOR2": 1.0,
+    "NAND2": 1.0,
+    "AND4": 1.0,
+    "XOR4": 0.9976,
+    "MUX": 1.0
+   }
+  },
+  "library": {
+   "0.005": {
+    "tables_all_pass": 65536,
+    "worst_table_pass": 1.0,
+    "mean_pass": 1.0
+   },
+   "0.01": {
+    "tables_all_pass": 65536,
+    "worst_table_pass": 1.0,
+    "mean_pass": 1.0
+   },
+   "0.015": {
+    "tables_all_pass": 65536,
+    "worst_table_pass": 1.0,
+    "mean_pass": 1.0
+   },
+   "0.02": {
+    "tables_all_pass": 65535,
+    "worst_table_pass": 0.99,
+    "mean_pass": 1.0
+   },
+   "0.03": {
+    "tables_all_pass": 64739,
+    "worst_table_pass": 0.87,
+    "mean_pass": 0.999822
+   },
+   "0.04": {
+    "tables_all_pass": 62422,
+    "worst_table_pass": 0.78,
+    "mean_pass": 0.99913
+   },
+   "0.05": {
+    "tables_all_pass": 60036,
+    "worst_table_pass": 0.6,
+    "mean_pass": 0.997796
+   }
+  },
+  "examples_sigma_ok": 0.03,
+  "library_sigma_ok": 0.015
+ },
  "budget": {
   "assumptions": {
    "PD_A_per_W": 1.0,

@@ -76,6 +76,13 @@ def main():
                                   f"七個範例最小 {fs[w7]['eps_pct']:.2f}%（{w7}）；0x0069 {fs['0x0069']['eps_pct']:.2f}%；"
                                   f"全表相位庫逐表最小 {lib['eps_min_pct']:.2f}%（{lib['mask']}），見 verification/gain_box.json。")
             r["verify"] = "LUT4 s9：system.py、gain_robust.py、gain_box.py（模型值）"
+    # 2026-11-07：S1、S4 由 system.json 帶入，同時涵蓋七個範例與全部相位庫；O3 改指向 S1，同一數字只留一處
+    ds, ip = sysj["dphi_spec"], sysj["input_phase"]
+    dl, de = ds["library"], ds["examples"]
+    span = lambda r: f"{r[0]:+g}°～{r[1]:+g}°"
+    for r in spec_d["requirements"]:
+        if r["id"] == "O3":
+            r["value"], r["verify"] = "5 路輸入在晶片入口的相位須固定且已知；容許誤差見 S1", "LUT4 s9"
     gn = conn0["electrical"]["gnd_network"]
     g1 = gn["by_R_heater_kohm"]["1"]
     if gn["shared_gnd_pairs"]:
@@ -86,16 +93,25 @@ def main():
         loop = (f"heater 1 kΩ、2π 時：相位不足最差 {g1['single']['max_rad']:.3f} rad，單路與 14 路同時相同（地線只在 GND PAD 會合）；"
                 "單路校正後殘差為 0。前提是 PAD 等電位、片外地阻抗為零")
     spec_d["requirements"] += [
-        dict(id="S1", item="輸入相位穩定", value="五路輸入相干、同一偏振（TE）；相對相位誤差 σ ≤ 0.02 rad（XOR4），需片外相位鎖定或追蹤", verify="量測"),
+        dict(id="S1", item="輸入相位穩定",
+             value=(f"五路輸入相干、同一偏振（TE），需片外相位鎖定或追蹤。5 路各加常態相位誤差（相位固定的模型值）："
+                    f"全部 {dl['n_tables']:,} 張 σ ≤ {ip['library_sigma_ok']:g} rad（各 {ip['draws_library']} 次全對）；"
+                    f"七個範例函數 σ ≤ {ip['examples_sigma_ok']:g} rad（各 {ip['trials_examples']:,} 次全對）。σ 是標準差，不是最大誤差界"),
+             verify="LUT4 s9：system.py（模型值）；量測"),
         dict(id="S2", item="雷射波長", value=f"±{sysj['dlambda_tol_nm']['XOR4']:g} nm（XOR4；模型只含各軌固定路徑差）", verify="LUT4 s9"),
         dict(id="S3", item="晶片溫度", value=f"±{sysj['dT_tol_K']['XOR4']:g} K（XOR4；同上）；需溫控", verify="LUT4 s9"),
-        dict(id="S4", item="二相位調變的 π 誤差", value=f"≤ {sysj['dphi_max_deg']}°（位元 1 的光場為 −E·e^(iδ)）", verify="LUT4 s9"),
+        dict(id="S4", item="二相位調變的 π 誤差",
+             value=(f"全部 {dl['n_tables']:,} 張：四路誤差各自在 ±{dl['independent_deg']:g}° 內全對；四路誤差相同時 {span(dl['common_deg'])}。"
+                    f"七個範例函數：四路各自 ±{de['independent_deg']:g}°；四路相同 {span(de['common_deg'])}。"
+                    f"位元 1 的光場為 −E·e^(iδ)；相位固定的模型值，只改這一項；四路各自的誤差用 {ds['independent_method']}"),
+             verify="LUT4 s9：system.py（模型值）"),
         dict(id="S5", item="光功率（靜態讀取 1 MHz）", value=f"每根資料光纖約 {sysj['budget']['cases']['1 MHz']['XOR4']['per_data_fiber_dBm']:+.0f} dBm（假設見 system_requirements.json）", verify="LUT4 s9"),
         dict(id="S6", item="heater 回路壓降", value=loop, verify="LUT4 s6 節點分析 gnd_net.py（模型值，不是寄生萃取或量測）"),
     ]
     (DEL / "interfaces" / "spec.json").write_text(json.dumps(spec_d, ensure_ascii=False, indent=2), encoding="utf-8")
     (DEL / "interfaces" / "system_requirements.json").write_text(json.dumps(dict(
-        tia_sigma_ok=sysj["tia_sigma_ok"], dlambda_tol_nm=sysj["dlambda_tol_nm"], dT_tol_K=sysj["dT_tol_K"], dphi_max_deg=sysj["dphi_max_deg"],
+        tia_sigma_ok=sysj["tia_sigma_ok"], dlambda_tol_nm=sysj["dlambda_tol_nm"], dT_tol_K=sysj["dT_tol_K"], dphi_spec=ds,
+        input_phase_sigma=dict(library=ip["library_sigma_ok"], examples=ip["examples_sigma_ok"], model=ip["model"], draws_library=ip["draws_library"], trials_examples=ip["trials_examples"]),
         tia_sigma_ok_scope="七個範例函數、各 σ 2,000 次全對的最大 σ；統計觀察，不是通用規格；確定性 ε 見 verification/gain_box.json",
         budget=sysj["budget"], route=sysj["route"]), ensure_ascii=False, indent=1), encoding="utf-8")
     for st, n in (("lut4v2/s2_sim", "sim_results.json"), ("lut4v2/s4_review", "review_checks.json"),
