@@ -1,0 +1,102 @@
+<section class="step" id="m3-s5" data-milestone="M3" data-step="s5" data-title="最終交付">
+<div class="bridge">
+<p><b>承接</b>：M3 s4 確認晶片可製造（DRC 0）、電氣與光學連接都和規格一致（LVS 14/14、光學 10/10）。M2 s1 的需求 K1 要求：晶片完成後依量測重新求相位，並重算容許範圍。</p>
+<p><b>本步要回答</b>：把晶片交給別人（量測者、封裝廠、下一個接手的人）時，要交哪些檔案與說明？對方如何知道如何接光、接電、校正？如何確認收到的檔案沒壞、彼此一致？</p>
+<p><b>交給下一步</b>：根目錄的 <code>delivery/</code> 交付包（佈局、介面、驗證結果、圖、README、交付檢查程式、雜湊清單）與交付檢查結果 <code>delivery_check.json</code>。這是整個課程的最終成品；M3 s6 再以商用工具對照同一份 GDS。</p>
+<p class="terms"><b>名詞對照</b>：交付包（給別人使用的一組檔案與說明）、雜湊清單（manifest，列出每個檔案與它的 SHA-256，用來確認檔案沒有被改動或損壞）、自我測試（self-test，檢查程式先對故意改壞的副本執行，確認它確實會報錯）、反向測試（negative test，餵給檢查程式不該通過的資料，例如刪一列、複製一列、空集合，確認它會拒絕）</p>
+</div>
+
+<figure class="concept"><img src="figures/m3/s5_concept.png" alt="本步概念圖：交付包的四個部分與交付檢查程式"><figcaption><b>本步概念</b>　交付包分成四部分：佈局（晶片 GDS）、介面（如何接）、驗證（為什麼可信）、README（如何用與如何校正）。交付檢查程式放在交付包裡，接手者不需要課程的其他程式，就能自己確認檔案完整、對照一致、結果算得出來。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能決定交付包應包含哪些檔案與說明；能寫出一個只依賴交付包本身的檢查程式；能用雜湊與交叉比對確認檔案一致；能把前面各步的限制整理成接手者可依循的操作與校正步驟。</p>
+<div class="example">
+<p>類比：買來的家具要附上零件清單、組裝說明和保固條款。零件清單讓你點收（缺了什麼、拿錯了什麼）；組裝說明讓你不必打電話問廠商；保固條款寫清楚哪些情況不保證。交付包也一樣：雜湊清單是零件清單，README 是組裝說明，已知限制是保固條款。</p>
+<p>最好的交付包，是對方不必看前面十幾個步驟的程式，也不必問作者，就能把晶片用起來。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 交付包要回答三件事</h4>
+<table>
+<tr><th>問題</th><th>對應檔案</th></tr>
+<tr><td>是什麼</td><td><code>layout/chip.gds</code>、<code>figures/</code>、README 第 1 節</td></tr>
+<tr><td>如何接、如何用</td><td><code>interfaces/</code>（規格、PAD 對照、EC 對照、接線表、相位起點、驗收答案）、README 第 3–5 節</td></tr>
+<tr><td>為什麼可信、哪裡不保證</td><td><code>verification/</code>（DRC、LVS、審查、模擬）、README 第 6–7 節</td></tr>
+</table>
+<h4>2. 用雜湊確認完整與一致</h4>
+<p>SHA-256 把一個檔案算成 64 位十六進位碼；檔案改一個位元組，碼就完全不同。交付包用它做兩種確認：</p>
+<ul>
+<li><b>完整</b>：<code>MANIFEST.json</code> 列出每個檔案的雜湊；接手者重算一次，對得上才表示沒有缺檔、沒有損壞。</li>
+<li><b>一致</b>：<code>chip.gds</code> 的雜湊必須等於 DRC 與連接檢查結果裡記錄的雜湊，才能說「這些驗證是對這份 GDS 做的」；接線表的雜湊必須等於相位設定檔記錄的雜湊，相位才適用（M1 s5 的做法）。</li>
+</ul>
+<h4>3. 自己重算，而不是只相信結果檔</h4>
+<p>交付檢查程式不用課程的共用模組，而是用自己的幾行矩陣運算，從接線表與相位設定檔重算 80 組 ΔP，再和真值表比對。這是另一條獨立的計算路線（先前已有 M1 的矩陣乘法、M2 s3 的電路模擬與 M3 s2 的佈局抽取），接手者可以自己驗證「這些相位確實能讓這個光路做出這些函數」。</p>
+<h4>4. 數量對，不代表集合對</h4>
+<p>只比數量、或只看「全部為真」，會放過兩種錯：同一列重複 80 次，數量還是 80；清單被清空時 <code>all([])</code> 為真，「全部通過」也成立。雜湊擋不住這些錯，因為改檔的人可以順手更新 <code>MANIFEST.json</code>。所以檢查程式把完整的集合寫死在程式裡，不從受檢的檔案推出來：18 個檔案、21 個 PAD、14 個 heater、10 個 EC 埠、5 個函數 × 16 組輸入、8 種故障案例；逐一比對有沒有重複、缺少、多出。真值表的 target 也由函數定義算出，不相信檔案自己寫的答案。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\m3_layout\s5_delivery\package.py
+.\lab design\m3_layout\s5_delivery\check_delivery.py --self-test
+.\lab design\m3_layout\s5_delivery\figs.py</code></pre>
+<p><code>package.py</code> 清空並重建 <code>delivery/</code>：複製各步的結果檔、產生 PAD 與 EC 對照表、由結果檔填入數字寫出 README，最後寫雜湊清單。<code>check_delivery.py</code> 逐項檢查，<code>--self-test</code> 先確認未改動的副本全部通過，再對 <span class="num" data-json="design/m3_layout/s5_delivery/out/delivery_check.json" data-expr="len(d['self_test'])" data-fmt="{:d}">88</span> 份故意改壞的副本各跑一次（基本 <span class="num" data-json="design/m3_layout/s5_delivery/out/delivery_check.json" data-expr="sum(v['group'] == '基本' for v in d['self_test'].values())" data-fmt="{:d}">10</span> 種、反向 <span class="num" data-json="design/m3_layout/s5_delivery/out/delivery_check.json" data-expr="sum(v['group'] == '反向' for v in d['self_test'].values())" data-fmt="{:d}">78</span> 種）。預期輸出：</p>
+<pre><code>寫出 delivery/：19 個檔案（含 MANIFEST.json），共約 640 KB
+通過　K1 檔案完整：缺 []、雜湊不符 []、多出 []
+…
+通過　K8 重算真值表：80/80，ΔP 最大差 4.9e-07
+通過　K10 重跑 DRC：違規 0，30 條規則都有跑
+通過　未改動的副本不誤報：[]
+抓到　故障注入「GDS 被改」→ K6 佈局版本
+抓到　反向測試「EC 第二筆複製成第一筆」→ K5 光學埠對照：10 個 EC；EC 的埠重複 ['in1']；EC 的埠缺 ['in0']（共 1）
+…
+自我測試 88/88 被檢出（基本 10、反向 78）
+交付檢查全部通過</code></pre>
+<p>接手者只要在交付包資料夾裡執行 <code>python check_delivery.py</code>（需要 numpy）；有 KLayout 與平台 deck 時，可加上 <code>--klayout</code>、<code>--deck</code> 重跑 DRC；都沒指定時 K10 印「略過」，指定了卻找不到時算未通過。</p>
+<p>練習：打開 <code>delivery/README.md</code>，依第 5 節思考，量測時第一步為什麼是「量每個 PAD 到地的電阻」。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/m3/s5_delivery.png" alt="左：交付包檔案結構；右：交付檢查與自我測試結果"><figcaption>圖 M3-12　左：交付包的檔案結構與大小。右：交付檢查 K1–K10 全部通過；自我測試的基本 <span class="num" data-json="design/m3_layout/s5_delivery/out/delivery_check.json" data-expr="sum(v['group'] == '基本' for v in d['self_test'].values())" data-fmt="{:d}">10</span> 種錯誤（改內容未更新清單、刪檔、寫入本機路徑、PAD 對調、改相位、改 GDS、README 少一節、EC 對調、改接線表、驗證結果有違規）都被對應的檢查檢出。反向測試的結果見下表。</figcaption></figure>
+<figure><img src="figures/m3/s5_chip.png" alt="交付的整顆晶片：10 個 EC、21 個 PAD 與其功能、中央 B7 核心"><figcaption>圖 M3-13　交付的整顆晶片（直接讀 chip.gds，等比例）。① 西緣 5 個輸入 EC、② 東緣 5 個輸出 EC，間距 250 µm；③ 北緣 15 個 PAD、④ 南緣 6 個 PAD，全部在晶片最外圍；⑤ 中央是 B7 核心（下一張圖放大）。每個 PAD 名稱下方是它的功能：φk、θk 是 MZI-k 的兩個相位，GND 是接地（相鄰兩個 heater 共用）。量測時依這張圖與 pads.csv 的座標對準探針。</figcaption></figure>
+<figure><img src="figures/m3/s5_core.png" alt="最終晶片的 B7 核心放大：7 顆 MZI、14 個 heater 與對應 PAD、光學埠"><figcaption>圖 M3-14　最終晶片的 B7 核心放大（直接讀交付的 chip.gds，縱向放大）。這是交付的實際佈局，可以把它和 M3 s1 的核心圖（圖 M3-1）、接線表逐一對照：虛線框是一顆 MZI，MZI-k (a,b) 表示它在第 a、b 軌；每個 heater 下方標出相位與「訊號 PAD／GND PAD」，例如 φ1 P02／GN1 表示 MZI-1 的 φ 由 P02 供電、經 GN1 接地；淡綠是往上下緣 PAD 的 Ti/AL 走線。右側紅字的 o2、o4 是判讀埠（ΔP＝P(o2)−P(o4)），其餘是監看埠。</figcaption></figure>
+<figure><img src="figures/m3/s5_virtuoso.png" alt="交付的 chip.gds 在 Virtuoso 中開啟的畫面"><figcaption>圖 M3-15　交付的 chip.gds 在 Virtuoso（業界常用的佈局環境；M3 s6 再比較它和 KLayout 的結果）中開啟的畫面。GDS 直接匯入、沒有修改，只套用課程配色（波導藍、TiN 橘、Ti/AL 綠、EC 開窗淺黃）並隱藏外框；PAD 與 EC 埠的名稱是 GDS 裡的文字標記。這張圖確認：接手的人用業界工具打開，看到的是同一顆晶片（21 個 PAD 在上下緣最外圍、10 個 EC 在兩側）。全圖時 0.45 µm 的波導比一個像素還細，需在 Options → Display 把 Resolution 調到 Very High，否則光路會看起來斷斷續續。</figcaption></figure>
+<p>下表的 K1–K10 是交付檢查的流水號，與規格的「需求 K1」（校正）無關。本步提到校正時一律寫「需求 K1」。</p>
+<table>
+<tr><th>交付檢查</th><th>內容</th><th>結果</th></tr>
+<tr><td>K1 檔案完整</td><td>雜湊清單恰好列出固定的 18 個檔案，檔案都在、雜湊與大小相符、沒有多出的檔案</td><td>通過</td></tr>
+<tr><td>K2 讀者文件禁字</td><td>交付文件沒有本機路徑與內部代號，固定清單的文字檔都有掃到</td><td>通過</td></tr>
+<tr><td>K3 README 章節</td><td>恰好 8 個固定標題，順序正確、不重複、每節有內容</td><td>通過</td></tr>
+<tr><td>K4、K5 對照</td><td>PAD 表恰好 21 列（14 個 heater 各一個訊號 PAD、7 個 GND PAD），EC 表恰好 10 列（in0–in4、out0–out4），都和規格一致，座標和 chip_info.json 相同</td><td>通過</td></tr>
+<tr><td>K6、K7 版本</td><td>GDS 與驗證結果、接線表與相位設定檔、規格的雜湊一致，README 記錄的也相同；接線表恰好 5 軌、7 顆 MZI、判讀埠 o2、o4</td><td>通過</td></tr>
+<tr><td>K8 重算真值表</td><td>真值表的鍵恰好是 5 個函數 × 16 組輸入，target 與函數定義相同；獨立重算 80 組，ΔP 與真值表最大差 <span class="num" data-json="design/m3_layout/s5_delivery/out/delivery_check.json" data-expr="d['checks']['K8 重算真值表']['detail'].split('最大差 ')[1]" data-fmt="{}">4.9e-07</span>（真值表取 6 位小數）</td><td>通過</td></tr>
+<tr><td>K9 驗證結果</td><td>DRC 0（30 條規則）、LVS 14 個 heater 全對且無錯誤、光學 10 個 EC 全對且無錯誤、固定的 8 種故障注入全檢出，連接檢查、佈局審查、電路模擬的固定項目全部通過（只確認結果檔；LVS 與光學連接要用課程的抽取程式才能重算）</td><td>通過</td></tr>
+<tr><td>K10 重跑 DRC</td><td>對交付的 GDS 再跑一次平台 deck，違規 0，且 30 條規則都出現在報告裡；沒有 KLayout 時印「略過」</td><td>通過</td></tr>
+<tr><td>未改動的副本</td><td>自我測試先跑一次，不可誤報</td><td>通過</td></tr>
+<tr><td>自我測試</td><td>基本 <span class="num" data-json="design/m3_layout/s5_delivery/out/delivery_check.json" data-expr="sum(v['group'] == '基本' for v in d['self_test'].values())" data-fmt="{:d}">10</span> 種＋反向 <span class="num" data-json="design/m3_layout/s5_delivery/out/delivery_check.json" data-expr="sum(v['group'] == '反向' for v in d['self_test'].values())" data-fmt="{:d}">78</span> 種故意改壞的副本。反向測試涵蓋刪一列、複製一列、空集合、缺故障案例、鍵打錯；除了針對雜湊清單本身的案例，都已更新 MANIFEST（K1 必須仍通過），只能靠語意檢查攔下</td><td><span class="num" data-json="design/m3_layout/s5_delivery/out/delivery_check.json" data-expr="sum(v['caught'] for v in d['self_test'].values())" data-fmt="{:d}">88</span>/<span class="num" data-json="design/m3_layout/s5_delivery/out/delivery_check.json" data-expr="len(d['self_test'])" data-fmt="{:d}">88</span> 被檢出</td></tr>
+</table>
+<p>驗收「交付檢查程式全部通過」：通過。README 的操作與校正步驟（第 5 節）把需求 K1 落實成六個量測步驟：接地與電阻、端面與損耗、heater 標定、重新求相位、跑真值表、重算容許範圍；第 7 節列出 EC 未經驗證、金屬跨越波導 32 次、MMI 損耗接近上限、TiN 片電阻未知等限制。</p>
+<p><b>實際遇到的情況</b>：複查時發現兩點。(1) 在課程內執行檢查時，不加 --self-test 也會寫結果檔，把自我測試的紀錄蓋成空的；改成只有完整檢查才寫。(2) README 原本寫「只送一路光標定每個 heater」，但 φ 是 MZI 兩個輸入之間的相對相位，只有兩個輸入都有同源光時才看得到；改寫成 θ 用單路光、φ 用兩路同源光標定。README 也補上座標原點、PAD 間距不等、損耗估計與 P<sub>π</sub> 的出處。</p>
+<p>外部審查又發現：把第二筆 EC 複製成第一筆，K5 仍通過「10 個 EC」；同一列真值表重複 80 次，K8 仍通過「80/80」；光學驗證列與故障注入結果清空，K9 也通過。原因是只比長度、以及 <code>all()</code> 對空集合為真。改成和固定清單比對後，第一次跑自我測試時所有竄改都顯示「抓到」，但「未改動的副本」未通過：比對函式把字典交給 <code>Counter</code>，字典的值被當成次數而出錯，程式錯誤也判成未通過。所以自我測試要先跑未改動的副本，也要看未通過的原因，不能只看「抓到」的數量。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>只交 GDS</b>：沒有 PAD 對照、相位起點與校正步驟，接手者無法使用。</li>
+<li><b>驗證結果和交付的 GDS 不是同一版</b>：沒有雜湊對照時，很容易交出改過之後沒有重新驗證的 GDS。</li>
+<li><b>只比數量，或用 all() 判全部通過</b>：重複的資料數量不變，空集合會讓 all() 為真；要和完整的鍵集合比對，也要測刪列、複製列、空集合。</li>
+<li><b>交付檢查依賴作者的環境</b>：檢查程式應只依賴交付包本身與常見套件，否則別人無法執行。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：如果有人改了 chip.gds，也同時更新了 MANIFEST.json，哪個檢查會檢出？</summary>
+<p>K6：chip.gds 的雜湊會和 drc_result.json、connectivity.json 記錄的不同，表示驗證結果不是對這份 GDS 做的（自我測試的「GDS 被改」就是這一種）。</p></details>
+<details class="quiz"><summary>自我檢查 2：README 第 5 節為什麼要先量電阻，再做 heater 標定？</summary>
+<p>電阻決定電流與電流密度（M3 s3 只能假設 0.5–2 kΩ），也能確認 14 個 heater 都導通、7 個 GND PAD 都有接上；這些確認之後，掃描 heater 功率得到的週期變化才有意義。</p></details>
+<details class="quiz"><summary>自我檢查 3：交付包中為什麼同時放 spec.json 和 pads.csv？</summary>
+<p>spec.json 是規格（heater 與 PAD 的對應），pads.csv 是實際佈局（PAD 在哪裡、接哪個 heater）。檢查 K4 比對兩者，確認佈局照規格做；接手者接探針時則直接使用 pads.csv 的座標。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>交付包位置</td><td>根目錄 <code>delivery/</code>（每次重建前清空）</td></tr>
+<tr><td>交付檢查</td><td>標準函式庫＋numpy；K10 需 KLayout 與平台 deck（選用）；--self-test 在暫存資料夾複製並改壞</td></tr>
+<tr><td>授權</td><td>chip.gds 含 PDK 元件幾何，依 PDK 授權使用，不公開散布</td></tr>
+</table>
+<div class="auto-code" data-files="design/m3_layout/s5_delivery/package.py design/m3_layout/s5_delivery/check_delivery.py design/m3_layout/s5_delivery/figs.py design/m3_layout/s5_delivery/virtuoso_view.py"></div>
+<div class="auto-history" data-file="design/m3_layout/s5_delivery/HISTORY.md"></div>
+</section>

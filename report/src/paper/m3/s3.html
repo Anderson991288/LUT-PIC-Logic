@@ -1,0 +1,93 @@
+<section class="step" id="p-m3-s3" data-milestone="M3" data-step="s3" data-title="詳細模擬的取樣窗">
+<div class="bridge">
+<p><b>承接</b>：M3 s2 重現了草稿表 I 的 margin，得到 0.9 dB／MZI 下的相位；M3 s1 列出邊緣、情境集、延遲掃描、護欄等時域設定的差異。</p>
+<p><b>本步要回答</b>：照草稿的設定做時域模擬，AND4、MAJ4、XOR2 在對齊時與 13.2 ps 延遲盒內的窗寬，和草稿表 III 的「詳細模擬」兩欄一樣嗎？我們論文 M1 的設定差在哪裡、各差多少？</p>
+<p><b>交給下一步</b>：<code>detail.json</code>（對齊與盒內共同窗、逐項替換的影響）與 <code>detail.py</code> 的模擬器。M4 的盒證明（用數學保證整個延遲盒都安全）要給出不大於本步盒內共同窗的保守下界（草稿表 III 認證欄）；證明的盒是否扣中點，要與本步的共同窗用同一種算法再比較。</p>
+<p class="terms"><b>名詞對照</b>：延遲盒（delay box）＝每路輸入的延遲在一個範圍內任意取值的集合，本步為每路 ±6.6 ps（任兩路相差最多 13.2 ps）；共同窗（shared window）＝一個取樣區間同時讓盒內所有延遲都判對；扣中點＝每組延遲先減去 (最大＋最小)/2，只留下輸入之間的 skew；各自取樣＝每組延遲各自找最長窗；時變護欄＝隨訊號歷史改變的護欄 Γ(t)，因為 RIN 隨光功率變化；認證窗＝盒內每一組延遲都保證安全的取樣窗，M4 s3 正式定義；FOH（一階保持）＝把類比濾波器轉成離散時間時，假設輸入在兩個格點之間線性變化的方法。</p>
+</div>
+
+<figure class="concept"><img src="figures/paper/m3/s3_concept.png" alt="本步概念圖：對齊與延遲盒的窗寬，以及一次只改一項的比較"><figcaption><b>本步概念</b>　盒內的窗有三種算法：共同窗、扣中點的共同窗、各自取樣；先分清楚各自對應的情境。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p>每片晶片的延遲在製造後大致固定，取樣時刻也可以在開機時用已知圖樣訓練。所以如果延遲固定、每片各自訓練，看的是「各自取樣」：每組延遲有自己的最佳取樣時刻。可是延遲在訓練之後如果還會在盒內變動（例如溫度），或要用一個區間證明整個盒都安全（草稿命題 1，充分但非必要），就要找「所有延遲都判對」的共同區間，像一班公車的停靠時間要同時涵蓋最早和最晚到的乘客。另外，所有輸入一起晚到的「共同延遲」會被訓練後的取樣時刻吸收，只有輸入之間的差（skew）才真正占去窗；草稿原文因此說要先扣掉中點。本步把三種算法都算出來。</p>
+<p>學習目標：(1) 寫出時變護欄下的安全條件與窗寬；(2) 分清楚「共同窗」「扣中點」「各自取樣」各自對應的情境；(3) 用一次只改一項的方法，找出兩份設定的差異各自造成多少窗寬變化。</p>
+
+<h3>② 原理與推導</h3>
+<h4>1. 安全條件與窗寬（草稿式 4、5）</h4>
+<math display="block"><msub><mi>g</mi><mi>s</mi></msub><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo><msub><mi>b</mi><mi>s</mi></msub><mo>·</mo><mi>V</mi><mo>(</mo><msub><mi>t</mi><mi>s</mi></msub><mo>+</mo><mi>t</mi><mo>)</mo><mo>−</mo><mi>Γ</mi><mo>(</mo><msub><mi>t</mi><mi>s</mi></msub><mo>+</mo><mi>t</mi><mo>)</mo><mo>≥</mo><mn>0</mn><mspace width="1em"/><mo>∀</mo><mi>s</mi></math>
+<p>s 是情境集中的每個符號，b<sub>s</sub>＝±1 是正確方向，t<sub>s</sub> 是符號 s 的起點，t 是取樣相位（ps）；V 是 D＝P<sub>o2</sub>−P<sub>o4</sub> 經接收端濾波後的值（P<sub>u</sub>）。窗寬 W 是 g<sub>s</sub>(t) ≥ 0 對所有 s 成立的最長連續區間的終點減起點；驗收條件是 W ≥ T<sub>req</sub>＝23 ps。</p>
+<h4>2. 時變護欄</h4>
+<math display="block"><mi>Γ</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo><mo>|</mo><msub><mi>V</mi><mi>off</mi></msub><mo>|</mo><mo>+</mo><mi>Q</mi><msqrt><mrow><msubsup><mi>σ</mi><mi>c</mi><mn>2</mn></msubsup><mo>+</mo><mi>RIN</mi><mo>·</mo><msub><mi>B</mi><mi>N</mi></msub><mo>·</mo><mfrac><mrow><mo>[</mo><msup><mrow><mo>|</mo><mi>h</mi><mo>|</mo></mrow><mn>2</mn></msup><mo>∗</mo><msup><mrow><mo>(</mo><mo>|</mo><mi>D</mi><mo>|</mo><mo>+</mo><msub><mi>ε</mi><mi>PD</mi></msub><msub><mi>P</mi><mi>sum</mi></msub><mo>)</mo></mrow><mn>2</mn></msup><mo>]</mo><mo>(</mo><mi>t</mi><mo>)</mo></mrow><mrow><mo>∫</mo><msup><mrow><mo>|</mo><mi>h</mi><mo>|</mo></mrow><mn>2</mn></msup></mrow></mfrac></mrow></msqrt></math>
+<p>σ<sub>c</sub> 是 TIA 熱雜訊與比較器雜訊（P<sub>u</sub>，與訊號無關）；Q＝7 是判讀倍數；RIN 單位 1／Hz，B<sub>N</sub> 是等效雜訊頻寬（Hz）；h 是接收端脈衝響應；ε<sub>PD</sub>＝2% 是兩個偵測器的響應度失配（與 heater 擺動幅度 ε 不同），P<sub>sum</sub>＝P<sub>o2</sub>＋P<sub>o4</sub>。共同光源的 RIN 在濾波前隨光功率變化，所以護欄也隨最近的訊號歷史變化；訊號小的時候護欄小。</p>
+<h4>3. 延遲盒與共同窗</h4>
+<p>延遲盒以對齊為中心，每路延遲 δ<sub>i</sub> ∈ [−6.6, +6.6] ps。盒內抽 41 點（16 個角落、中心、16 個隨機點、8 個軸上端點），這個組成與共同窗的算法取自草稿所附的計算程式；草稿正文只寫「min over sampled box points」，隨機點的種子由本研究自訂。共同窗的算法是先對每個取樣相位取 41 點中最差的 g，再找最長區間：</p>
+<math display="block"><msub><mi>W</mi><mi>box</mi></msub><mo>=</mo><mi>longest</mi><mo>{</mo><mi>t</mi><mo>:</mo><munder><mi>min</mi><mrow><mi>δ</mi><mo>∈</mo><mi>samples</mi></mrow></munder><munder><mi>min</mi><mi>s</mi></munder><msub><mi>g</mi><mi>s</mi></msub><mo>(</mo><mi>t</mi><mo>;</mo><mi>δ</mi><mo>)</mo><mo>≥</mo><mn>0</mn><mo>}</mo></math>
+<p>W<sub>box</sub> 是共同窗（ps）。這 41 點包含所有輸入同向平移的點（例如全部 +6.6 ps），但草稿 III-E 原文說共同延遲由取樣時刻吸收、要先把每組延遲減去 (max δ<sub>i</sub>＋min δ<sub>i</sub>)/2。所以本步另算「扣中點的共同窗」：每個抽樣點先扣中點再取最小。第三種「各自取樣」是每組延遲各自找最長窗再取最小，對應延遲固定、每個實例各自訓練取樣時刻。三者的大小關係是：共同窗 ≤ 扣中點 ≤ 各自取樣。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\paper\m3_align\s3_detail\detail.py
+.\lab design\paper\m3_align\s3_detail\figs.py
+.\lab design\paper\m3_align\concept.py</code></pre>
+<p><code>detail.py</code> 對 3 個函數 × 7 種設定（草稿設定，以及逐項換成論文 M1 的 6 種）各算對齊與 41 點延遲盒（盒內再算一次扣中點）。預期輸出（節錄）：</p>
+<pre><code>AND4：對齊 50 ps（草稿 50.5）｜盒內共同窗 37 ps（草稿 37.5；認證 31.5）｜扣中點 41.5｜各自取樣最小 47.5｜…
+XOR2：對齊 66 ps（草稿 65.5）｜盒內共同窗 53 ps（草稿 52；認證 37.5）｜扣中點 53｜各自取樣最小 53｜…
+邊緣改為 10–90% 30 ps（論文 M1）：AND4 對齊 -5、盒 -5；MAJ4 對齊 -4.5、盒 -4；XOR2 對齊 -3、盒 -3.5
+…
+檢查： {'aligned_within_3ps': True, 'box_within_3ps': True, 'box_above_cert': True, 'all_above_treq': True, 'order_same': True}</code></pre>
+<p>實際遇到的錯誤：(1) 第一次把盒內欄算成「每個延遲各自的最長窗取最小」，AND4、MAJ4 得到 49、47 ps，比草稿的 37.5、39.5 ps 大 8–12 ps。草稿正文沒有寫這一欄的算法；查草稿所附的計算程式後，才知道它是共同窗（逐點取最小再找區間），而且抽樣點包含共同平移。這是先對不上、再去查定義，所以三種算法都列出，不只列對上草稿的那一種。(2) 原本的 Euler 序列只用循環的 B(16,2)，接在隨機符號前面時，最後一個符號接回第一個的轉移會斷掉；那次湊巧由隨機段補齊。改成補回第 1 個符號（257 個）並在程式中檢查 256 種轉移都在後，隨機段的內容也跟著移動，AND4 的數字變動 1.5 ps；先前「換成 B(16,3) 少 1.5 ps」也因此消失，是隨機段內容不同，不是記憶長度。</p>
+<p>自己動手：把 <code>HALF_BOX</code> 改成 9（跨距 18 ps），看哪個函數的共同窗先低於 23 ps。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/paper/m3/s3_detail.png" alt="(a) margin 減護欄對取樣相位；(b) 與草稿表 III 比較；(c) 逐項換成論文 M1 設定的影響"><figcaption>圖 M3-3　(a) 草稿設定下，所有符號中最差的 b·V(t)−Γ(t) 對取樣相位（實線：對齊；虛線：盒內 41 點逐點最小），≥ 0 的最長區間就是窗寬。(b) 本步的對齊與盒內共同窗，與草稿表 III（紅線）、本步扣中點的共同窗（空心圓）及草稿的認證窗（三角，M4 要重現）比較。(c) 在草稿設定上一次只換一項成論文 M1 的設定時，盒內共同窗的變化。</figcaption></figure>
+<table>
+<tr><th>函數</th><th>對齊（本步）</th><th>草稿</th><th>盒內共同窗（本步）</th><th>草稿</th><th>扣中點</th><th>各自取樣</th><th>草稿認證窗</th></tr>
+<tr><td>AND4</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['AND4']['aligned']" data-fmt="{:g}">50</span></td><td>50.5</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['AND4']['box_min']" data-fmt="{:g}">37</span></td><td>37.5</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['AND4']['box_center']" data-fmt="{:g}">41.5</span></td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['AND4']['box_each_min']" data-fmt="{:g}">47.5</span></td><td>31.5</td></tr>
+<tr><td>MAJ4</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['MAJ4']['aligned']" data-fmt="{:g}">54</span></td><td>52.5</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['MAJ4']['box_min']" data-fmt="{:g}">40.5</span></td><td>39.5</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['MAJ4']['box_center']" data-fmt="{:g}">40.5</span></td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['MAJ4']['box_each_min']" data-fmt="{:g}">47</span></td><td>32.5</td></tr>
+<tr><td>XOR2</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['XOR2']['aligned']" data-fmt="{:g}">66</span></td><td>65.5</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['XOR2']['box_min']" data-fmt="{:g}">53</span></td><td>52</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['XOR2']['box_center']" data-fmt="{:g}">53</span></td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['XOR2']['box_each_min']" data-fmt="{:g}">53</span></td><td>37.5</td></tr>
+</table>
+<p><b>重現</b>：用與草稿計算程式相同的算法，6 個數字都在草稿的 1.5 ps 以內（最大差在 MAJ4 對齊）；三個函數的大小順序也相同（XOR2 最寬）。差異的原因推測是草稿的護欄以區間內的最大功率計算（較保守），以及 768 個隨機符號的內容不同（資料集不同，只能比較到這個程度）；1.5 ps 是 3 個 0.5 ps 格點，小於任何一個函數到 T<sub>req</sub> 的餘裕，不影響結論。盒內共同窗都大於草稿的認證窗，差 <span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="min(v['box_min']-v['draft_cert'] for v in d['compare'].values())" data-fmt="{:g}">5.5</span>–<span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="max(v['box_min']-v['draft_cert'] for v in d['compare'].values())" data-fmt="{:g}">15.5</span> ps，這是證明必須保守的代價（M4）。</p>
+<p><b>定義的影響</b>：AND4 的共同窗 <span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['AND4']['box_min']" data-fmt="{:g}">37</span> ps，扣中點後 <span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['AND4']['box_center']" data-fmt="{:g}">41.5</span> ps，各自取樣 <span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['compare']['AND4']['box_each_min']" data-fmt="{:g}">47.5</span> ps。AND4 的盒內損失主要來自共同平移，扣中點後只剩 skew 造成的損失。MAJ4、XOR2 扣中點前後相同，因為它們最差的點本來就是兩組輸入分處盒兩端的 skew 角落，損失和共同平移一樣大。草稿表 III 的詳細欄（以及計算程式）包含共同平移，和草稿 III-E「共同延遲被吸收」的說法不一致；表 III 應該用哪一種，列入 M7 的草稿修改清單。</p>
+<p><b>一次只改一項</b>（盒內共同窗的變化，ps）：</p>
+<table>
+<tr><th>換成論文 M1 的設定</th><th>AND4</th><th>MAJ4</th><th>XOR2</th></tr>
+<tr><td>邊緣改為 10–90% 30 ps（論文 M1）</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['edge']['AND4']['box_min']" data-fmt="{:+g}">−5</span></td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['edge']['MAJ4']['box_min']" data-fmt="{:+g}">−4</span></td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['edge']['XOR2']['box_min']" data-fmt="{:+g}">−3.5</span></td></tr>
+<tr><td>固定護欄（時變護欄的最大值）</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['const_guard']['AND4']['box_min']" data-fmt="{:+g}">−6</span></td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['const_guard']['MAJ4']['box_min']" data-fmt="{:+g}">−4.5</span></td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['const_guard']['XOR2']['box_min']" data-fmt="{:+g}">−0.5</span></td></tr>
+<tr><td>情境改為 B(16,3) 序列（論文 M1）</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['seq3']['AND4']['box_min']" data-fmt="{:+g}">0</span></td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['seq3']['MAJ4']['box_min']" data-fmt="{:+g}">0</span></td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['seq3']['XOR2']['box_min']" data-fmt="{:+g}">0</span></td></tr>
+<tr><td>0.33 dB／MMI 的相位與模型（論文 M1）</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['m1_phase']['AND4']['box_min']" data-fmt="{:+g}">+1</span></td><td>—</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['m1_phase']['XOR2']['box_min']" data-fmt="{:+g}">+5.5</span></td></tr>
+<tr><td>時間格點 1 ps</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['dt1']['AND4']['box_min']" data-fmt="{:+g}">−1</span></td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['dt1']['MAJ4']['box_min']" data-fmt="{:+g}">−0.5</span></td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['dt1']['XOR2']['box_min']" data-fmt="{:+g}">−1</span></td></tr>
+<tr><td>加入 shot 雜訊</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['shot']['AND4']['box_min']" data-fmt="{:+g}">−1</span></td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['shot']['MAJ4']['box_min']" data-fmt="{:+g}">−1</span></td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['delta']['shot']['XOR2']['box_min']" data-fmt="{:+g}">−1</span></td></tr>
+</table>
+<ul>
+<li><b>邊緣</b>：我們的邊緣較慢（全寬 50.8 對 31.25 ps），窗少 3–4.5 ps。</li>
+<li><b>護欄</b>：改成固定護欄時，AND4、MAJ4 少約 5 ps，XOR2 幾乎不變。AND、MAJ 類靠參考光判讀，轉態時光功率大、RIN 大，固定護欄會把轉態時的大雜訊套用到整個 UI；XOR2 的護欄本來就幾乎只有固定雜訊（M3 s1）。</li>
+<li><b>情境</b>：接收端的記憶約 <span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['results']['D0']['AND4']['mem_ui']" data-fmt="{:g}">1.61</span> UI（脈衝響應能量剩 10<sup>−4</sup>），比 1 UI 長，所以只保證相鄰轉移的 Euler 序列沒有走過所有 3 符號歷史；不過換成 B(16,3) 後窗寬變化 ≤ 0.5 ps，Euler 序列加 768 個隨機符號在這三個函數上已足夠。草稿在證明時另外用 4 階 de Bruijn 序列處理所有歷史（M4）。</li>
+<li><b>相位與損耗</b>：論文 M1 的 0.33 dB／MMI 損耗較小，XOR2 的 margin 較大，窗多 5.5 ps；這是元件模型不同，不是方法不同。</li>
+<li><b>格點與 shot</b>：各約 1 ps 以內。</li>
+</ul>
+<p><b>驗收</b>：對齊與盒內共同窗和草稿表 III 相差 ≤ 3 ps（通過，最大 1.5 ps）；盒內共同窗 ≥ 草稿認證窗（通過）；全部 ≥ T<sub>req</sub>（通過）。</p>
+<p><b>本步結論</b>：(1) 用與草稿計算程式相同的算法，草稿表 III 的詳細模擬兩欄可以重現（差 ≤ 1.5 ps）；(2) 盒內窗寬取決於定義：AND4 的共同窗、扣中點、各自取樣分別是 37、41.5、47.5 ps；草稿表 III 包含共同平移，與草稿 III-E 原文不一致，表註要寫明算法與是否扣中點（列入 M7 的草稿修改清單）；(3) 兩份設定的差異中，影響最大的是時變護欄（約 5 ps）與邊緣（3–5 ps），論文 M1、M2 的窗寬因此偏保守；(4) 接收端記憶約 1.6 UI，但 Euler 序列加隨機符號與 B(16,3) 的結果相差 ≤ 0.5 ps；證明時仍要涵蓋所有歷史（M4）。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>不寫明用哪一種盒內窗</b>：共同窗、扣中點、各自取樣對應不同的情境，數字可以差 10 ps；比較時要寫明算法。</li>
+<li><b>用固定護欄</b>：最保守但會少算窗寬；若要和草稿比較，護欄要隨訊號變化。</li>
+<li><b>同時改很多設定</b>：數字變了卻不知道是哪一項造成的；一次只改一項。</li>
+<li><b>只看相鄰轉移</b>：接收端記憶超過 1 UI 時，更早的符號也會影響判讀。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：為什麼 XOR2 的對齊窗最寬，margin 卻最小？</summary>
+<p>窗寬看的是 margin 減護欄 ≥ 0 能維持多久。XOR2 的護欄很小（約 0.13 P<sub>u</sub>），而且它的判讀量在轉態時變化較平緩（圖 M3-3(a) 紅線較寬），所以雖然峰值只有約 0.10 P<sub>u</sub>，大於 0 的時間卻最長。AND4、MAJ4 的峰值高，但兩側下降得快。</p></details>
+<details class="quiz"><summary>自我檢查 2：盒內共同窗比對齊少了 13–13.5 ps，但盒的跨距是 13.2 ps，這是巧合嗎？</summary>
+<p>不是巧合：共同窗要同時涵蓋整個盒，盒內有「全部早 6.6 ps」與「全部晚 6.6 ps」兩點，同一個窗平移 ±6.6 ps 後的交集就少 13.2 ps，這是共同平移造成的。扣中點後，AND4 只少 8.5 ps；MAJ4、XOR2 仍少約 13 ps，因為兩組輸入分處盒兩端的 skew 角落同樣占去約一個跨距。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>相位</td><td>M3 s2 的 0.9 dB／MZI 相位；輸入延遲模型（macro 內差動延遲不計）</td></tr>
+<tr><td>輸入</td><td>升餘弦全寬 31.25 ps；Euler 序列 257 個符號＋<span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['n_random']" data-fmt="{:d}">768</span> 個隨機符號（種子 <span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['seed']" data-fmt="{:d}">3300</span>），循環</td></tr>
+<tr><td>接收端</td><td>二階 Butterworth 7 GHz，FOH 精確離散；格點 0.5 ps；偵測器端每路 −7 dBm；時變護欄（不含 shot）</td></tr>
+<tr><td>延遲盒</td><td>每路 ±<span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['half_box_ps']" data-fmt="{:g}">6.6</span> ps；41 點（角落 16、中心、隨機 16（種子 935，本研究自訂）、軸上端點 8，依草稿所附計算程式）；共同窗、扣中點、各自取樣三種</td></tr>
+<tr><td>執行</td><td><span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['workers']" data-fmt="{:d}">6</span> 個 worker 約 <span class="num" data-json="design/paper/m3_align/s3_detail/out/detail.json" data-expr="d['wall_s']" data-fmt="{:g}">57.5</span> s</td></tr>
+</table>
+<div class="auto-code" data-files="design/paper/m3_align/s3_detail/detail.py design/paper/m3_align/s3_detail/figs.py design/paper/m3_align/concept.py"></div>
+<div class="auto-history" data-file="design/paper/m3_align/s3_detail/HISTORY.md"></div>
+</section>

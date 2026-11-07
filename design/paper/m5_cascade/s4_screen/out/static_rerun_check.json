@@ -1,0 +1,12 @@
+{
+ "n_rerun": 7422,
+ "n_cache": 7422,
+ "n_common": 7422,
+ "n_only_rerun": 0,
+ "n_only_cache": 0,
+ "n_exact": 7422,
+ "max_abs_margin_diff": 0.0,
+ "max_abs_phase_diff": 0.0,
+ "workers": 6,
+ "time_s": 2505.9
+}

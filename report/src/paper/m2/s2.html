@@ -1,0 +1,77 @@
+<section class="step" id="p-m2-s2" data-milestone="M2" data-step="s2" data-title="介面規格與操作模式">
+<div class="bridge">
+<p><b>承接</b>：M2 s1 顯示 skew 容許因函數而異（最小約 18 ps，OR4），M1 也顯示相位預算與監測需求都很緊。各項規格需要用同一個準則重新檢視。</p>
+<p><b>本步要回答</b>：把規格整理成一張表，每一項寫出依據的數字與「離失效還有多遠」；校正在什麼時候做、要不要停資料？</p>
+<p><b>交給下一步</b>：<code>spec.json</code>（規格、依據、餘裕、狀態）與操作模式表。M2 s3 用同一份規格檢查「相位造成的失敗有多少實際上是功率不夠」。</p>
+<p class="terms"><b>名詞對照</b>：餘裕（margin to failure）＝規格離失效點的距離，以 ps 或倍數表示；操作模式＝校正在資料傳送前、啟動時或傳送中進行的安排。</p>
+</div>
+
+<figure class="concept"><img src="figures/paper/m2/s2_concept.png" alt="本步概念圖：每項規格的依據與餘裕，以及操作模式"><figcaption><b>本步概念</b>　每一項規格都要寫出依據的數字與餘裕；沒有餘裕或尚未建模的，明白列出來。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p>買保險絲時，不會買剛好等於電器電流的那一顆，而是留一點餘裕；同時也要知道它多久要換。規格也是一樣：「≤ 18 ps」如果剛好等於失效點，任何一點量測誤差都會越界；「需要 5 個偵測器」如果只寫「建議」，接手的人可能省掉兩個。本步不做新的計算，只把各步的數字整理成「規格、依據、餘裕」三欄，並寫清楚校正的時機。</p>
+<p>學習目標：(1) 為每項規格找出依據的數字；(2) 用同一個準則判斷餘裕；(3) 寫出操作模式，分清楚已模擬與未建模的部分。</p>
+
+<h3>② 原理與推導</h3>
+<h4>1. 餘裕的準則</h4>
+<p>餘裕一律用倍數＝依據的失效點（或可容許值）／ 規格（或需求值）判斷；以時間表示的規格另列距離（失效點 − 規格）供參考。準則：倍數 ≥ 1.5 為「有餘裕」，1 到 1.5 之間為「餘裕小」，小於 1 為「不足」；沒有計算依據的寫「未驗證」或「假設」。</p>
+<h4>2. 時間對齊規格</h4>
+<p>M1 s4 以「skew 額外代價 1 dB」定義失效點，最小者決定規格。最小的 1 dB 點是 <span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['skew_allow_1db_ps'][d['skew_limit_function']]" data-fmt="{:g}">18</span> ps（<span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['skew_limit_function']" data-fmt="{}">OR4</span>）。規格若定在 18 ps 就沒有餘裕，所以本步把規格定為 <span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['skew_spec_ps']" data-fmt="{:d}">15</span> ps，餘裕 <span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['skew_margin_ps']" data-fmt="{:g}">3</span> ps，規格處 skew 額外代價最多 <span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="max(d['skew_extra_at_spec_db'].values())" data-fmt="{:.2f}">0.72</span> dB。以倍數看只有 <span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['skew_margin_ratio']" data-fmt="{:.2f}">1.20</span> 倍，依準則屬於「餘裕小」；而且 1 dB 點來自名義模型，沒有包含 MMI 等硬體偏差（後面 M2 s4 檢查），實際的失效點可能更小。總預算與聯合驗收以 <span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['joint_skew_ps']" data-fmt="{:d}">20</span> ps 計，比規格寬，偏保守。</p>
+<h4>3. 消光比規格</h4>
+<p>M1 s2 的解析近似給出 25.8 dB，但在這個值 XOR 類函數的 margin 只保留 89.8%，依 90% 的定義略為不足（後面 M2 s5 對 16 個函數也得到同樣的結果）。規格改取 0.5 dB 格點的結果 <span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['er_spec_db']" data-fmt="{:g}">26</span> dB，此時 XOR 類保留剛好 90%。所有模擬仍以 <span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['er_sim_db']" data-fmt="{:.1f}">25.8</span> dB 計算：殘留光較大，結果偏保守，不必重算。</p>
+<h4>4. 監測偵測器</h4>
+<p>動態校正可追的漂移速度＝追蹤落後的容許量 × 2π f<sub>L</sub>。5 個輸出都有偵測器時是光纖漂移的 <span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['ramp_ratio_all']" data-fmt="{:.2f}">1.32</span> 倍；只用判讀埠 o2、o4 時回授頻寬較低，只有 <span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['ramp_ratio_readout_only']" data-fmt="{:.2f}">0.80</span> 倍，追不上。所以「5 個輸出都要有偵測器」是必要條件，不是建議。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\paper\m2_evidence\s2_spec\spec.py
+.\lab design\paper\m2_evidence\concept.py</code></pre>
+<p><code>spec.py</code> 只讀 M1 各步的 JSON，整理成規格表與操作模式表，約 1 秒。預期輸出（節錄）：</p>
+<pre><code>時間對齊：5 路到達時間差 ≤ 15 ps｜最小 1 dB 點 18.0 ps（OR4，名義模型、未含 MMI 偏差）；規格處 skew 額外代價最多 0.72 dB｜餘裕 3.0 ps（1.2 倍）（餘裕小）
+監測偵測器：5 個輸出都要有偵測器｜可追漂移：5 個 0.096、只用 o2、o4 0.059 rad/s；光纖 0.073 rad/s｜餘裕 1.32 倍（只用判讀埠 0.80 倍）（餘裕小）
+…
+檢查： {'skew_spec_below_all_1db': True, 'five_detectors_needed': True, 'joint_skew_covers_spec': True, 'er_spec_keeps_90pct': True}</code></pre>
+<p>自己動手：把 <code>SKEW_SPEC_PS</code> 改成 18，看時間對齊的狀態變成什麼。</p>
+
+<h3>④ 結果與驗收</h3>
+<h4>1. 規格與餘裕</h4>
+<table>
+<tr><th>項目</th><th>規格</th><th>依據</th><th>餘裕</th><th>狀態</th></tr>
+<tr><td>時間對齊</td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][0]['spec']" data-fmt="{}">5 路到達時間差 ≤ 15 ps</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][0]['evidence']" data-fmt="{}">最小 1 dB 點 18.0 ps（OR4，名義模型、未含 MMI 偏差）；規格處 skew 額外代價最多 0.72 dB</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][0]['margin']" data-fmt="{}">3.0 ps（1.2 倍）</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][0]['status']" data-fmt="{}">餘裕小</span></td></tr>
+<tr><td>相對相位（合計）</td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][1]['spec']" data-fmt="{}">估計誤差（3σ）、追蹤落後、快速擾動幅度相加 ≤ δ_det＝0.099 rad</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][1]['evidence']" data-fmt="{}">估計 3σ 0.030＋落後 0.035＋快速 0.035</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][1]['margin']" data-fmt="{}">用滿</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][1]['status']" data-fmt="{}">餘裕小</span></td></tr>
+<tr><td>快速擾動</td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][2]['spec']" data-fmt="{}">快於回授頻寬的相位擾動 ≤ 0.035 rad（發射端負責）</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][2]['evidence']" data-fmt="{}">振動、氣流；未量測</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][2]['margin']" data-fmt="{}">—</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][2]['status']" data-fmt="{}">未驗證</span></td></tr>
+<tr><td>監測偵測器</td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][3]['spec']" data-fmt="{}">5 個輸出都要有偵測器</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][3]['evidence']" data-fmt="{}">可追漂移：5 個 0.096、只用 o2、o4 0.059 rad/s；光纖 0.073 rad/s</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][3]['margin']" data-fmt="{}">1.32 倍（只用判讀埠 0.80 倍）</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][3]['status']" data-fmt="{}">餘裕小</span></td></tr>
+<tr><td>資料</td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][4]['spec']" data-fmt="{}">隨機資料（例如擾碼）</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][4]['evidence']" data-fmt="{}">擺動量測的雜訊估計假設各位元獨立</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][4]['margin']" data-fmt="{}">—</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][4]['status']" data-fmt="{}">假設</span></td></tr>
+<tr><td>消光比</td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][5]['spec']" data-fmt="{}">≥ 26 dB（晶片依殘留重新求相位）</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][5]['evidence']" data-fmt="{}">格點結果 26 dB（XOR2）；解析近似 25.79 dB 時 XOR 類只保留 89.8%（略低於 90%），模擬都用 25.8 dB（偏保守）；轉態時多 0.035 dB</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][5]['margin']" data-fmt="{}">以 margin 保留 90% 定義（規格處剛好 90%）</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][5]['status']" data-fmt="{}">餘裕小</span></td></tr>
+<tr><td>功率</td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][6]['spec']" data-fmt="{}">每根資料光纖 ≥ -2.49 dBm、參考光纖 ≥ 7.05 dBm</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][6]['evidence']" data-fmt="{}">XOR2 決定；聯合驗收與分項相加差 ≤ 0.20 dB</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][6]['margin']" data-fmt="{}">已含各項代價（不另留餘裕）</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['items'][6]['status']" data-fmt="{}">需求</span></td></tr>
+</table>
+<h4>2. 操作模式</h4>
+<table>
+<tr><th>階段</th><th>做什麼</th><th>資料</th><th>狀態</th></tr>
+<tr><td>上線前（一次）</td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['modes'][0]['action']" data-fmt="{}">量發射端的殘留光大小與相位；以已知輸入字直接量 o2、o4 的功率差，依量到的 margin 重新求 14 個相位（靜態校正，含 MMI 等硬體偏差，M2 s4）</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['modes'][0]['data']" data-fmt="{}">不傳資料</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['modes'][0]['status']" data-fmt="{}">參考解已模擬（已知硬體、靜態最佳，M2 s4）；量測型重解（量測次數、誤差、收斂）未建模</span></td></tr>
+<tr><td>啟動</td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['modes'][1]['action']" data-fmt="{}">把 4 路輸入相位拉到追蹤的可用範圍內（初始對準）</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['modes'][1]['data']" data-fmt="{}">不傳資料或用已知字</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['modes'][1]['status']" data-fmt="{}">未建模</span></td></tr>
+<tr><td>運作中（持續）</td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['modes'][2]['action']" data-fmt="{}">7 個 heater 同時小幅擺動、同步偵測，只調 φ 追蹤漂移（動態校正）</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['modes'][2]['data']" data-fmt="{}">照常傳送，資料需隨機</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['modes'][2]['status']" data-fmt="{}">已模擬（一階回授）</span></td></tr>
+<tr><td>異常</td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['modes'][3]['action']" data-fmt="{}">漂移超出追蹤範圍或判讀錯誤率上升時，回到啟動</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['modes'][3]['data']" data-fmt="{}">中斷</span></td><td><span class="num" data-json="design/paper/m2_evidence/s2_spec/out/spec.json" data-expr="d['modes'][3]['status']" data-fmt="{}">未建模</span></td></tr>
+</table>
+<p>整理後的結論：(1) 時間對齊改為 15 ps 後離 1 dB 點還有 3 ps（1.2 倍，餘裕小，且未含硬體偏差）；(2) 消光比規格改為 26 dB，XOR 類剛好保留 90%；(3) 相對相位的預算已用滿，監測偵測器的餘裕只有約 1.3 倍，這兩項是目前最緊的地方；(4) 靜態校正要在資料傳送前做一次，動態校正在傳送中持續進行、不中斷資料；上線前的重解目前只有「已知硬體的參考解」（M2 s4），以量測結果重解的方法尚未建模；(5) 啟動時的初始對準與異常時的處理尚未建模，列為限制。M1 s5 的介面規格表採用本步的數字。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>規格等於失效點</b>：規格要比失效點留餘裕，否則量測誤差或老化就會越界。</li>
+<li><b>把必要條件寫成建議</b>：只用判讀埠時追不上漂移，所以 5 個偵測器是必要的。</li>
+<li><b>沒寫操作模式</b>：同一個校正方法，在傳送前做與在傳送中做，對資料與系統的要求完全不同。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：為什麼總預算用 20 ps 的代價，規格卻是 15 ps？</summary>
+<p>預算用比規格寬的 skew 計算代價，結果偏保守：只要實際 skew 在 15 ps 以內，實際代價就小於預算裡的值。反過來，如果預算用的 skew 比規格窄，預算就會低估。</p></details>
+<details class="quiz"><summary>自我檢查 2：相位預算「用滿」是什麼意思？要怎麼改善？</summary>
+<p>相位容許 δ<sub>det</sub> 被估計誤差、追蹤落後、快速擾動三項以幅度相加剛好分完，沒有剩下的部分。改善的方法有：讓估計更準（平均更久，但回授變慢）、提高回授頻寬（擺動加大，但 margin 損失變大），或把光纖固定並縮短，降低快速擾動與漂移速度。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>輸入</td><td>M1 s1–s5 的結果 JSON（含聯合驗收）</td></tr>
+<tr><td>準則</td><td>倍數＝失效點 ／ 規格：有餘裕 ≥ 1.5；餘裕小 1–1.5；不足 &lt; 1（時間項另列距離）</td></tr>
+<tr><td>範圍</td><td>不做新的計算；初始對準、異常處理、快速擾動的量測不在範圍內</td></tr>
+</table>
+<div class="auto-code" data-files="design/paper/m2_evidence/s2_spec/spec.py design/paper/m2_evidence/concept.py"></div>
+<div class="auto-history" data-file="design/paper/m2_evidence/s2_spec/HISTORY.md"></div>
+</section>

@@ -1,0 +1,146 @@
+<section class="step" id="p-m1-s5" data-milestone="M1" data-step="s5" data-title="介面規格、總預算與論文重點">
+<div class="bridge">
+<p><b>承接</b>：M1 s1 找出問題，M1 s2、s3 用靜態與動態兩種校正處理輸入光的誤差，M1 s4 在校正後的條件下驗收時序。各步的需求散在不同地方。</p>
+<p><b>本步要回答</b>：整合起來，片外發射端要給什麼樣的光、總共要多少光功率？M1 是完整版研究的簡化版（完整版研究指本研究已寫成的完整版論文稿，M3 起稱為草稿）：要強調哪幾個重點，哪些可以壓縮或省略？</p>
+<p><b>交給下一步</b>：輸入介面規格、<code>assess.json</code>（逐函數的總功率預算、三個重點與證據、限制）、與完整版的對應表、待解風險。論文依這三個重點撰寫。</p>
+</div>
+
+<figure class="concept"><img src="figures/paper/m1/s5_concept.png" alt="本步概念圖：三個重點、與完整版的對應、總功率預算與待解風險"><figcaption><b>本步概念</b>　只留三個重點：時序分析、靜態校正、動態校正與校正後驗收；其餘壓縮成一句或一張表。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能把各步的需求整合成一張介面規格與一份總功率預算；能分辨方法中撐起主結論的部分，與可以壓縮或省略的部分。</p>
+<div class="example">
+<p>類比：把一本書縮寫成一篇短文，要保留主線的幾個轉折，細節壓成一句；縮寫後的讀者仍要能看懂「問題是什麼、怎麼解、解得夠不夠」。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 總功率預算（逐函數合成）</h4>
+<p>每個函數 f 都有自己的靜態需求（M1 s1，B7 輸入端的 P<sub>u</sub>）與各項代價 Δ<sub>k</sub>(f)：消光比的靜態損失、轉態與接收端頻寬（M1 s4 的時域模型已含晶片內路徑延遲，不另外相加）、skew、heater 擺動、相位誤差用滿 δ<sub>det</sub>。margin 降為 r 倍時，光功率要多給 −10 log<sub>10</sub> r dB。先逐函數相加，再取最大者：</p>
+<math display="block"><mrow><msub><mi>P</mi><mrow><mi>u</mi><mo>,</mo><mn>10</mn><mtext>G</mtext></mrow></msub><mo>=</mo><munder><mi>max</mi><mi>f</mi></munder><mrow><mo>[</mo><msub><mi>P</mi><mrow><mi>u</mi><mo>,</mo><mtext>靜態</mtext></mrow></msub><mo>(</mo><mi>f</mi><mo>)</mo><mo>+</mo><munder><mo>∑</mo><mi>k</mi></munder><msub><mi>Δ</mi><mi>k</mi></msub><mo>(</mo><mi>f</mi><mo>)</mo><mo>]</mo></mrow></mrow></math>
+<p>代價由 margin 比值換算，前提是雜訊不隨光功率改變（M1 s1：熱雜訊加比較器雜訊占 99%）。各項直接相加是近似：項目之間的交互作用只部分納入（M1 s4 同時算了 skew 與消光比）。所以再做一次<b>聯合驗收</b>：選 AND4（四輸入）與 XOR2（預算最緊）兩個代表函數，在時域模型裡同時加入消光比殘留、skew 20 ps、追蹤後的輸入相位殘差（每路 ≤ δ<sub>det</sub>）與 7 個 heater 同時擺動，在同一個 23 ps 取樣窗內重算 margin，與相加的結果比較。相位與擺動的組合太多，先用靜態 margin 篩出最差的 3 組，再對每組跑所有 skew 角落。</p>
+<h4>2. 簡化的原則</h4>
+<p>完整版研究用串接的 B7 與嚴格的延遲範圍認證、Monte Carlo 製程實例（隨機抽樣大量製程變異的實例）證明方法。本研究只保留讓「10 Gb/s 能不能運作、要怎麼校正」成立的部分：判讀量是輸入光場的二次式，時序要在取樣窗內驗收（重點一）；固定的誤差用靜態校正（重點二）；會漂的誤差用動態校正，校正後再驗收（重點三）。證明性質的部分壓縮成一段，規模性的部分省略、列為限制。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\paper\m1_timing\s5_assess\joint.py
+.\lab design\paper\m1_timing\s5_assess\assess.py
+.\lab design\paper\m1_timing\s5_assess\figs.py
+.\lab design\paper\m1_timing\concept.py</code></pre>
+<p><code>joint.py</code> 沿用 M1 s4 的時域模型做聯合驗收（約 3 分鐘）；<code>assess.py</code> 讀 M1 s1–s4 與聯合驗收的 JSON，逐函數合成總功率預算，寫出三個重點與支撐的數字，約 1 秒。預期輸出（節錄；K1–K3 對應 ④ 的重點一到三）：</p>
+<pre><code>代價：消光比（靜態） 0.465 dB（M1 s2、s4：殘留光讓靜態 margin 下降（重新求相位後））
+代價：轉態與接收端頻寬 0.610 dB（M1 s4：skew 0 時的代價（含殘留光與晶片內路徑差））
+代價：skew ≤ 15 ps 0.605 dB（M1 s4：以 skew 20 ps 相對 skew 0 的額外代價計（偏保守））
+代價：heater 擺動 0.110 dB（M1 s3：7 個 heater 同時擺動時的 margin 損失）
+代價：相位誤差（≤ δ_det） 0.457 dB（M1 s1、s3：估計誤差（3σ）、追蹤落後、快速擾動幅度相加用滿 δ_det）
+各函數合計：{'AND2': -11.61, 'OR2': -11.57, 'XOR2': -4.49, 'AND4': -8.87, 'OR4': -8.91} → 決定需求的是 XOR2
+靜態 P_u -6.74 dBm ＋ 動態 2.25 dB → -4.49 dBm；每根資料光纖 -2.49 dBm、參考 7.05 dBm、合計 8.65 dBm
+K1 時序分析：skew 0 已有 ≤ 1.4 dB；skew 額外 0.5／1／2 dB 在 12.1／18／25.7 ps；晶片內路徑差 ≤ 0.01 dB
+K2 靜態校正：消光比需求 38 → 25.8 dB（XOR2，解析近似）；margin ≈ (1−a0)^n m0，n＝{'AND2': 1, 'OR2': 1, 'XOR2': 2, 'AND4': 1, 'OR4': 1}
+K3 動態校正與校正後驗收：擺動 0.0062 rad（7 個同時擺動損失 ≤ 3%）、回授 0.44 Hz、可追 0.096 rad/s（光纖熱漂移約 0.073）；聯合驗收校正後 23 ps 窗仍在，聯合代價 AND4 3.18 dB（分項相加 2.98）、XOR2 2.23 dB（分項相加 2.25）
+寫出 figures/paper/m1/s5_budget.png</code></pre>
+
+<h3>④ 結果與驗收</h3>
+<h4>1. 三個重點</h4>
+<table>
+<tr><th>重點</th><th>結論</th><th>關鍵數字</th><th>圖</th></tr>
+<tr><td>一　時序分析</td><td>判讀量是輸入光場的二次式，時序要看取樣窗內的判讀量；用功率代價把 skew 寫成發射端規格</td>
+<td>各路同時到達已要多給 ≤ <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['penalty0_max_ideal']" data-fmt="{:.1f}">1.4</span> dB；skew 額外 0.5／1／2 dB 在 <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['skew_at_db']['0.5']" data-fmt="{:g}">12.1</span>／<span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['skew_at_db']['1.0']" data-fmt="{:g}">18</span>／<span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['skew_at_db']['2.0']" data-fmt="{:g}">25.7</span> ps；1 dB 點最小約 18 ps，規格取 ≤ 15 ps 留餘裕</td><td>M1-7、M1-8</td></tr>
+<tr><td>二　靜態校正</td><td>固定的誤差量一次就能算進模型，只調 heater 重新求相位吸收；消光比需求可用解析近似估計</td>
+<td>消光比需求 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_fixed_db']" data-fmt="{:g}">38</span> → <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_required_db']" data-fmt="{:.1f}">25.8</span> dB；margin ≈ (1−a<sub>0</sub>)<sup>n</sup> m<sub>0</sub>（一次項函數 n＝1、XOR2 n＝2）</td><td>M1-4</td></tr>
+<tr><td>三　動態校正與校正後驗收</td><td>輸入相位漂移只調 φ 就能補回；最佳點上平均功率量不出漂移，改用 heater 擺動加同步偵測；校正後在時域驗收</td>
+<td>擺動 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['dither_rad']" data-fmt="{:.4f}">0.0062</span> rad、回授 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['loop_bw_hz']" data-fmt="{:.2f}">0.44</span> Hz、可追 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['ramp_rate_allow_rad_s']" data-fmt="{:.2f}">0.10</span> rad/s（光纖熱漂移約 0.073）</td><td>M1-5、M1-6</td></tr>
+</table>
+
+<h4>2. 與完整版研究的對應</h4>
+<table>
+<tr><th>完整版的內容</th><th>本研究</th><th>處理</th><th>因此不能宣稱</th></tr>
+<tr><td>考慮光電判讀的時序模型與 UI 預算</td><td>一階預算（M1 s1）＋時域功率代價（M1 s4）</td><td>保留（重點一）</td><td>任意資料歷史的保證（只涵蓋 B(16,3) 的三符號組合）；硬體簽核</td></tr>
+<tr><td>延遲範圍認證與補長選擇</td><td>不做嚴格證明，以代價對 skew 的曲線訂規格；分欄同步佈局讓晶片內路徑差不到 0.4 ps，代價 ≤ <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['chip_bound_db']" data-fmt="{:.2f}">0.01</span> dB，不需補長</td><td>壓縮成一段</td><td>延遲範圍的嚴格認證；其他佈局也不需補長</td></tr>
+<tr><td>設計與校正分工、校正後重新驗收</td><td>靜態校正（M1 s2）＋動態校正（M1 s3）＋校正後驗收（M1 s4）；動態校正在資料傳送中進行</td><td>保留（重點二、三）</td><td>參數被準確辨識（時序恢復不等於相位估對）；含熱串擾、2π 重設與未知損耗時仍可校正</td></tr>
+<tr><td>串接、Monte Carlo 製程實例、接收端頻寬與位元率掃描</td><td>單顆 B7、理想製程、固定 7 GHz 接收端</td><td>省略，列為限制</td><td>串接後的時序、製程良率、其他接收端或位元率下的結論</td></tr>
+</table>
+<p>以擾動訊號控制可程式 MZI 網路（mesh）已有前人做過（例如以正交擺動訊號鎖在轉移函數極值）；本研究的動態校正是把同樣的量測方式用在資料照常傳送的邏輯電路上，目標是判讀 margin 的最佳點。</p>
+
+<h4>3. 輸入介面規格</h4>
+<p>片外發射端要給什麼樣的光：把 M1 s1–s4 散在各步的需求整理成一張表，接手的人照著做就能接上這顆晶片。</p>
+<table>
+<tr><th>項目</th><th>需求</th><th>依據</th></tr>
+<tr><td>光源</td><td>5 路（x1–x4、R）來自同一顆雷射，波長 1550 nm</td><td>B7 靠干涉判讀，各路要同調（相位關係固定）</td></tr>
+<tr><td>資料格式</td><td>光場開關：「1」振幅 1、「0」接近全暗；參考光 R 不調變、振幅 3（功率 9 P<sub>u</sub>）；資料需隨機（例如擾碼），動態校正的量測才成立</td><td>課程 M1 的輸入定義；M1 s3</td></tr>
+<tr><td>消光比</td><td>≥ <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_need_resolved_db']['XOR2']" data-fmt="{:g}">26</span> dB（晶片依殘留重新求相位；取 0.5 dB 格點結果。解析近似 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_required_db']" data-fmt="{:.1f}">25.8</span> dB 時 XOR 類 margin 只保留 89.8%，略低於 90%；所有模擬以 25.8 dB 計算，偏保守）</td><td>M1 s2；M1 s4 確認轉態時只多 <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['er_extra_db_max']" data-fmt="{:.2f}">0.04</span> dB</td></tr>
+<tr><td>相對相位</td><td>估計誤差（3σ）、追蹤落後、快速擾動幅度相加 ≤ <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['det_rad']" data-fmt="{:.2f}">0.10</span> rad：其中快於回授頻寬的擾動（振動、氣流）由發射端壓在 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['phase_alloc']['fast_rad']" data-fmt="{:.3f}">0.035</span> rad 以內</td><td>M1 s1、s3</td></tr>
+<tr><td>時間對齊</td><td>5 路到達晶片的時間差 ≤ 15 ps（skew 額外代價 ≤ 0.72 dB；離 1 dB 點還有 3 ps）</td><td>M1 s4、論文 M2 s2</td></tr>
+<tr><td>監測</td><td>5 個輸出都接偵測器（只用 o2、o4 時可追的漂移速度只有光纖漂移的 0.8 倍，追不上）</td><td>M1 s3</td></tr>
+<tr><td>功率</td><td>每根資料光纖 ≥ <span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['fiber_data_dbm']" data-fmt="{:.1f}">−2.5</span> dBm、參考光纖 ≥ <span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['fiber_ref_dbm']" data-fmt="{:+.1f}">+7.0</span> dBm</td><td>下一節</td></tr>
+</table>
+
+<h4>4. 10 Gb/s 總功率預算</h4>
+<figure><img src="figures/paper/m1/s5_budget.png" alt="10 Gb/s 總功率預算：每項代價發生在訊號鏈的位置，以及依序疊加後需要的功率"><figcaption>圖 M1-9　10 Gb/s 總功率預算（決定需求的函數 <span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['limiting_function']" data-fmt="{}">XOR2</span>）。上：光由左往右走，每一項代價標在它發生的位置。下：從靜態需求開始，依大小把各項代價疊上去，得到 B7 輸入端要的功率，再加輸入 EC 的損耗，就是每根資料光纖要給的功率。</figcaption></figure>
+<table>
+<tr><th>函數</th><th>靜態需求</th><th>各項代價合計</th><th>B7 輸入端要的功率</th></tr>
+<tr><td>XOR2</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['per_function']['XOR2']['static_dbm']" data-fmt="{:.2f}">−6.74</span> dBm</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['per_function']['XOR2']['dynamic_db']" data-fmt="{:.2f}">2.25</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['per_function']['XOR2']['total_dbm']" data-fmt="{:.2f}">−4.49</span> dBm</td></tr>
+<tr><td>AND4</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['per_function']['AND4']['static_dbm']" data-fmt="{:.2f}">−11.85</span> dBm</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['per_function']['AND4']['dynamic_db']" data-fmt="{:.2f}">2.98</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['per_function']['AND4']['total_dbm']" data-fmt="{:.2f}">−8.87</span> dBm</td></tr>
+<tr><td>OR4</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['per_function']['OR4']['static_dbm']" data-fmt="{:.2f}">−11.77</span> dBm</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['per_function']['OR4']['dynamic_db']" data-fmt="{:.2f}">2.86</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['per_function']['OR4']['total_dbm']" data-fmt="{:.2f}">−8.91</span> dBm</td></tr>
+<tr><td>AND2、OR2</td><td>約 −13 dBm</td><td colspan="2">遠低於 XOR2，不決定需求</td></tr>
+</table>
+<p>XOR2 的靜態 margin 最小，決定了需求；四輸入函數的動態代價較大，但靜態需求低很多。每根資料光纖 <span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['fiber_data_dbm']" data-fmt="{:.1f}">−2.5</span> dBm、5 根合計 <span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['total_dbm']" data-fmt="{:+.1f}">+8.7</span> dBm，由片外雷射提供；片外分光與調變的損耗未計入本預算。</p>
+
+<h4>5. 聯合驗收：偏差前 → 偏差後 → 校正後</h4>
+<table>
+<tr><th>函數</th><th>條件</th><th>靜態 margin（P<sub>u</sub>）</th><th>23 ps 窗內 margin（P<sub>u</sub>）</th><th>代價（相對名義靜態）</th></tr>
+<tr><td>AND4</td><td>偏差前：名義（理想消光比、無 skew、無相位誤差）</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['AND4']['nominal']['m_static']" data-fmt="{:.3f}">0.970</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['AND4']['nominal']['m_win']" data-fmt="{:.3f}">0.752</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['AND4']['nominal']['penalty_db']" data-fmt="{:.2f}">1.11</span> dB</td></tr>
+<tr><td>AND4</td><td>規格條件：消光比 25.8 dB＋skew 20 ps</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['AND4']['spec']['m_static']" data-fmt="{:.3f}">0.921</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['AND4']['spec']['m_win']" data-fmt="{:.3f}">0.549</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['AND4']['spec']['penalty_db']" data-fmt="{:.2f}">2.47</span> dB</td></tr>
+<tr><td>AND4</td><td>偏差後：未追蹤的漂移，每路 ≤ 0.3 rad</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['AND4']['drift']['m_static']" data-fmt="{:.3f}">0.425</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['AND4']['drift']['m_win']" data-fmt="{:.3f}">0.085</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['AND4']['drift']['penalty_db']" data-fmt="{:.2f}">10.59</span> dB</td></tr>
+<tr><td>AND4</td><td>校正後：規格條件＋相位殘差 ≤ δ<sub>det</sub>＋7 個同時擺動</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['AND4']['final']['m_static']" data-fmt="{:.3f}">0.832</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['AND4']['final']['m_win']" data-fmt="{:.3f}">0.467</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['AND4']['final']['penalty_db']" data-fmt="{:.2f}">3.18</span> dB</td></tr>
+<tr><td>XOR2</td><td>偏差前：名義（理想消光比、無 skew、無相位誤差）</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['XOR2']['nominal']['m_static']" data-fmt="{:.3f}">0.289</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['XOR2']['nominal']['m_win']" data-fmt="{:.3f}">0.251</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['XOR2']['nominal']['penalty_db']" data-fmt="{:.2f}">0.61</span> dB</td></tr>
+<tr><td>XOR2</td><td>規格條件：消光比 25.8 dB＋skew 20 ps</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['XOR2']['spec']['m_static']" data-fmt="{:.3f}">0.259</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['XOR2']['spec']['m_win']" data-fmt="{:.3f}">0.196</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['XOR2']['spec']['penalty_db']" data-fmt="{:.2f}">1.68</span> dB</td></tr>
+<tr><td>XOR2</td><td>偏差後：未追蹤的漂移，每路 ≤ 0.3 rad</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['XOR2']['drift']['m_static']" data-fmt="{:.3f}">0.107</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['XOR2']['drift']['m_win']" data-fmt="{:.3f}">0.065</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['XOR2']['drift']['penalty_db']" data-fmt="{:.2f}">6.51</span> dB</td></tr>
+<tr><td>XOR2</td><td>校正後：規格條件＋相位殘差 ≤ δ<sub>det</sub>＋7 個同時擺動</td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['XOR2']['final']['m_static']" data-fmt="{:.3f}">0.228</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['XOR2']['final']['m_win']" data-fmt="{:.3f}">0.173</span></td><td><span class="num" data-json="design/paper/m1_timing/s5_assess/out/joint.json" data-expr="d['functions']['XOR2']['final']['penalty_db']" data-fmt="{:.2f}">2.23</span> dB</td></tr>
+</table>
+<p>校正後兩個函數都還有 23 ps 的取樣窗。XOR2 的聯合代價 <span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['joint']['XOR2']['joint_db']" data-fmt="{:.2f}">2.23</span> dB，分項相加 <span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['joint']['XOR2']['sum_db']" data-fmt="{:.2f}">2.25</span> dB；AND4 聯合 <span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['joint']['AND4']['joint_db']" data-fmt="{:.2f}">3.18</span> dB，相加 <span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['joint']['AND4']['sum_db']" data-fmt="{:.2f}">2.98</span> dB。兩者最多相差 <span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="max(abs(v['sum_minus_joint_db']) for v in d['joint'].values())" data-fmt="{:.2f}">0.20</span> dB：決定需求的 XOR2 幾乎一致；AND4 的聯合代價比相加多約 0.2 dB（相位殘差與 skew 同時存在時互相加重），相加會稍微低估，但 AND4 的總需求仍比 XOR2 低約 4 dB，不改變總預算。未追蹤的漂移（0.3 rad）讓 23 ps 窗內的 margin 掉到名義的三分之一以下，這就是需要動態校正的原因。這個驗收仍有前提：相位殘差取預算上限的角落、擺動取最差組合，但只對靜態最差的 3 組做時域計算；只做兩個代表函數；同一個模型既用來設計也用來驗收。</p>
+
+<h4>6. 短文大綱</h4>
+<table>
+<tr><th>節</th><th>內容</th><th>圖表</th></tr>
+<tr><td>I Introduction</td><td>光資料邏輯要同時管時序與相位；本文以單顆 B7 在 10 Gb/s 示範時序分析與校正</td><td>—</td></tr>
+<tr><td>II System and Budget</td><td>B7、片外發射端與接收端；一階預算指出相位穩定度的要求最嚴</td><td>Fig. 1 系統（尚未繪製）</td></tr>
+<tr><td>III Timing Analysis</td><td>重點一：時域功率代價與 skew 規格（延遲範圍與補長壓縮成一段）</td><td>M1-8</td></tr>
+<tr><td>IV Calibration</td><td>重點二：靜態校正與消光比的解析近似；重點三：動態校正</td><td>M1-4、M1-5、M1-6</td></tr>
+<tr><td>V Post-Calibration Acceptance</td><td>校正後的時序驗收（偏差前 → 偏差後 → 校正後的聯合驗收表）、介面規格與總功率預算</td><td>聯合驗收表、M1-9、介面規格表</td></tr>
+<tr><td>VI Conclusion</td><td>限制與量測計畫</td><td>—</td></tr>
+</table>
+
+<h4>7. 待解風險</h4>
+<p>X1–X7 只是本表的項目編號。</p>
+<table>
+<tr><th>代號</th><th>狀態</th><th>內容</th></tr>
+<tr><td>X1</td><td>未解</td><td>全部是模擬，沒有量測；需要測試晶片在低速下驗證兩種校正</td></tr>
+<tr><td>X2</td><td>未解</td><td>假設值（heater 熱時間常數、EC 損耗、接收端參數）要找出處並做敏感度</td></tr>
+<tr><td>X3</td><td>未解</td><td>追蹤迴路只做一階估計；heater 熱串擾、相位累積到 2π 的重設未建模</td></tr>
+<tr><td>X4</td><td>部分</td><td>M2 s4：MMI 分光比 ±3% 時，XOR2 的三種狀態在 <span class="num" data-json="design/paper/m2_evidence/s4_deviation/out/deviation.json" data-expr="d['n_inst']" data-fmt="{:d}">32</span> 個模擬實例中，都沒有實例在系統預算內有窗；已知硬體的參考解最多還要多 <span class="num" data-json="design/paper/m2_evidence/s4_deviation/out/deviation.json" data-expr="d['functions']['XOR2']['summary']['oracle']['extra_db']['max']" data-fmt="{:.1f}">1.5</span> dB。MMI 相位誤差、heater 增益、熱串擾未納入</td></tr>
+<tr><td>X5</td><td>部分</td><td>引用的擾動控制文獻目前只讀過摘要，全文待確認</td></tr>
+<tr><td>X6</td><td>已解（2026-10-31）</td><td>模型一致性、σ 的意義、o2／o4 路徑、雜訊模型、路徑層級延遲、逐函數預算、同時擺動、相位預算分配</td></tr>
+<tr><td>X7</td><td>未解</td><td>靜態校正假設殘留的大小與相位已量準；量測誤差對重新求相位的影響未評估（動態校正已含雜訊）</td></tr>
+</table>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>把每個分析都當成重點</b>：縮寫版只留撐起主結論的三件事，其餘壓成一句或一張表。</li>
+<li><b>不同函數的代價混著相加</b>：每項代價都相對該函數自己的 margin，要逐函數合成後再取最大。</li>
+<li><b>同一份容許量重複使用</b>：相位容許 δ<sub>det</sub> 要分給估計誤差（3σ）、追蹤落後、快速擾動，幅度相加不能超過。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：為什麼延遲範圍認證可以壓縮成一段？</summary>
+<p>本晶片是分欄同步佈局，判讀用到的路徑只差 0.335 ps，晶片內的時間差對結果的影響約 0.01 dB；時序要求幾乎全在片外，用代價對 skew 的曲線訂規格就夠了。嚴格的認證是完整版研究的貢獻，這裡引用即可。</p></details>
+<details class="quiz"><summary>自我檢查 2：為什麼決定總功率的是 XOR2，而不是動態代價最大的四輸入函數？</summary>
+<p>XOR2 的靜態 margin 最小（0.289），靜態需求比四輸入函數高約 5 dB；四輸入函數的動態代價雖然較大，加起來仍比 XOR2 低。所以要逐函數合成再取最大，不能把各項的最差值直接相加。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>輸入</td><td>M1 s1–s4 的結果 JSON；聯合驗收沿用 M1 s4 的時域模型（B(16,3) 序列、0.5 ps 格點、23 ps 窗含兩端點）</td></tr>
+<tr><td>預算</td><td>逐函數相加後取最大；skew 取 20 ps 的值代表介面規格 15 ps（偏保守）；代價由 margin 比值換算（熱雜訊主導）</td></tr>
+<tr><td>範圍</td><td>不做新的計算；完整版研究的嚴格認證、串接與製程實例不在本研究範圍</td></tr>
+</table>
+<div class="auto-code" data-files="design/paper/m1_timing/s5_assess/assess.py design/paper/m1_timing/s5_assess/figs.py design/paper/m1_timing/concept.py"></div>
+<div class="auto-history" data-file="design/paper/m1_timing/s5_assess/HISTORY.md"></div>
+</section>

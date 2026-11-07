@@ -1,0 +1,1638 @@
+{
+ "die_um": [
+  4280.0,
+  1200.0
+ ],
+ "die_x_um": [
+  -1310.0,
+  2970.0
+ ],
+ "die_y_um": [
+  -640.0,
+  560.0
+ ],
+ "ec": [
+  {
+   "port": "in0",
+   "signal": "x1",
+   "side": "W",
+   "facet_um": [
+    -1310.0,
+    440.0
+   ]
+  },
+  {
+   "port": "out0",
+   "signal": "o1",
+   "side": "E",
+   "facet_um": [
+    2970.0,
+    440.0
+   ]
+  },
+  {
+   "port": "in1",
+   "signal": "x2",
+   "side": "W",
+   "facet_um": [
+    -1310.0,
+    190.0
+   ]
+  },
+  {
+   "port": "out1",
+   "signal": "o2",
+   "side": "E",
+   "facet_um": [
+    2970.0,
+    190.0
+   ]
+  },
+  {
+   "port": "in2",
+   "signal": "x3",
+   "side": "W",
+   "facet_um": [
+    -1310.0,
+    -60.0
+   ]
+  },
+  {
+   "port": "out2",
+   "signal": "o3",
+   "side": "E",
+   "facet_um": [
+    2970.0,
+    -60.0
+   ]
+  },
+  {
+   "port": "in3",
+   "signal": "x4",
+   "side": "W",
+   "facet_um": [
+    -1310.0,
+    -310.0
+   ]
+  },
+  {
+   "port": "out3",
+   "signal": "o4",
+   "side": "E",
+   "facet_um": [
+    2970.0,
+    -310.0
+   ]
+  },
+  {
+   "port": "in4",
+   "signal": "R",
+   "side": "W",
+   "facet_um": [
+    -1310.0,
+    -560.0
+   ]
+  },
+  {
+   "port": "out4",
+   "signal": "o5",
+   "side": "E",
+   "facet_um": [
+    2970.0,
+    -560.0
+   ]
+  }
+ ],
+ "ec_params": {
+  "tip_w": 0.25,
+  "base_w": 1.0,
+  "core_end_w": 0.35,
+  "tip_len": 30.0,
+  "taper_len": 200.0,
+  "bilevel_len": 30.0,
+  "win_half": 10.0
+ },
+ "ec_pitch_um": 250.0,
+ "fan_length_um": 400.0,
+ "comp_length_um": 600.0,
+ "comp_n": 2,
+ "comp_bump_um": {
+  "in0": 0.0,
+  "in1": 103.57,
+  "in2": 128.57,
+  "in3": 103.57,
+  "in4": 0.0
+ },
+ "fan_in_len_um": {
+  "in0": 1216.269,
+  "in1": 1216.269,
+  "in2": 1216.269,
+  "in3": 1216.269,
+  "in4": 1216.269
+ },
+ "fan_out_len_um": {
+  "out0": 616.269,
+  "out1": 466.664,
+  "out2": 400.0,
+  "out3": 466.664,
+  "out4": 616.269
+ },
+ "fan_in_spread_um": 0.0,
+ "fan_out_spread_um": 216.3,
+ "fan_rmin_um": 35.3,
+ "pads": [
+  {
+   "name": "P02",
+   "net": "P02",
+   "heater": "H02",
+   "side": "N",
+   "xy_um": [
+    10.0,
+    450.0
+   ],
+   "heaters": [
+    "H02"
+   ]
+  },
+  {
+   "name": "GN1",
+   "net": "GN1",
+   "heater": null,
+   "side": "N",
+   "xy_um": [
+    200.339,
+    450.0
+   ],
+   "heaters": [
+    "H02",
+    "H01"
+   ]
+  },
+  {
+   "name": "P01",
+   "net": "P01",
+   "heater": "H01",
+   "side": "N",
+   "xy_um": [
+    350.339,
+    450.0
+   ],
+   "heaters": [
+    "H01"
+   ]
+  },
+  {
+   "name": "P06",
+   "net": "P06",
+   "heater": "H06",
+   "side": "N",
+   "xy_um": [
+    500.339,
+    450.0
+   ],
+   "heaters": [
+    "H06"
+   ]
+  },
+  {
+   "name": "GN2",
+   "net": "GN2",
+   "heater": null,
+   "side": "N",
+   "xy_um": [
+    650.339,
+    450.0
+   ],
+   "heaters": [
+    "H06",
+    "H05"
+   ]
+  },
+  {
+   "name": "P05",
+   "net": "P05",
+   "heater": "H05",
+   "side": "N",
+   "xy_um": [
+    800.339,
+    450.0
+   ],
+   "heaters": [
+    "H05"
+   ]
+  },
+  {
+   "name": "P10",
+   "net": "P10",
+   "heater": "H10",
+   "side": "N",
+   "xy_um": [
+    950.339,
+    450.0
+   ],
+   "heaters": [
+    "H10"
+   ]
+  },
+  {
+   "name": "P08",
+   "net": "P08",
+   "heater": "H08",
+   "side": "N",
+   "xy_um": [
+    1100.339,
+    450.0
+   ],
+   "heaters": [
+    "H08"
+   ]
+  },
+  {
+   "name": "GN3",
+   "net": "GN3",
+   "heater": null,
+   "side": "N",
+   "xy_um": [
+    1250.339,
+    450.0
+   ],
+   "heaters": [
+    "H08",
+    "H10"
+   ]
+  },
+  {
+   "name": "P09",
+   "net": "P09",
+   "heater": "H09",
+   "side": "N",
+   "xy_um": [
+    1400.339,
+    450.0
+   ],
+   "heaters": [
+    "H09"
+   ]
+  },
+  {
+   "name": "P07",
+   "net": "P07",
+   "heater": "H07",
+   "side": "N",
+   "xy_um": [
+    1550.339,
+    450.0
+   ],
+   "heaters": [
+    "H07"
+   ]
+  },
+  {
+   "name": "GN4",
+   "net": "GN4",
+   "heater": null,
+   "side": "N",
+   "xy_um": [
+    1700.339,
+    450.0
+   ],
+   "heaters": [
+    "H07",
+    "H09"
+   ]
+  },
+  {
+   "name": "P12",
+   "net": "P12",
+   "heater": "H12",
+   "side": "N",
+   "xy_um": [
+    1850.339,
+    450.0
+   ],
+   "heaters": [
+    "H12"
+   ]
+  },
+  {
+   "name": "GN5",
+   "net": "GN5",
+   "heater": null,
+   "side": "N",
+   "xy_um": [
+    2000.339,
+    450.0
+   ],
+   "heaters": [
+    "H12",
+    "H11"
+   ]
+  },
+  {
+   "name": "P11",
+   "net": "P11",
+   "heater": "H11",
+   "side": "N",
+   "xy_um": [
+    2150.339,
+    450.0
+   ],
+   "heaters": [
+    "H11"
+   ]
+  },
+  {
+   "name": "P04",
+   "net": "P04",
+   "heater": "H04",
+   "side": "S",
+   "xy_um": [
+    -12.0,
+    -530.0
+   ],
+   "heaters": [
+    "H04"
+   ]
+  },
+  {
+   "name": "GS1",
+   "net": "GS1",
+   "heater": null,
+   "side": "S",
+   "xy_um": [
+    205.25,
+    -530.0
+   ],
+   "heaters": [
+    "H04",
+    "H03"
+   ]
+  },
+  {
+   "name": "P03",
+   "net": "P03",
+   "heater": "H03",
+   "side": "S",
+   "xy_um": [
+    422.5,
+    -530.0
+   ],
+   "heaters": [
+    "H03"
+   ]
+  },
+  {
+   "name": "P14",
+   "net": "P14",
+   "heater": "H14",
+   "side": "S",
+   "xy_um": [
+    1683.0,
+    -530.0
+   ],
+   "heaters": [
+    "H14"
+   ]
+  },
+  {
+   "name": "GS2",
+   "net": "GS2",
+   "heater": null,
+   "side": "S",
+   "xy_um": [
+    1900.25,
+    -530.0
+   ],
+   "heaters": [
+    "H14",
+    "H13"
+   ]
+  },
+  {
+   "name": "P13",
+   "net": "P13",
+   "heater": "H13",
+   "side": "S",
+   "xy_um": [
+    2117.5,
+    -530.0
+   ],
+   "heaters": [
+    "H13"
+   ]
+  }
+ ],
+ "pad_pitch_min_um": 150.0,
+ "pad_edge_um": 60.0,
+ "ec_edge_min_um": 80.0,
+ "n_pads": 21,
+ "n_gnd_pads": 7,
+ "n_pads_side": {
+  "N": 15,
+  "S": 6
+ },
+ "n_heater_flipped": 5,
+ "loss_estimate": [
+  {
+   "rail": 1,
+   "length_um": 4216.0,
+   "n_mmi": 4,
+   "prop_db": [
+    1.26,
+    1.69
+   ],
+   "mmi_db": 1.32,
+   "total_db": [
+    2.58,
+    3.01
+   ]
+  },
+  {
+   "rail": 2,
+   "length_um": 4089.8,
+   "n_mmi": 8,
+   "prop_db": [
+    1.23,
+    1.64
+   ],
+   "mmi_db": 2.64,
+   "total_db": [
+    3.87,
+    4.28
+   ]
+  },
+  {
+   "rail": 3,
+   "length_um": 4011.4,
+   "n_mmi": 6,
+   "prop_db": [
+    1.2,
+    1.6
+   ],
+   "mmi_db": 1.98,
+   "total_db": [
+    3.18,
+    3.58
+   ]
+  },
+  {
+   "rail": 4,
+   "length_um": 4078.1,
+   "n_mmi": 6,
+   "prop_db": [
+    1.22,
+    1.63
+   ],
+   "mmi_db": 1.98,
+   "total_db": [
+    3.2,
+    3.61
+   ]
+  },
+  {
+   "rail": 5,
+   "length_um": 4216.0,
+   "n_mmi": 4,
+   "prop_db": [
+    1.26,
+    1.69
+   ],
+   "mmi_db": 1.32,
+   "total_db": [
+    2.58,
+    3.01
+   ]
+  }
+ ],
+ "loss_db_cm": [
+  3.0,
+  4.0
+ ],
+ "mmi_loss_db": 0.33,
+ "heater_squares": 111.1,
+ "tin_thickness_um": 0.15,
+ "gnd_pad_dx_um": 20.0,
+ "routes": [
+  {
+   "heater": "H02",
+   "pad": "P02",
+   "end": "L",
+   "side": "N",
+   "start": [
+    10.0,
+    16.0
+   ],
+   "lane": 10.0,
+   "jog": false,
+   "role": "sig",
+   "target": 10.0,
+   "net": "P02",
+   "pts": [
+    [
+     10.0,
+     16.0
+    ],
+    [
+     10.0,
+     60.0
+    ],
+    [
+     10.0,
+     380.0
+    ],
+    [
+     10.0,
+     420.0
+    ]
+   ],
+   "length_um": 404.0,
+   "crossings": 0
+  },
+  {
+   "heater": "H02",
+   "pad": "P02",
+   "end": "R",
+   "side": "N",
+   "start": [
+    110.0,
+    16.0
+   ],
+   "lane": 110.0,
+   "jog": false,
+   "role": "gnd",
+   "target": 180.33928571428572,
+   "net": "GN1",
+   "pts": [
+    [
+     110.0,
+     16.0
+    ],
+    [
+     110.0,
+     60.0
+    ],
+    [
+     180.339,
+     380.0
+    ],
+    [
+     180.339,
+     420.0
+    ]
+   ],
+   "length_um": 411.64,
+   "crossings": 0
+  },
+  {
+   "heater": "H01",
+   "pad": "P01",
+   "end": "L",
+   "side": "N",
+   "start": [
+    292.5,
+    16.0
+   ],
+   "lane": 292.5,
+   "jog": false,
+   "role": "gnd",
+   "target": 220.33928571428572,
+   "net": "GN1",
+   "pts": [
+    [
+     292.5,
+     16.0
+    ],
+    [
+     292.5,
+     60.0
+    ],
+    [
+     220.339,
+     380.0
+    ],
+    [
+     220.339,
+     420.0
+    ]
+   ],
+   "length_um": 412.04,
+   "crossings": 0
+  },
+  {
+   "heater": "H01",
+   "pad": "P01",
+   "end": "R",
+   "side": "N",
+   "start": [
+    392.5,
+    16.0
+   ],
+   "lane": 392.5,
+   "jog": false,
+   "role": "sig",
+   "target": 350.3392857142857,
+   "net": "P01",
+   "pts": [
+    [
+     392.5,
+     16.0
+    ],
+    [
+     392.5,
+     60.0
+    ],
+    [
+     350.339,
+     380.0
+    ],
+    [
+     350.339,
+     420.0
+    ]
+   ],
+   "length_um": 406.77,
+   "crossings": 0
+  },
+  {
+   "heater": "H06",
+   "pad": "P06",
+   "end": "L",
+   "side": "N",
+   "start": [
+    575.0,
+    -14.0
+   ],
+   "lane": 575.0,
+   "jog": false,
+   "role": "sig",
+   "target": 500.3392857142857,
+   "net": "P06",
+   "pts": [
+    [
+     575.0,
+     -14.0
+    ],
+    [
+     575.0,
+     60.0
+    ],
+    [
+     500.339,
+     380.0
+    ],
+    [
+     500.339,
+     420.0
+    ]
+   ],
+   "length_um": 442.59,
+   "crossings": 1
+  },
+  {
+   "heater": "H06",
+   "pad": "P06",
+   "end": "R",
+   "side": "N",
+   "start": [
+    675.0,
+    -14.0
+   ],
+   "lane": 675.0,
+   "jog": false,
+   "role": "gnd",
+   "target": 630.3392857142857,
+   "net": "GN2",
+   "pts": [
+    [
+     675.0,
+     -14.0
+    ],
+    [
+     675.0,
+     60.0
+    ],
+    [
+     630.339,
+     380.0
+    ],
+    [
+     630.339,
+     420.0
+    ]
+   ],
+   "length_um": 437.1,
+   "crossings": 1
+  },
+  {
+   "heater": "H05",
+   "pad": "P05",
+   "end": "L",
+   "side": "N",
+   "start": [
+    857.5,
+    -14.0
+   ],
+   "lane": 857.5,
+   "jog": false,
+   "role": "gnd",
+   "target": 670.3392857142857,
+   "net": "GN2",
+   "pts": [
+    [
+     857.5,
+     -14.0
+    ],
+    [
+     857.5,
+     60.0
+    ],
+    [
+     670.339,
+     380.0
+    ],
+    [
+     670.339,
+     420.0
+    ]
+   ],
+   "length_um": 484.71,
+   "crossings": 1
+  },
+  {
+   "heater": "H05",
+   "pad": "P05",
+   "end": "R",
+   "side": "N",
+   "start": [
+    957.5,
+    -14.0
+   ],
+   "lane": 957.5,
+   "jog": false,
+   "role": "sig",
+   "target": 800.3392857142857,
+   "net": "P05",
+   "pts": [
+    [
+     957.5,
+     -14.0
+    ],
+    [
+     957.5,
+     60.0
+    ],
+    [
+     800.339,
+     380.0
+    ],
+    [
+     800.339,
+     420.0
+    ]
+   ],
+   "length_um": 470.51,
+   "crossings": 1
+  },
+  {
+   "heater": "H10",
+   "pad": "P10",
+   "end": "L",
+   "side": "N",
+   "start": [
+    1140.0,
+    -44.0
+   ],
+   "lane": 1118.0,
+   "jog": true,
+   "role": "sig",
+   "target": 950.3392857142857,
+   "net": "P10",
+   "pts": [
+    [
+     1140.0,
+     -44.0
+    ],
+    [
+     1118.0,
+     -44.0
+    ],
+    [
+     1118.0,
+     60.0
+    ],
+    [
+     950.339,
+     380.0
+    ],
+    [
+     950.339,
+     420.0
+    ]
+   ],
+   "length_um": 527.26,
+   "crossings": 2
+  },
+  {
+   "heater": "H08",
+   "pad": "P08",
+   "end": "L",
+   "side": "N",
+   "start": [
+    1140.0,
+    16.0
+   ],
+   "lane": 1140.0,
+   "jog": false,
+   "role": "sig",
+   "target": 1100.3392857142858,
+   "net": "P08",
+   "pts": [
+    [
+     1140.0,
+     16.0
+    ],
+    [
+     1140.0,
+     60.0
+    ],
+    [
+     1100.339,
+     380.0
+    ],
+    [
+     1100.339,
+     420.0
+    ]
+   ],
+   "length_um": 406.45,
+   "crossings": 0
+  },
+  {
+   "heater": "H08",
+   "pad": "P08",
+   "end": "R",
+   "side": "N",
+   "start": [
+    1240.0,
+    16.0
+   ],
+   "lane": 1240.0,
+   "jog": false,
+   "role": "gnd",
+   "target": 1230.3392857142858,
+   "net": "GN3",
+   "pts": [
+    [
+     1240.0,
+     16.0
+    ],
+    [
+     1240.0,
+     60.0
+    ],
+    [
+     1230.339,
+     380.0
+    ],
+    [
+     1230.339,
+     420.0
+    ]
+   ],
+   "length_um": 404.15,
+   "crossings": 0
+  },
+  {
+   "heater": "H10",
+   "pad": "P10",
+   "end": "R",
+   "side": "N",
+   "start": [
+    1240.0,
+    -44.0
+   ],
+   "lane": 1270.0,
+   "jog": true,
+   "role": "gnd",
+   "target": 1270.3392857142858,
+   "net": "GN3",
+   "pts": [
+    [
+     1240.0,
+     -44.0
+    ],
+    [
+     1270.0,
+     -44.0
+    ],
+    [
+     1270.0,
+     60.0
+    ],
+    [
+     1270.339,
+     380.0
+    ],
+    [
+     1270.339,
+     420.0
+    ]
+   ],
+   "length_um": 494.0,
+   "crossings": 2
+  },
+  {
+   "heater": "H09",
+   "pad": "P09",
+   "end": "L",
+   "side": "N",
+   "start": [
+    1422.5,
+    -44.0
+   ],
+   "lane": 1400.5,
+   "jog": true,
+   "role": "sig",
+   "target": 1400.3392857142858,
+   "net": "P09",
+   "pts": [
+    [
+     1422.5,
+     -44.0
+    ],
+    [
+     1400.5,
+     -44.0
+    ],
+    [
+     1400.5,
+     60.0
+    ],
+    [
+     1400.339,
+     380.0
+    ],
+    [
+     1400.339,
+     420.0
+    ]
+   ],
+   "length_um": 486.0,
+   "crossings": 2
+  },
+  {
+   "heater": "H07",
+   "pad": "P07",
+   "end": "L",
+   "side": "N",
+   "start": [
+    1422.5,
+    16.0
+   ],
+   "lane": 1422.5,
+   "jog": false,
+   "role": "sig",
+   "target": 1550.3392857142858,
+   "net": "P07",
+   "pts": [
+    [
+     1422.5,
+     16.0
+    ],
+    [
+     1422.5,
+     60.0
+    ],
+    [
+     1550.339,
+     380.0
+    ],
+    [
+     1550.339,
+     420.0
+    ]
+   ],
+   "length_um": 428.59,
+   "crossings": 0
+  },
+  {
+   "heater": "H07",
+   "pad": "P07",
+   "end": "R",
+   "side": "N",
+   "start": [
+    1522.5,
+    16.0
+   ],
+   "lane": 1522.5,
+   "jog": false,
+   "role": "gnd",
+   "target": 1680.3392857142858,
+   "net": "GN4",
+   "pts": [
+    [
+     1522.5,
+     16.0
+    ],
+    [
+     1522.5,
+     60.0
+    ],
+    [
+     1680.339,
+     380.0
+    ],
+    [
+     1680.339,
+     420.0
+    ]
+   ],
+   "length_um": 440.81,
+   "crossings": 0
+  },
+  {
+   "heater": "H09",
+   "pad": "P09",
+   "end": "R",
+   "side": "N",
+   "start": [
+    1522.5,
+    -44.0
+   ],
+   "lane": 1552.5,
+   "jog": true,
+   "role": "gnd",
+   "target": 1720.3392857142858,
+   "net": "GN4",
+   "pts": [
+    [
+     1522.5,
+     -44.0
+    ],
+    [
+     1552.5,
+     -44.0
+    ],
+    [
+     1552.5,
+     60.0
+    ],
+    [
+     1720.339,
+     380.0
+    ],
+    [
+     1720.339,
+     420.0
+    ]
+   ],
+   "length_um": 535.34,
+   "crossings": 2
+  },
+  {
+   "heater": "H12",
+   "pad": "P12",
+   "end": "L",
+   "side": "N",
+   "start": [
+    1705.0,
+    -14.0
+   ],
+   "lane": 1705.0,
+   "jog": false,
+   "role": "sig",
+   "target": 1850.3392857142858,
+   "net": "P12",
+   "pts": [
+    [
+     1705.0,
+     -14.0
+    ],
+    [
+     1705.0,
+     60.0
+    ],
+    [
+     1850.339,
+     380.0
+    ],
+    [
+     1850.339,
+     420.0
+    ]
+   ],
+   "length_um": 465.46,
+   "crossings": 1
+  },
+  {
+   "heater": "H12",
+   "pad": "P12",
+   "end": "R",
+   "side": "N",
+   "start": [
+    1805.0,
+    -14.0
+   ],
+   "lane": 1805.0,
+   "jog": false,
+   "role": "gnd",
+   "target": 1980.3392857142858,
+   "net": "GN5",
+   "pts": [
+    [
+     1805.0,
+     -14.0
+    ],
+    [
+     1805.0,
+     60.0
+    ],
+    [
+     1980.339,
+     380.0
+    ],
+    [
+     1980.339,
+     420.0
+    ]
+   ],
+   "length_um": 478.89,
+   "crossings": 1
+  },
+  {
+   "heater": "H11",
+   "pad": "P11",
+   "end": "L",
+   "side": "N",
+   "start": [
+    1987.5,
+    -14.0
+   ],
+   "lane": 1987.5,
+   "jog": false,
+   "role": "gnd",
+   "target": 2020.3392857142858,
+   "net": "GN5",
+   "pts": [
+    [
+     1987.5,
+     -14.0
+    ],
+    [
+     1987.5,
+     60.0
+    ],
+    [
+     2020.339,
+     380.0
+    ],
+    [
+     2020.339,
+     420.0
+    ]
+   ],
+   "length_um": 435.68,
+   "crossings": 1
+  },
+  {
+   "heater": "H11",
+   "pad": "P11",
+   "end": "R",
+   "side": "N",
+   "start": [
+    2087.5,
+    -14.0
+   ],
+   "lane": 2087.5,
+   "jog": false,
+   "role": "sig",
+   "target": 2150.339285714286,
+   "net": "P11",
+   "pts": [
+    [
+     2087.5,
+     -14.0
+    ],
+    [
+     2087.5,
+     60.0
+    ],
+    [
+     2150.339,
+     380.0
+    ],
+    [
+     2150.339,
+     420.0
+    ]
+   ],
+   "length_um": 440.11,
+   "crossings": 1
+  },
+  {
+   "heater": "H04",
+   "pad": "P04",
+   "end": "L",
+   "side": "S",
+   "start": [
+    10.0,
+    -74.0
+   ],
+   "lane": -12.0,
+   "jog": true,
+   "role": "sig",
+   "target": -12.0,
+   "net": "P04",
+   "pts": [
+    [
+     10.0,
+     -74.0
+    ],
+    [
+     -12.0,
+     -74.0
+    ],
+    [
+     -12.0,
+     -140.0
+    ],
+    [
+     -12.0,
+     -460.0
+    ],
+    [
+     -12.0,
+     -500.0
+    ]
+   ],
+   "length_um": 448.0,
+   "crossings": 2
+  },
+  {
+   "heater": "H04",
+   "pad": "P04",
+   "end": "R",
+   "side": "S",
+   "start": [
+    110.0,
+    -74.0
+   ],
+   "lane": 140.0,
+   "jog": true,
+   "role": "gnd",
+   "target": 185.25,
+   "net": "GS1",
+   "pts": [
+    [
+     110.0,
+     -74.0
+    ],
+    [
+     140.0,
+     -74.0
+    ],
+    [
+     140.0,
+     -140.0
+    ],
+    [
+     185.25,
+     -460.0
+    ],
+    [
+     185.25,
+     -500.0
+    ]
+   ],
+   "length_um": 459.18,
+   "crossings": 2
+  },
+  {
+   "heater": "H03",
+   "pad": "P03",
+   "end": "L",
+   "side": "S",
+   "start": [
+    292.5,
+    -74.0
+   ],
+   "lane": 270.5,
+   "jog": true,
+   "role": "gnd",
+   "target": 225.25,
+   "net": "GS1",
+   "pts": [
+    [
+     292.5,
+     -74.0
+    ],
+    [
+     270.5,
+     -74.0
+    ],
+    [
+     270.5,
+     -140.0
+    ],
+    [
+     225.25,
+     -460.0
+    ],
+    [
+     225.25,
+     -500.0
+    ]
+   ],
+   "length_um": 451.18,
+   "crossings": 2
+  },
+  {
+   "heater": "H03",
+   "pad": "P03",
+   "end": "R",
+   "side": "S",
+   "start": [
+    392.5,
+    -74.0
+   ],
+   "lane": 422.5,
+   "jog": true,
+   "role": "sig",
+   "target": 422.5,
+   "net": "P03",
+   "pts": [
+    [
+     392.5,
+     -74.0
+    ],
+    [
+     422.5,
+     -74.0
+    ],
+    [
+     422.5,
+     -140.0
+    ],
+    [
+     422.5,
+     -460.0
+    ],
+    [
+     422.5,
+     -500.0
+    ]
+   ],
+   "length_um": 456.0,
+   "crossings": 2
+  },
+  {
+   "heater": "H14",
+   "pad": "P14",
+   "end": "L",
+   "side": "S",
+   "start": [
+    1705.0,
+    -74.0
+   ],
+   "lane": 1683.0,
+   "jog": true,
+   "role": "sig",
+   "target": 1683.0,
+   "net": "P14",
+   "pts": [
+    [
+     1705.0,
+     -74.0
+    ],
+    [
+     1683.0,
+     -74.0
+    ],
+    [
+     1683.0,
+     -140.0
+    ],
+    [
+     1683.0,
+     -460.0
+    ],
+    [
+     1683.0,
+     -500.0
+    ]
+   ],
+   "length_um": 448.0,
+   "crossings": 2
+  },
+  {
+   "heater": "H14",
+   "pad": "P14",
+   "end": "R",
+   "side": "S",
+   "start": [
+    1805.0,
+    -74.0
+   ],
+   "lane": 1835.0,
+   "jog": true,
+   "role": "gnd",
+   "target": 1880.25,
+   "net": "GS2",
+   "pts": [
+    [
+     1805.0,
+     -74.0
+    ],
+    [
+     1835.0,
+     -74.0
+    ],
+    [
+     1835.0,
+     -140.0
+    ],
+    [
+     1880.25,
+     -460.0
+    ],
+    [
+     1880.25,
+     -500.0
+    ]
+   ],
+   "length_um": 459.18,
+   "crossings": 2
+  },
+  {
+   "heater": "H13",
+   "pad": "P13",
+   "end": "L",
+   "side": "S",
+   "start": [
+    1987.5,
+    -74.0
+   ],
+   "lane": 1965.5,
+   "jog": true,
+   "role": "gnd",
+   "target": 1920.25,
+   "net": "GS2",
+   "pts": [
+    [
+     1987.5,
+     -74.0
+    ],
+    [
+     1965.5,
+     -74.0
+    ],
+    [
+     1965.5,
+     -140.0
+    ],
+    [
+     1920.25,
+     -460.0
+    ],
+    [
+     1920.25,
+     -500.0
+    ]
+   ],
+   "length_um": 451.18,
+   "crossings": 2
+  },
+  {
+   "heater": "H13",
+   "pad": "P13",
+   "end": "R",
+   "side": "S",
+   "start": [
+    2087.5,
+    -74.0
+   ],
+   "lane": 2117.5,
+   "jog": true,
+   "role": "sig",
+   "target": 2117.5,
+   "net": "P13",
+   "pts": [
+    [
+     2087.5,
+     -74.0
+    ],
+    [
+     2117.5,
+     -74.0
+    ],
+    [
+     2117.5,
+     -140.0
+    ],
+    [
+     2117.5,
+     -460.0
+    ],
+    [
+     2117.5,
+     -500.0
+    ]
+   ],
+   "length_um": 456.0,
+   "crossings": 2
+  }
+ ],
+ "n_crossings": 32,
+ "crossings": {
+  "H02_sig": 0,
+  "H02_gnd": 0,
+  "H01_gnd": 0,
+  "H01_sig": 0,
+  "H06_sig": 1,
+  "H06_gnd": 1,
+  "H05_gnd": 1,
+  "H05_sig": 1,
+  "H10_sig": 2,
+  "H08_sig": 0,
+  "H08_gnd": 0,
+  "H10_gnd": 2,
+  "H09_sig": 2,
+  "H07_sig": 0,
+  "H07_gnd": 0,
+  "H09_gnd": 2,
+  "H12_sig": 1,
+  "H12_gnd": 1,
+  "H11_gnd": 1,
+  "H11_sig": 1,
+  "H04_sig": 2,
+  "H04_gnd": 2,
+  "H03_gnd": 2,
+  "H03_sig": 2,
+  "H14_sig": 2,
+  "H14_gnd": 2,
+  "H13_gnd": 2,
+  "H13_sig": 2
+ },
+ "n_jog": 12,
+ "al_min_net_spacing_um": 11.5,
+ "al_min_to_other_tin_um": 12.0,
+ "al_components": 21,
+ "wire_width_um": 10.0,
+ "al_thickness_um": 0.22,
+ "current_density": [
+  {
+   "R_kohm": 0.5,
+   "I_heater_max_mA": 7.21,
+   "V_heater_max_V": 3.61,
+   "J_line_mA_um2": 3.28,
+   "rho_tin_uohm_cm": 67.0,
+   "I_gnd_pad_mA": 12.9,
+   "I_gnd_pad_worst_mA": 14.4
+  },
+  {
+   "R_kohm": 1.0,
+   "I_heater_max_mA": 5.1,
+   "V_heater_max_V": 5.1,
+   "J_line_mA_um2": 2.32,
+   "rho_tin_uohm_cm": 135.0,
+   "I_gnd_pad_mA": 9.1,
+   "I_gnd_pad_worst_mA": 10.2
+  },
+  {
+   "R_kohm": 2.0,
+   "I_heater_max_mA": 3.61,
+   "V_heater_max_V": 7.21,
+   "J_line_mA_um2": 1.64,
+   "rho_tin_uohm_cm": 270.0,
+   "I_gnd_pad_mA": 6.4,
+   "I_gnd_pad_worst_mA": 7.2
+  }
+ ],
+ "drc": {
+  "total": 0,
+  "counts": {},
+  "n_rules": 30,
+  "design_area_um": [
+   4280.0,
+   1200.0
+  ],
+  "design_area_source": "declared",
+  "outside": 0
+ },
+ "checks": {
+  "pads_outermost": true,
+  "gnd_pads_shared": true,
+  "drc_clean": true,
+  "al_spacing": true,
+  "al_to_other_tin": true,
+  "al_not_on_heater_body": true,
+  "one_pad_per_al_net": true,
+  "n_signal_pads": true,
+  "ec_count": true,
+  "ec_pitch": true,
+  "fan_rmin_ok": true,
+  "inputs_equal_length": true,
+  "pad_pitch": true,
+  "mapping_spec": true
+ }
+}

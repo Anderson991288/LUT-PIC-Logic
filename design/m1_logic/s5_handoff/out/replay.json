@@ -1,0 +1,40 @@
+{
+  "netlist_sha_ok": true,
+  "passed": 80,
+  "total": 80,
+  "csv_max_dP_err": 4.864864860953944e-07,
+  "csv_target_bit_mismatch": 0,
+  "tamper": {
+    "a 交換 AND4 的 θ1、φ1": {
+      "passed": 79,
+      "total": 80,
+      "max_dP_diff": 2.773894
+    },
+    "b AND2 的相位當 XOR2": {
+      "passed": 68,
+      "total": 80,
+      "max_dP_diff": 5.225038
+    },
+    "c MZI-6 移到波導 3、4": {
+      "passed": 49,
+      "total": 80,
+      "max_dP_diff": 15.621175,
+      "sha_match": false
+    },
+    "d 讀取埠 o2、o4 對調": {
+      "passed": 0,
+      "total": 80,
+      "max_dP_diff": 21.997878
+    },
+    "e R 改成 2.9": {
+      "passed": 80,
+      "total": 80,
+      "max_dP_diff": 0.514883
+    },
+    "f θ 放在下臂": {
+      "passed": 58,
+      "total": 80,
+      "max_dP_diff": 8.871839
+    }
+  }
+}

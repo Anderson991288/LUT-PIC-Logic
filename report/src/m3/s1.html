@@ -1,0 +1,97 @@
+<section class="step" id="m3-s1" data-milestone="M3" data-step="s1" data-title="IPKISS 佈局：B7 核心">
+<div class="bridge">
+<p><b>承接</b>：本步使用前面三份成果。M1 s5 的接線表定下 7 顆 MZI 的位置（層與上方波導）。M2 s1 的規格定下光學埠名與 heater 編號 H01–H14。M2 s2 的元件清單定下 MMI 用 PDK、heater 自建，並列出 heater 最小間距 10 µm 等佈局限制（PDK 加熱條過不了 DRC 這件事，是本步發現後回頭更正的）。</p>
+<p><b>本步要回答</b>：電路圖只描述元件之間的連接，如何把它變成實體幾何：每顆 MZI 放在哪、波導如何彎、heater 蓋在哪、金屬如何避開光路？畫完之後，如何確定 GDS 的內容符合電路圖？</p>
+<p><b>交給下一步</b>：<code>b7_core.gds</code>（B7 核心，不含 EC 與 PAD）與 <code>layout_info.json</code>（光學埠位表、7 顆 MZI 的位置、14 個 heater 的位置與落墊座標、讀回比對與 DRC 結果）。M3 s2 審查這份佈局；M3 s3 從落墊座標繞線到 PAD，並把光學埠接到 EC。</p>
+<p class="terms"><b>名詞對照</b>：軌（rail，B7 的一條波導在佈局上的水平位置）、軌距（相鄰兩軌的中心距離）、S 彎（S-bend，把波導平移到另一個高度的平滑彎道）、曲率半徑（彎道最彎處對應的圓半徑；太小會漏光）、落墊（landing pad，heater 端點擴大的 TiN 方塊，上面再蓋 Ti/AL，給繞線接觸）、凹口（notch，同一塊圖形凹進去的地方；DRC 的間距規則也會檢查）、讀回（readback，從寫出的 GDS 讀出實際位置來核對）、設計區（DRC 視為可放圖形的範圍）</p>
+</div>
+
+<figure class="concept"><img src="figures/m3/s1_concept.png" alt="本步概念圖：電路接線變成佈局幾何"><figcaption><b>本步概念</b>　左邊的電路圖只描述接線；佈局把每一層變成一欄、每條波導變成一軌，在對應的位置畫出 MZI。畫完再從 GDS 讀回位置，與接線表、規格比對，並跑 DRC。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能用 IPKISS 畫出一顆 MZI 並排成 B7；能說明軌距、S 彎長度、相位區長度各由什麼決定；會用「讀回 GDS」核對佈局與電路圖一致；知道 PDK 元件也要先過 DRC。</p>
+<div class="example">
+<p>類比：電路圖像地鐵路線圖，只畫出哪幾站相連、在哪裡轉乘；佈局像實際施工圖，要決定每條隧道的位置、轉彎半徑，以及電纜如何走才不會碰到軌道。施工完還要對照路線圖驗收：每個轉乘站確實蓋在路線圖說的位置嗎？</p>
+<p>本步只畫 B7 核心：5 條輸入、5 條輸出都先用直波導引到核心兩端，heater 只畫到落墊。EC、PAD 與繞線在 M3 s3 加上。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 從接線表到座標</h4>
+<p>接線表中第 k 顆 MZI 的位置是（層 l、上方波導 p）。佈局時每一層是一欄，欄寬等於一顆 MZI 的長度 L<sub>MZI</sub>；每條波導是一軌，軌距 Λ。MZI 的左上角就放在</p>
+<math display="block"><mrow><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>)</mo><mo>=</mo><mo>(</mo><mo>(</mo><mi>l</mi><mo>−</mo><mn>1</mn><mo>)</mo><mspace width="0.2em"/><msub><mi>L</mi><mtext>MZI</mtext></msub><mo>,</mo><mspace width="0.3em"/><mo>−</mo><mo>(</mo><mi>r</mi><mo>−</mo><mn>1</mn><mo>)</mo><mspace width="0.2em"/><mi>Λ</mi><mo>)</mo></mrow></math>
+<p>x、y 是佈局座標（µm），l＝1–4 是層、r＝1–5 是上方波導（軌）的編號（由上往下），都和接線表一樣從 1 起算；Λ 是軌距（µm）。同一欄裡沒有 MZI 的軌，用一段等長的直波導通過。</p>
+<h4>2. 一顆 MZI 的長度</h4>
+<p>M1 的 MZI 是「φ → MMI → θ → MMI」：φ 在上方輸入，θ 在上臂。佈局上依序是 φ 相位區、S 彎（從軌道靠攏到 MMI 的兩個埠）、MMI 1、S 彎（分開回到軌道）、θ 相位區、S 彎、MMI 2、S 彎：</p>
+<math display="block"><mrow><msub><mi>L</mi><mtext>MZI</mtext></msub><mo>=</mo><mn>2</mn><msub><mi>L</mi><mtext>ph</mtext></msub><mo>+</mo><mn>4</mn><msub><mi>L</mi><mtext>S</mtext></msub><mo>+</mo><mn>2</mn><msub><mi>L</mi><mtext>MMI</mtext></msub><mo>,</mo><mspace width="1em"/><msub><mi>L</mi><mtext>ph</mtext></msub><mo>=</mo><msub><mi>L</mi><mtext>h</mtext></msub><mo>+</mo><mn>2</mn><msub><mi>d</mi><mtext>h</mtext></msub></mrow></math>
+<p>L<sub>ph</sub> 是相位區長度、L<sub>h</sub> 是 heater 長度（100 µm）、d<sub>h</sub> 是 heater 兩端到相位區邊緣的距離（10 µm）、L<sub>S</sub> 是 S 彎的水平長度、L<sub>MMI</sub> 是 MMI 的埠到埠長度（82.5 µm），單位都是 µm。上下兩臂用同樣的 S 彎與直線，所以兩臂等長。</p>
+<h4>3. S 彎不能太急</h4>
+<p>S 彎用餘弦曲線 y(t)＝y<sub>0</sub>＋Δy(1 − cos πt)/2，水平長度 L。它最彎的地方曲率半徑是</p>
+<math display="block"><mrow><msub><mi>R</mi><mtext>min</mtext></msub><mo>=</mo><mfrac><mrow><mn>2</mn><msup><mi>L</mi><mn>2</mn></msup></mrow><mrow><msup><mi>π</mi><mn>2</mn></msup><mo>|</mo><mi>Δ</mi><mi>y</mi><mo>|</mo></mrow></mfrac></mrow></math>
+<p>L 是 S 彎扣掉兩端短直段後的水平長度、Δy 是要平移的高度（µm）。平台截面規範要求條形波導（strip waveguide，矩形截面的矽波導，本課程的波導都是這一種）彎曲半徑 ≥ 10 µm。軌距 30 µm、MMI 兩埠相距 2.03 µm 時，Δy≈14 µm；L＝39 µm 得到 R<sub>min</sub>≈22 µm，留有餘裕。</p>
+<h4>4. 軌距與 heater 落墊</h4>
+<p>軌距要同時容納：TiN 最小間距 10 µm（不同 heater 之間，以及同一塊 TiN 的凹口）、heater 熱串擾、以及 M3 s3 的繞線空間。本設計取 Λ＝30 µm。heater 是一條 0.9 µm 寬的 TiN，蓋在相位區波導正上方；兩端各用一段 3 µm 寬的 TiN 往上（遠離下臂）引到 10×10 µm 的落墊，上面再蓋 11×12 µm 的 Ti/AL。這樣 Ti/AL 不會蓋在波導上方吸光，繞線也只需要接到落墊。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\m3_layout\s1_core\layout.py
+.\lab design\m3_layout\s1_core\figs.py</code></pre>
+<p><code>layout.py</code> 依序：讀接線表、規格、元件清單 → 畫一顆 MZI cell（MMI、S 彎、相位區、heater）→ 依接線表放 7 顆、補直通波導與兩端引線 → 寫出 GDS → 讀回 GDS 核對 → 故障注入 → DRC。預期輸出：</p>
+<pre><code>MZI 長 565 µm（相位區 120、S 彎 40、MMI 82.5）；核心 2360×120 µm；波導寬 0.45 µm
+S 彎最小曲率半徑 22.0 µm；上下臂長 205.8591／205.8591 µm；接點誤差 3.6e-15 µm；MZI 軌比直通軌多 11.7183 µm
+讀回 GDS：MMI 14、加熱條 14、MZI 位置 [[0, 0], [0, 2], [1, 1], [1, 3], [2, 2], [3, 0], [3, 3]]
+DRC：28 條規則，違規 0 {}；設計區 (2400.0, 182.0)（measured）
+故障注入（都應為 True）：{'mzi_moved': True, 'heater_swapped': True, 'port_swapped': True}</code></pre>
+<p>輸出中 MZI 位置的每一對是（上方波導索引, 層索引），都從 0 起算，並依波導排序。</p>
+<p>練習：在 <code>layout_info.json</code> 的 <code>heaters</code> 找出 H10 的兩個落墊座標，對照圖 M3-1 確認它在 MZI-5 的哪一段；再把 <code>LAND_OFF</code> 改回 12 重跑，看 DRC 報出哪條規則。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/m3/s1_core.png" alt="B7 核心佈局全圖：四欄、五軌、七顆 MZI，標出 heater 編號與光學埠"><figcaption>圖 M3-1　B7 核心佈局（從 GDS 讀回，縱向放大）。四欄對應四層，紫框是 MZI 編號；紅字是 heater 編號與它控制的相位，例如 MZI-1 的 φ1 由 H02、θ1 由 H01 控制，與規格一致。左邊是輸入埠（x1–x4、R），右邊是輸出埠（o1–o5）。</figcaption></figure>
+<figure><img src="figures/m3/s1_mzi.png" alt="單顆 MZI 的佈局與各段長度"><figcaption>圖 M3-2　單顆 MZI（MZI-1）。下方標出各段長度：φ 相位區、S 彎、MMI、θ 相位區；上下兩臂等長。heater 蓋在上軌的兩個相位區，兩端往上引到落墊。</figcaption></figure>
+<figure><img src="figures/m3/s1_heater.png" alt="heater 左端放大：加熱條、TiN 短條、落墊與 Ti/AL"><figcaption>圖 M3-3　heater 端點放大（等比例）。加熱條蓋在波導上；3 µm 寬的 TiN 短條往上引到 TiN 落墊，再蓋 Ti/AL。落墊下緣到加熱條上緣的距離必須 ≥ 10 µm，否則同一塊 TiN 的凹口違反間距規則。</figcaption></figure>
+<table>
+<tr><th>驗收項目</th><th>結果</th></tr>
+<tr><td>MZI、MMI、heater 個數</td><td>讀回 GDS：MMI <span class="num" data-json="design/m3_layout/s1_core/out/layout_info.json" data-expr="d['readback']['n_mmi']" data-fmt="{:d}">14</span>、heater <span class="num" data-json="design/m3_layout/s1_core/out/layout_info.json" data-expr="d['readback']['n_heater']" data-fmt="{:d}">14</span>；每顆 MZI 恰有兩個 MMI</td></tr>
+<tr><td>MZI 位置與接線表</td><td>由 MMI 位置推回的 7 組（層, 上方波導）與接線表完全相同</td></tr>
+<tr><td>heater 編號與規格</td><td>由 heater 位置推回（MZI, θ／φ），14 個都與規格的 H01–H14 一致</td></tr>
+<tr><td>光學埠與規格</td><td>位置取自 GDS 的文字標記；名稱、邊緣（輸入在西、輸出在東）、上下順序都一致</td></tr>
+<tr><td>接點誤差</td><td>波導端點與 MMI 埠最大差 <span class="num" data-json="design/m3_layout/s1_core/out/layout_info.json" data-expr="d['geometry']['join_err_um']" data-fmt="{:.1e}">3.6e-15</span> µm</td></tr>
+<tr><td>上下臂</td><td>都是 <span class="num" data-json="design/m3_layout/s1_core/out/layout_info.json" data-expr="d['geometry']['arm_len_um'][0]" data-fmt="{:.2f}">205.86</span> µm（等長）</td></tr>
+<tr><td>S 彎最小曲率半徑</td><td><span class="num" data-json="design/m3_layout/s1_core/out/layout_info.json" data-expr="d['geometry']['sbend_rmin_um']" data-fmt="{:.1f}">22.0</span> µm（規範 ≥ 10 µm）</td></tr>
+<tr><td>DRC</td><td><span class="num" data-json="design/m3_layout/s1_core/out/layout_info.json" data-expr="d['drc']['n_rules']" data-fmt="{:d}">28</span> 條規則、違規 <span class="num" data-json="design/m3_layout/s1_core/out/layout_info.json" data-expr="d['drc']['total']" data-fmt="{:d}">0</span>；所有圖形在 GDS 99 外框內（外框只畫在 DRC 用的副本 <code>b7_core_framed.gds</code>，核心本身不帶外框；設計區取外框量測值）</td></tr>
+<tr><td>故障注入</td><td>接線表中 MZI-3 換層、規格中 H01／H02 的對應對調、GDS 中 in0／in1 標記對調，三種都被讀回比對檢出</td></tr>
+</table>
+<p>DRC 的「規則數」是報告中出現的規則類別數，會隨 GDS 含有的層而變（核心沒有 EC，所以沒有 GDS 4、5），所以和整顆晶片的 30 條不同；用的是同一份 deck。</p>
+<p>核心尺寸 <span class="num" data-json="design/m3_layout/s1_core/out/layout_info.json" data-expr="d['geometry']['core_size_um'][0]" data-fmt="{:g}">2360</span>×<span class="num" data-json="design/m3_layout/s1_core/out/layout_info.json" data-expr="d['geometry']['core_size_um'][1]" data-fmt="{:g}">120</span> µm（光學部分）。另外記下一個要交給校正的數字：經過 MZI 的軌比同一欄的直通軌多走 <span class="num" data-json="design/m3_layout/s1_core/out/layout_info.json" data-expr="d['geometry']['rail_vs_bypass_extra_um']" data-fmt="{:.1f}">11.7</span> µm（S 彎比直線長），光在 1.55 µm 下會多出好幾個 2π 的相位，再加上 MMI 內部的相位，各軌之間會有固定的相位差。這些固定相位差和製程誤差一樣，要靠需求 K1（晶片完成後重新校正相位，見 M2 s1）吸收。</p>
+<p><b>實際遇到的情況</b>：</p>
+<ul>
+<li><b>PDK 的加熱條過不了 DRC</b>：第一版直接用 PDK 的加熱條 cell，DRC 報出大量「GDS 41 小於 2 µm」違規。單獨對這個 cell 跑 DRC 也有同類違規，共 16208 處：它兩端的接點是直徑 2 µm 的圓，畫成 360 邊形後，DRC 量到的寬度小於 2 µm。於是改依平台設計規範自畫 heater（TiN 條＋落墊＋Ti/AL），並回到 M2 s2 的元件清單，加上「每個 PDK cell 單獨跑 DRC」這項檢查，元件 C3 改為自建。</li>
+<li><b>同一塊 TiN 的凹口也算間距</b>：第一版落墊離軌道 12 µm，DRC 報 2 處「GDS 39 間距 &lt; 10 µm」，位置在加熱條和自己的落墊之間。它們是同一塊 TiN，但凹進去的部分只有 6.55 µm。把落墊移到 16 µm 後，間距變成 10.55 µm，DRC 歸零；外框也跟著加高，把落墊包進去。</li>
+<li><b>三種不同的波導寬度</b>：技術檔（PDK 的製程設定檔）寫 0.5 µm、PDK 波導模板預設 0.4 µm、MMI 的埠是 0.45 µm。為了和 MMI 相接時寬度不跳變，取 0.45 µm，M2 s2 的元件清單也一併更正。</li>
+<li><b>埠位比對原本用了畫圖時的變數</b>：光學埠的比對原本用的是程式自己記下的埠位表，等於自己驗證自己；改為從 GDS 的文字標記取位置，故障注入也改成對調 GDS 中的標記。</li>
+<li>第一次寫出的 GDS 是空的：<code>core.Layout()</code> 不帶參數會建立一個新的空白視圖，要用已經畫好的那個視圖寫檔。</li>
+</ul>
+<p><b>參考文獻</b>：平台設計規範（heater 寬 900 nm、TiN 上直接沉積 Ti/AL）：CORNERSTONE MPW：https://cornerstone.sotonfab.co.uk/mpw/live-calls/</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>以為 PDK 的元件一定過 DRC</b>：PDK cell 也要單獨跑一次平台 DRC。本課程的加熱條即未通過。</li>
+<li><b>只看畫圖時的變數就說「位置對了」</b>：要從寫出的 GDS 讀回實際位置來比對，才能檢出座標換算、cell 原點等錯誤。</li>
+<li><b>直通軌只畫直線，忘了它和 MZI 軌長度不同</b>：幾何上不等長會造成固定相位差，要在校正時處理，或在佈局時刻意補長。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：如果軌距從 30 µm 改成 20 µm，S 彎的最小曲率半徑會變成多少？</summary>
+<p>Δy 從約 14 µm 變成約 9 µm（20/2 − 1.015），R<sub>min</sub>＝2·39²／(π²·9)≈34 µm，反而更大。軌距越小，S 彎越緩；限制軌距的是 heater 的 TiN 間距、熱串擾與繞線空間，不是 S 彎。</p></details>
+<details class="quiz"><summary>自我檢查 2：讀回比對如何知道某個 heater 是 φ 還是 θ？</summary>
+<p>先由 heater 的 y 座標決定它在哪一軌、由 x 決定在哪一欄，找到那一欄、以這一軌為上方波導的 MZI；再看它的 x 在這顆 MZI 的第一個 MMI 之前（φ），還是兩個 MMI 之間（θ）。最後查規格的編號，與 layout_info 記錄的編號比對。</p></details>
+<details class="quiz"><summary>自我檢查 3：為什麼 heater 的落墊往上引、而不是直接在加熱條兩端蓋 Ti/AL？</summary>
+<p>加熱條在波導正上方，直接蓋 Ti/AL 會讓金屬覆蓋波導，增加吸收損耗；PDK 原本的小圓接點也過不了 DRC。往上（遠離下臂）引出，落墊與 Ti/AL 都不碰到光路，也給繞線一個明確的接點。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>輸入</td><td>接線表（以 SHA-256 核對）、規格、元件清單；CORNERSTONE PDK（SOI220）</td></tr>
+<tr><td>主要尺寸</td><td>軌距 30 µm；S 彎 40 µm（兩端各 0.5 µm 直段）；相位區 120 µm（heater 100 µm＋兩端各 10 µm）；引線 50 µm；波導寬 0.45 µm</td></tr>
+<tr><td>heater</td><td>TiN 0.9×100 µm；端點 TiN 短條寬 3 µm，引到軌道上方 16 µm 的 10×10 µm TiN 落墊；Ti/AL 11×12 µm</td></tr>
+<tr><td>DRC</td><td>KLayout，平台 deck（28 條規則）；設計區取 GDS 99 外框量測值</td></tr>
+</table>
+<div class="auto-code" data-files="design/m3_layout/s1_core/layout.py design/m3_layout/s1_core/figs.py"></div>
+<div class="auto-history" data-file="design/m3_layout/s1_core/HISTORY.md"></div>
+</section>

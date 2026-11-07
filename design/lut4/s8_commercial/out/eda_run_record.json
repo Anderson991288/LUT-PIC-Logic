@@ -1,0 +1,46 @@
+{
+ "mode": "本次實跑：EDA_Server 批次執行 strmin、strmout（200／8191）、Calibre 四份 GDS",
+ "origin": "2026-11-07 使用者授權對本次 LUT4 GDS 重跑",
+ "tools": {
+  "virtuoso": "IC231 ISR15（strmin／strmout）",
+  "calibre": "aok_cal_2026.1_17.11",
+  "host": "WSL EDA_Server"
+ },
+ "inputs": {
+  "chip_sha256": "c6286b4caddee6daeef4cb6b51d74b2deadd85ccb48ce12c66f3ef13bdc1809f",
+  "fault_sha256": "69265fb6913a02e879f8489b8e26b1d21d8cc08b9996c60098f892a39f194dec"
+ },
+ "calibre_run_times": {
+  "chip": "Sat Nov  7 16:23:42 2026",
+  "fault": "Sat Nov  7 16:23:44 2026",
+  "strmout_200": "Sat Nov  7 16:23:47 2026",
+  "strmout_8191": "Sat Nov  7 16:23:49 2026"
+ },
+ "outputs_sha256": {
+  "strmin.log": "a0fea6f60d06b79d1d7a69c01b41b014d6e67a9fac5886f35c6cf49e337b5a22",
+  "strmout_200.log": "cdc1196e63727b1d36df7893ba82e03d538d1846c2f75a2cfc09249ab4aa2e21",
+  "strmout_8191.log": "830508ed541af456d1cb4c00529003aba578d0cd4f4d92e90cac8009c49d78ce",
+  "strmout_200.gds": "f3b5a83a038f8cdaf6007ab8db7599ca2fdc0eec0c2c676ef8b8c5fbbba6c473",
+  "strmout_8191.gds": "420ce19499bd82f1e81d2384fbef86b78c6891fc7320528d779426c9a0cba3bb",
+  "cds.lib": "e9d8891ada0408e12e46530ccd80a93adabda393a492ccdb72160c2962d25dd7",
+  "xStrmOut_layerMap.txt": "35aa6f9d3d5c2afc499f93352835cf6d212b1ac123bb51f4fb346306c87f527b",
+  "calibre_chip.log": "30a6d848161cf09b7036aa7386a8ae66e6cc5d675666d7258509cb6e37eac6db",
+  "calibre_chip.summary": "d25a9f30958764534c51b24dc65fadc6d256f49411d20a93b152a5c380c3765f",
+  "calibre_chip.results": "e136d4fd9718531708a2ae4f8f68bac8c4d3de16200c22556c11839cc3cd32a9",
+  "calibre_fault.log": "cbb519c4f7e87279efe898488bd67b0afcce6cc6aa2890d18d3909c063a63dae",
+  "calibre_fault.summary": "65387880ab7a0edbbb63d3502cf17a7fe97de180bb84fc288a92e77f8a85ea40",
+  "calibre_fault.results": "2a40f6397ab4a04635d692f967a03186c10542b5ebf2be65e25ade918be7332b",
+  "calibre_strmout_200.log": "3d5fef6d646bec25f2d9c0f2d00a10615e7c09660163dddd009d332838b6d81e",
+  "calibre_strmout_200.summary": "56b116d1eca77915c81a0a3325d2e771daf417795f4cd8f5fa8990b3b247cc8a",
+  "calibre_strmout_200.results": "13d7630086ce0890db417c19bdaa0bbdaacc3e5b0ad765e46c19f34135569ad5",
+  "calibre_strmout_8191.log": "3f023fef860053777abef5aa900752576eef6502c267f10714577a94993429b4",
+  "calibre_strmout_8191.summary": "d275a45677a3808577638a877874a5613b01b4504f5b73819b85b26cb8906ad6",
+  "calibre_strmout_8191.results": "cfba1255462d956b845134797ee3efac112fc048c0578ef77c28fb9b74a724db"
+ },
+ "later_change": {
+  "fault_gds_rewritten": "2026-11-07 s6_verify 重跑時重寫了故障檔，時間戳改變，雜湊與本紀錄的 fault_sha256 不同",
+  "current_fault_sha256": "b92878dba438d0e15a28890daa904e87442e319827c35637adfcce970d6c3159",
+  "stripped_sha256": "d8e7055d28702f610ec7f70ed3be02df04949d78d3b1f33cf536bdb701222cc8",
+  "geometry_same_as_reference": true
+ }
+}

@@ -1,0 +1,14 @@
+{
+ "status": "只核對既有證據",
+ "note": "參考專案的 Virtuoso／RVE 截圖；本次未開 Virtuoso／RVE",
+ "reference_chip_sha256": "6dc5c2748328bc176c61906c5c69a1415554ba7b556e80fa0b97f1df1ccf77e6",
+ "chip_sha256": "a7a20dbecfe79076a80c6425ac803c36534d1f7a17b6d8ac9bb2fc4ce7bad7a2",
+ "files": {
+  "v_chip.png": "3ac631b7b6e37d2c95790b65d18d3cc909c093510b4194d84d9f180b7b8a4ef1",
+  "v_core.png": "bdf1e64ae38a4b35d7faf52e9aec6cf7164155c88724ff367d9ab5cead336b5a",
+  "v_mzi.png": "7a3b9d8a81fa99bc0933cd7e096f81283ab45eea0498398d972092be40bb0233",
+  "v_fault.png": "3e8d340d67a1cfa960eae798e40703439e9086e315d12b08ef8e60b7d97e4c90",
+  "rve_chip.png": "6e6254993788839a3f2bbeec9216e9f55840e0f52c4c4191e1e83e920ae2383a",
+  "rve_fault.png": "cba2d391ccd45b2d8ea08e0d67f32b2e4296e6a1919edd1658f8f20822eeb951"
+ }
+}

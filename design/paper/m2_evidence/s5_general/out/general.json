@@ -1,0 +1,820 @@
+{
+  "functions": {
+    "AND": {
+      "name": "AND",
+      "kind": "two",
+      "n_inputs": 2,
+      "starts": 24,
+      "m0": 1.2436,
+      "pu_static_dbm": -12.99,
+      "skew_penalty_db": {
+        "0": 0.548,
+        "15": 0.819,
+        "20": 1.058
+      },
+      "er_keep": 0.949,
+      "rank": 2,
+      "n_phase": 2,
+      "joint_m_win": 0.9056,
+      "joint_pu_dbm": -11.57,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        4.71239,
+        6.28319,
+        0.0,
+        0.51902,
+        4.07264,
+        6.28319,
+        3.14159
+      ],
+      "phi": [
+        0.0,
+        3.8457,
+        5.83783,
+        0.45391,
+        2.80155,
+        4.88762,
+        5.4918
+      ],
+      "time_s": {
+        "synth": 6.11,
+        "power": 0.0,
+        "timing": 5.54,
+        "static_cal": 2.77,
+        "observe": 0.01,
+        "joint": 4.97
+      }
+    },
+    "NAND": {
+      "name": "NAND",
+      "kind": "two",
+      "n_inputs": 2,
+      "starts": 24,
+      "m0": 1.2436,
+      "pu_static_dbm": -12.99,
+      "skew_penalty_db": {
+        "0": 0.548,
+        "15": 0.819,
+        "20": 1.058
+      },
+      "er_keep": 0.949,
+      "rank": 2,
+      "n_phase": 2,
+      "joint_m_win": 0.9058,
+      "joint_pu_dbm": -11.57,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        4.71239,
+        0.0,
+        6.28319,
+        0.46732,
+        5.35214,
+        0.0,
+        3.14159
+      ],
+      "phi": [
+        6.28319,
+        4.7579,
+        0.74094,
+        1.77154,
+        4.75685,
+        1.15665,
+        2.13539
+      ],
+      "time_s": {
+        "synth": 5.28,
+        "power": 0.0,
+        "timing": 5.57,
+        "static_cal": 2.83,
+        "observe": 0.02,
+        "joint": 5.02
+      }
+    },
+    "OR": {
+      "name": "OR",
+      "kind": "two",
+      "n_inputs": 2,
+      "starts": 24,
+      "m0": 1.2459,
+      "pu_static_dbm": -13.01,
+      "skew_penalty_db": {
+        "0": 0.587,
+        "15": 0.87,
+        "20": 1.158
+      },
+      "er_keep": 0.949,
+      "rank": 2,
+      "n_phase": 2,
+      "joint_m_win": 0.8878,
+      "joint_pu_dbm": -11.5,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        1.5708,
+        6.28319,
+        0.0,
+        0.07092,
+        4.49222,
+        0.0,
+        3.14159
+      ],
+      "phi": [
+        3.14159,
+        1.61991,
+        2.16067,
+        1.7361,
+        1.76632,
+        2.70797,
+        2.50439
+      ],
+      "time_s": {
+        "synth": 5.53,
+        "power": 0.0,
+        "timing": 5.6,
+        "static_cal": 2.52,
+        "observe": 0.01,
+        "joint": 5.04
+      }
+    },
+    "NOR": {
+      "name": "NOR",
+      "kind": "two",
+      "n_inputs": 2,
+      "starts": 24,
+      "m0": 1.2459,
+      "pu_static_dbm": -13.01,
+      "skew_penalty_db": {
+        "0": 0.587,
+        "15": 0.87,
+        "20": 1.158
+      },
+      "er_keep": 0.949,
+      "rank": 2,
+      "n_phase": 2,
+      "joint_m_win": 0.8878,
+      "joint_pu_dbm": -11.5,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        1.5708,
+        6.28319,
+        0.0,
+        0.66994,
+        4.93256,
+        0.0,
+        3.14159
+      ],
+      "phi": [
+        3.14159,
+        4.43422,
+        2.36686,
+        1.5322,
+        4.70172,
+        2.84553,
+        5.06298
+      ],
+      "time_s": {
+        "synth": 4.89,
+        "power": 0.0,
+        "timing": 5.58,
+        "static_cal": 2.9,
+        "observe": 0.01,
+        "joint": 5.03
+      }
+    },
+    "XOR": {
+      "name": "XOR",
+      "kind": "two",
+      "n_inputs": 2,
+      "starts": 96,
+      "m0": 0.2887,
+      "pu_static_dbm": -6.74,
+      "skew_penalty_db": {
+        "0": 0.609,
+        "15": 0.946,
+        "20": 1.214
+      },
+      "er_keep": 0.898,
+      "rank": 2,
+      "n_phase": 2,
+      "joint_m_win": 0.1728,
+      "joint_pu_dbm": -4.5,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        1.5708,
+        3.14159,
+        6.28319,
+        0.0,
+        6.28319,
+        3.14159,
+        2.72153
+      ],
+      "phi": [
+        3.14159,
+        3.75717,
+        4.11937,
+        1.4337,
+        3.53676,
+        1.30814,
+        5.37742
+      ],
+      "time_s": {
+        "synth": 57.43,
+        "power": 0.0,
+        "timing": 5.52,
+        "static_cal": 0.13,
+        "observe": 0.01,
+        "joint": 4.99
+      }
+    },
+    "XNOR": {
+      "name": "XNOR",
+      "kind": "two",
+      "n_inputs": 2,
+      "starts": 96,
+      "m0": 0.2859,
+      "pu_static_dbm": -6.7,
+      "skew_penalty_db": {
+        "0": 0.58,
+        "15": 0.912,
+        "20": 1.174
+      },
+      "er_keep": 0.898,
+      "rank": 2,
+      "n_phase": 2,
+      "joint_m_win": 0.1573,
+      "joint_pu_dbm": -4.09,
+      "joint_pass": false,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        4.71239,
+        0.0,
+        0.0,
+        0.0,
+        6.18758,
+        2.67911,
+        3.14159
+      ],
+      "phi": [
+        3.11994,
+        3.76292,
+        3.11348,
+        1.5771,
+        0.82434,
+        2.31291,
+        2.12448
+      ],
+      "time_s": {
+        "synth": 61.53,
+        "power": 0.0,
+        "timing": 5.54,
+        "static_cal": 0.42,
+        "observe": 0.02,
+        "joint": 5.06
+      }
+    },
+    "x1": {
+      "name": "x1",
+      "kind": "two",
+      "n_inputs": 1,
+      "starts": 24,
+      "m0": 1.7605,
+      "pu_static_dbm": -14.54,
+      "skew_penalty_db": {
+        "0": 0.265,
+        "15": 0.265,
+        "20": 0.265
+      },
+      "er_keep": 0.949,
+      "rank": 1,
+      "n_phase": 1,
+      "joint_m_win": 1.5473,
+      "joint_pu_dbm": -13.97,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        0.0,
+        0.0,
+        6.28319,
+        2.67118,
+        1.88451,
+        6.28319,
+        3.14159
+      ],
+      "phi": [
+        1.07736,
+        4.71332,
+        2.04792,
+        4.24624,
+        1.58711,
+        4.84071,
+        3.77073
+      ],
+      "time_s": {
+        "synth": 4.92,
+        "power": 0.0,
+        "timing": 3.15,
+        "static_cal": 1.57,
+        "observe": 0.01,
+        "joint": 2.45
+      }
+    },
+    "¬x1": {
+      "name": "¬x1",
+      "kind": "two",
+      "n_inputs": 1,
+      "starts": 24,
+      "m0": 1.7605,
+      "pu_static_dbm": -14.54,
+      "skew_penalty_db": {
+        "0": 0.265,
+        "15": 0.265,
+        "20": 0.265
+      },
+      "er_keep": 0.949,
+      "rank": 1,
+      "n_phase": 1,
+      "joint_m_win": 1.5475,
+      "joint_pu_dbm": -13.97,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        6.28319,
+        6.28319,
+        0.0,
+        0.97409,
+        1.25708,
+        0.0,
+        3.14159
+      ],
+      "phi": [
+        0.92169,
+        1.84147,
+        1.22093,
+        4.15747,
+        5.71136,
+        2.10427,
+        1.39173
+      ],
+      "time_s": {
+        "synth": 4.01,
+        "power": 0.0,
+        "timing": 3.16,
+        "static_cal": 0.87,
+        "observe": 0.01,
+        "joint": 2.47
+      }
+    },
+    "x2": {
+      "name": "x2",
+      "kind": "two",
+      "n_inputs": 1,
+      "starts": 24,
+      "m0": 1.7605,
+      "pu_static_dbm": -14.55,
+      "skew_penalty_db": {
+        "0": 0.265,
+        "15": 0.265,
+        "20": 0.265
+      },
+      "er_keep": 0.949,
+      "rank": 1,
+      "n_phase": 1,
+      "joint_m_win": 1.5496,
+      "joint_pu_dbm": -13.98,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        3.14159,
+        6.28319,
+        6.28319,
+        0.50112,
+        4.39868,
+        6.28319,
+        3.14159
+      ],
+      "phi": [
+        0.07863,
+        4.15284,
+        3.13513,
+        2.76842,
+        0.00646,
+        3.56535,
+        4.02859
+      ],
+      "time_s": {
+        "synth": 4.24,
+        "power": 0.0,
+        "timing": 3.22,
+        "static_cal": 1.21,
+        "observe": 0.01,
+        "joint": 2.42
+      }
+    },
+    "¬x2": {
+      "name": "¬x2",
+      "kind": "two",
+      "n_inputs": 1,
+      "starts": 24,
+      "m0": 1.7605,
+      "pu_static_dbm": -14.55,
+      "skew_penalty_db": {
+        "0": 0.265,
+        "15": 0.265,
+        "20": 0.265
+      },
+      "er_keep": 0.949,
+      "rank": 1,
+      "n_phase": 1,
+      "joint_m_win": 1.5498,
+      "joint_pu_dbm": -13.98,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        3.14159,
+        6.28319,
+        0.0,
+        3.14668,
+        5.0261,
+        6.28319,
+        3.14159
+      ],
+      "phi": [
+        4.32444,
+        4.61161,
+        3.1538,
+        2.45465,
+        3.12938,
+        4.08023,
+        1.80875
+      ],
+      "time_s": {
+        "synth": 4.43,
+        "power": 0.0,
+        "timing": 3.18,
+        "static_cal": 0.67,
+        "observe": 0.01,
+        "joint": 2.44
+      }
+    },
+    "x1·¬x2": {
+      "name": "x1·¬x2",
+      "kind": "two",
+      "n_inputs": 2,
+      "starts": 24,
+      "m0": 1.2843,
+      "pu_static_dbm": -13.16,
+      "skew_penalty_db": {
+        "0": 0.573,
+        "15": 0.867,
+        "20": 1.113
+      },
+      "er_keep": 0.952,
+      "rank": 2,
+      "n_phase": 2,
+      "joint_m_win": 0.9365,
+      "joint_pu_dbm": -11.75,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        4.17259,
+        0.0,
+        6.28319,
+        6.28318,
+        4.54911,
+        5.48942,
+        3.14159
+      ],
+      "phi": [
+        3.14159,
+        5.80837,
+        4.94241,
+        0.53844,
+        0.82528,
+        2.79142,
+        5.83121
+      ],
+      "time_s": {
+        "synth": 5.74,
+        "power": 0.0,
+        "timing": 5.59,
+        "static_cal": 1.34,
+        "observe": 0.02,
+        "joint": 5.07
+      }
+    },
+    "¬x1·x2": {
+      "name": "¬x1·x2",
+      "kind": "two",
+      "n_inputs": 2,
+      "starts": 24,
+      "m0": 1.2843,
+      "pu_static_dbm": -13.16,
+      "skew_penalty_db": {
+        "0": 0.574,
+        "15": 0.865,
+        "20": 1.113
+      },
+      "er_keep": 0.952,
+      "rank": 2,
+      "n_phase": 2,
+      "joint_m_win": 0.9348,
+      "joint_pu_dbm": -11.75,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        1.031,
+        0.0,
+        6.28319,
+        0.0,
+        1.73407,
+        5.48942,
+        3.14159
+      ],
+      "phi": [
+        6.28318,
+        1.45526,
+        3.79825,
+        2.72204,
+        3.54023,
+        0.77109,
+        0.62574
+      ],
+      "time_s": {
+        "synth": 7.77,
+        "power": 0.0,
+        "timing": 5.66,
+        "static_cal": 1.4,
+        "observe": 0.02,
+        "joint": 5.06
+      }
+    },
+    "x1+¬x2": {
+      "name": "x1+¬x2",
+      "kind": "two",
+      "n_inputs": 2,
+      "starts": 24,
+      "m0": 1.2794,
+      "pu_static_dbm": -13.12,
+      "skew_penalty_db": {
+        "0": 0.579,
+        "15": 0.868,
+        "20": 1.108
+      },
+      "er_keep": 0.952,
+      "rank": 2,
+      "n_phase": 2,
+      "joint_m_win": 0.9348,
+      "joint_pu_dbm": -11.72,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        2.05619,
+        0.0,
+        0.0,
+        0.0,
+        1.29294,
+        5.71519,
+        3.14159
+      ],
+      "phi": [
+        0.0,
+        6.22245,
+        2.71854,
+        1.8457,
+        0.96575,
+        0.91427,
+        3.38887
+      ],
+      "time_s": {
+        "synth": 6.44,
+        "power": 0.0,
+        "timing": 5.58,
+        "static_cal": 1.16,
+        "observe": 0.01,
+        "joint": 4.97
+      }
+    },
+    "¬x1+x2": {
+      "name": "¬x1+x2",
+      "kind": "two",
+      "n_inputs": 2,
+      "starts": 24,
+      "m0": 1.2794,
+      "pu_static_dbm": -13.13,
+      "skew_penalty_db": {
+        "0": 0.578,
+        "15": 0.869,
+        "20": 1.107
+      },
+      "er_keep": 0.952,
+      "rank": 2,
+      "n_phase": 2,
+      "joint_m_win": 0.9445,
+      "joint_pu_dbm": -11.77,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        1.0854,
+        6.28319,
+        6.28318,
+        6.28318,
+        4.99024,
+        0.56799,
+        3.14159
+      ],
+      "phi": [
+        0.0,
+        2.21056,
+        4.42664,
+        5.5018,
+        6.02624,
+        5.8754,
+        6.1224
+      ],
+      "time_s": {
+        "synth": 9.7,
+        "power": 0.0,
+        "timing": 5.57,
+        "static_cal": 1.2,
+        "observe": 0.02,
+        "joint": 5.02
+      }
+    },
+    "AND4": {
+      "name": "AND4",
+      "kind": "four",
+      "n_inputs": 4,
+      "starts": 24,
+      "m0": 0.9703,
+      "pu_static_dbm": -11.85,
+      "skew_penalty_db": {
+        "0": 1.109,
+        "15": 1.781,
+        "20": 2.228
+      },
+      "er_keep": 0.949,
+      "rank": 4,
+      "n_phase": 4,
+      "joint_m_win": 0.4667,
+      "joint_pu_dbm": -8.47,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        1.57079,
+        2.02457,
+        5.2304,
+        5.74499,
+        4.44074,
+        0.95068,
+        1.04945
+      ],
+      "phi": [
+        1.84612,
+        6.28319,
+        1.43314,
+        4.04834,
+        4.68027,
+        0.88655,
+        2.49202
+      ],
+      "time_s": {
+        "synth": 0.0,
+        "power": 0.0,
+        "timing": 19.42,
+        "static_cal": 1.75,
+        "observe": 0.03,
+        "joint": 21.4
+      }
+    },
+    "OR4": {
+      "name": "OR4",
+      "kind": "four",
+      "n_inputs": 4,
+      "starts": 24,
+      "m0": 0.9418,
+      "pu_static_dbm": -11.77,
+      "skew_penalty_db": {
+        "0": 1.375,
+        "15": 2.092,
+        "20": 2.558
+      },
+      "er_keep": 0.95,
+      "rank": 4,
+      "n_phase": 4,
+      "joint_m_win": 0.4923,
+      "joint_pu_dbm": -8.83,
+      "joint_pass": true,
+      "budget_pu_dbm": -4.49,
+      "theta": [
+        4.71239,
+        0.97359,
+        1.16028,
+        6.06995,
+        1.45741,
+        0.0,
+        1.81617
+      ],
+      "phi": [
+        6.28319,
+        0.0,
+        2.35619,
+        0.19392,
+        3.04825,
+        1.00817,
+        3.98369
+      ],
+      "time_s": {
+        "synth": 0.0,
+        "power": 0.0,
+        "timing": 19.4,
+        "static_cal": 0.41,
+        "observe": 0.03,
+        "joint": 21.47
+      }
+    }
+  },
+  "n_functions": 16,
+  "wall_s": 491.7,
+  "workers": 1,
+  "cpu": "AMD Ryzen 7 5800X3D 8-Core Processor",
+  "stage_time_total_s": {
+    "synth": 188.0,
+    "power": 0.0,
+    "timing": 107.3,
+    "static_cal": 23.1,
+    "observe": 0.2,
+    "joint": 102.9
+  },
+  "xnor_swap": {
+    "name": "XNOR（比較器對調）",
+    "kind": "swap",
+    "n_inputs": 2,
+    "starts": 96,
+    "m0": 0.2887,
+    "pu_static_dbm": -6.74,
+    "skew_penalty_db": {
+      "0": 0.609,
+      "15": 0.946,
+      "20": 1.214
+    },
+    "er_keep": 0.898,
+    "rank": 2,
+    "n_phase": 2,
+    "joint_m_win": 0.1728,
+    "joint_pu_dbm": -4.5,
+    "joint_pass": true,
+    "budget_pu_dbm": -4.49,
+    "theta": [
+      1.5708,
+      3.14159,
+      6.28319,
+      0.0,
+      6.28319,
+      3.14159,
+      2.72153
+    ],
+    "phi": [
+      3.14159,
+      3.75717,
+      4.11937,
+      1.4337,
+      3.53676,
+      1.30814,
+      5.37742
+    ],
+    "time_s": {
+      "synth": 57.55,
+      "power": 0.0,
+      "timing": 5.52,
+      "static_cal": 0.12,
+      "observe": 0.02,
+      "joint": 5.02
+    }
+  },
+  "xnor_vs_xor_m0_diff": 0.0028,
+  "n_pass_with_swap": 16,
+  "xor_pass_is_self_consistent": true,
+  "course_margin": {
+    "AND": 1.2436,
+    "OR": 1.2459,
+    "XOR": 0.2887
+  },
+  "synth_matches_course": {
+    "AND": true,
+    "OR": true,
+    "XOR": true
+  },
+  "hardest": "XNOR",
+  "n_joint_pass": 15,
+  "budget_pu_dbm": -4.49,
+  "checks": {
+    "all_observable": true,
+    "all_er_keep": false,
+    "synth_matches_course": true,
+    "swap_equals_xor": true
+  }
+}

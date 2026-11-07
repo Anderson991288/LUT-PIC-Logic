@@ -1,0 +1,117 @@
+{
+  "flow": [
+    {
+      "step": "M2 s1",
+      "name": "介面規格",
+      "tool": "Python",
+      "input": [
+        "b7_netlist.json",
+        "phases.json",
+        "truth_tables.csv"
+      ],
+      "output": [
+        "spec.json",
+        "tolerance.json"
+      ],
+      "check": "接線表 SHA-256 一致；14 個通道都有 PAD"
+    },
+    {
+      "step": "M2 s2",
+      "name": "設計流程與 PDK",
+      "tool": "Python＋PDK 查詢",
+      "input": [
+        "spec.json"
+      ],
+      "output": [
+        "components.json",
+        "flow.json"
+      ],
+      "check": "每個元件有 PDK cell 或自建理由"
+    },
+    {
+      "step": "M2 s3",
+      "name": "電路模擬",
+      "tool": "IPKISS 電路模型（C1＋C2）",
+      "input": [
+        "spec.json",
+        "phases.json",
+        "components.json"
+      ],
+      "output": [
+        "sim_results.json"
+      ],
+      "check": "換成 PDK 模型後 80 組仍全對"
+    },
+    {
+      "step": "M3 s1",
+      "name": "B7 核心佈局",
+      "tool": "IPKISS 佈局（C1、C3、C7）",
+      "input": [
+        "spec.json",
+        "components.json"
+      ],
+      "output": [
+        "b7_core.gds",
+        "layout_info.json"
+      ],
+      "check": "7 顆 MZI、14 個 MMI、14 個相位區；埠位與 spec 一致"
+    },
+    {
+      "step": "M3 s2",
+      "name": "佈局審查",
+      "tool": "KLayout 讀回 GDS",
+      "input": [
+        "b7_core.gds",
+        "layout_info.json"
+      ],
+      "output": [
+        "review_checks.json"
+      ],
+      "check": "審查項全部通過或有處置"
+    },
+    {
+      "step": "M3 s3",
+      "name": "晶片整合",
+      "tool": "IPKISS 佈局（C4–C6、C8）",
+      "input": [
+        "b7_core.gds",
+        "spec.json"
+      ],
+      "output": [
+        "chip.gds",
+        "chip_info.json"
+      ],
+      "check": "左右 EC、上下 PAD；14 訊號＋GND"
+    },
+    {
+      "step": "M3 s4",
+      "name": "DRC 與連接檢查",
+      "tool": "KLayout DRC deck＋Python",
+      "input": [
+        "chip.gds",
+        "chip_info.json"
+      ],
+      "output": [
+        "drc_result.json",
+        "connectivity.json"
+      ],
+      "check": "DRC 0；每個 heater 接到對的 PAD"
+    },
+    {
+      "step": "M3 s5",
+      "name": "交付",
+      "tool": "Python",
+      "input": [
+        "chip.gds",
+        "spec.json",
+        "drc_result.json",
+        "connectivity.json"
+      ],
+      "output": [
+        "delivery/"
+      ],
+      "check": "交付檢查程式全部通過"
+    }
+  ],
+  "dangling_inputs": []
+}

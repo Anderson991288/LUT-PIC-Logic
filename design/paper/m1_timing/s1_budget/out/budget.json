@@ -1,0 +1,380 @@
+{
+  "assume": {
+    "bit_rate_gbps": 10.0,
+    "lambda_um": 1.55,
+    "ng_si": 4.28,
+    "dneff_dT_si": 0.00018,
+    "ng_fiber": 1.468,
+    "dn_dT_fiber": 1e-05,
+    "alpha_fiber": 5.5e-07,
+    "v_coax_c": 0.7,
+    "t_tx_ui": 0.3,
+    "rx_bw_ghz": 7.0,
+    "setup_ps": 10.0,
+    "hold_ps": 5.0,
+    "jitter_ps": 8.0,
+    "resp_a_w": 0.5,
+    "tia_noise_pa_rthz": 20.0,
+    "q": 7.0,
+    "tia_ohm": 1000.0,
+    "comp_noise_mv": 0.5,
+    "comp_offset_mv": 0.3,
+    "rin_db_hz": -140.0,
+    "pd_mismatch": 0.02,
+    "ec_loss_db": 2.0
+  },
+  "timing": {
+    "ps_per_um": 0.01428,
+    "column_extra_um": 11.7183,
+    "column_extra_ps": 0.1673,
+    "per_mzi": [
+      {
+        "mzi": "MZI-1",
+        "column": 1,
+        "rails": [
+          1,
+          2
+        ],
+        "sources": [
+          "x1",
+          "x2"
+        ],
+        "dL_um": 0.0,
+        "skew_ps": 0.0
+      },
+      {
+        "mzi": "MZI-2",
+        "column": 1,
+        "rails": [
+          4,
+          5
+        ],
+        "sources": [
+          "R",
+          "x4"
+        ],
+        "dL_um": 0.0,
+        "skew_ps": 0.0
+      },
+      {
+        "mzi": "MZI-3",
+        "column": 2,
+        "rails": [
+          2,
+          3
+        ],
+        "sources": [
+          "x1",
+          "x2",
+          "x3"
+        ],
+        "dL_um": 11.718,
+        "skew_ps": 0.1673
+      },
+      {
+        "mzi": "MZI-4",
+        "column": 3,
+        "rails": [
+          1,
+          2
+        ],
+        "sources": [
+          "x1",
+          "x2",
+          "x3"
+        ],
+        "dL_um": 11.718,
+        "skew_ps": 0.1673
+      },
+      {
+        "mzi": "MZI-5",
+        "column": 3,
+        "rails": [
+          3,
+          4
+        ],
+        "sources": [
+          "R",
+          "x1",
+          "x2",
+          "x3",
+          "x4"
+        ],
+        "dL_um": 11.718,
+        "skew_ps": 0.1673
+      },
+      {
+        "mzi": "MZI-6",
+        "column": 4,
+        "rails": [
+          2,
+          3
+        ],
+        "sources": [
+          "R",
+          "x1",
+          "x2",
+          "x3",
+          "x4"
+        ],
+        "dL_um": 11.718,
+        "skew_ps": 0.1673
+      },
+      {
+        "mzi": "MZI-7",
+        "column": 4,
+        "rails": [
+          4,
+          5
+        ],
+        "sources": [
+          "R",
+          "x1",
+          "x2",
+          "x3",
+          "x4"
+        ],
+        "dL_um": 23.437,
+        "skew_ps": 0.3346
+      }
+    ],
+    "outputs": [
+      {
+        "output": "o1",
+        "path_um": [
+          4215.97,
+          4227.69
+        ],
+        "delay_ps": [
+          60.19,
+          60.357
+        ],
+        "skew_ps": 0.1673
+      },
+      {
+        "output": "o2",
+        "path_um": [
+          4078.09,
+          4089.81
+        ],
+        "delay_ps": [
+          58.221,
+          58.388
+        ],
+        "skew_ps": 0.1673
+      },
+      {
+        "output": "o3",
+        "path_um": [
+          4011.42,
+          4023.14
+        ],
+        "delay_ps": [
+          57.269,
+          57.437
+        ],
+        "skew_ps": 0.1673
+      },
+      {
+        "output": "o4",
+        "path_um": [
+          4066.37,
+          4089.81
+        ],
+        "delay_ps": [
+          58.054,
+          58.388
+        ],
+        "skew_ps": 0.3346
+      },
+      {
+        "output": "o5",
+        "path_um": [
+          4215.97,
+          4239.41
+        ],
+        "delay_ps": [
+          60.19,
+          60.524
+        ],
+        "skew_ps": 0.3346
+      }
+    ],
+    "worst_mzi": "MZI-7",
+    "worst_skew_ps": 0.3346,
+    "o2_vs_o4_latest_ps": 0.0,
+    "readout": {
+      "o2_um": [
+        4078.09,
+        4089.81
+      ],
+      "o4_um": [
+        4066.37,
+        4089.81
+      ],
+      "spread_um": 23.44,
+      "spread_ps": 0.3346
+    },
+    "outputs_spread_ps": 3.255,
+    "ui_ps": 100.0,
+    "t_tx_ps": 30.0,
+    "t_rx_ps": 50.0,
+    "t_edge_ps": 58.31,
+    "t_req_ps": 23.0,
+    "skew_allow_ps": 18.69,
+    "worst_fraction_of_allow": 0.0179,
+    "offchip": [
+      {
+        "item": "光纖長度差 1 mm",
+        "skew_ps": 4.9
+      },
+      {
+        "item": "光纖長度差 1 cm",
+        "skew_ps": 49.0
+      },
+      {
+        "item": "RF 同軸線長度差 1 cm",
+        "skew_ps": 47.7
+      }
+    ]
+  },
+  "power": {
+    "margin_min": 0.2887,
+    "margin_function": "XOR2",
+    "worst_S": 0.289,
+    "enbw_ghz": 7.775,
+    "noise_ua": 1.846,
+    "offset_ua": 0.3,
+    "noise_share": {
+      "th": 0.913,
+      "comp": 0.0734,
+      "shot": 0.0097,
+      "rin_diff": 0.004,
+      "rin_cm": 0.0
+    },
+    "thermal_share": 0.9863,
+    "pu_core_per_function_dbm": {
+      "AND2": -12.99,
+      "OR2": -13.01,
+      "XOR2": -6.74,
+      "AND4": -11.85,
+      "OR4": -11.77
+    },
+    "pu_core_old_dbm": -7.27,
+    "dp_pd_dbm": -15.78,
+    "prop_db": 1.64,
+    "ec_loss_db": 2.0,
+    "pu_core_dbm": -6.74,
+    "pu_fiber_dbm": -4.74,
+    "r_fiber_dbm": 4.8,
+    "total_dbm": 6.4,
+    "steps": [
+      [
+        "偵測器需要的 ΔP",
+        -15.78
+      ],
+      [
+        "÷ margin → P_u（偵測器端）",
+        -10.38
+      ],
+      [
+        "＋傳播損耗",
+        -8.74
+      ],
+      [
+        "＋輸出 EC → P_u（B7 輸入端）",
+        -6.74
+      ],
+      [
+        "＋輸入 EC → 每根資料光纖",
+        -4.74
+      ],
+      [
+        "參考光纖（9 P_u）",
+        4.8
+      ],
+      [
+        "5 根合計（13 P_u）",
+        6.4
+      ]
+    ]
+  },
+  "phase": {
+    "sigma_random_rad": 0.1,
+    "det_rad": 0.099,
+    "det_per_function": {
+      "AND2": 0.217,
+      "OR2": 0.321,
+      "XOR2": 0.099,
+      "AND4": 0.11,
+      "OR4": 0.317
+    },
+    "det_function": "XOR2",
+    "det_keep": 0.9,
+    "det_loss_db": {
+      "AND2": 0.092,
+      "OR2": 0.042,
+      "XOR2": 0.457,
+      "AND4": 0.387,
+      "OR4": 0.043
+    },
+    "k_si_rad_mK": 729.7,
+    "k_fiber_rad_mK": 43.81,
+    "cases": [
+      {
+        "case": "晶片內 MZI-7 兩條輸入路徑差",
+        "medium": "矽波導",
+        "L_m": 2.3437e-05,
+        "kind": "長度差，同溫",
+        "rad_per_K": 0.0171,
+        "dT_allow_K": 5.79,
+        "dlambda_allow_pm": 377.0
+      },
+      {
+        "case": "兩根光纖長度差 1 cm",
+        "medium": "光纖",
+        "L_m": 0.01,
+        "kind": "長度差，同溫",
+        "rad_per_K": 0.4381,
+        "dT_allow_K": 0.226,
+        "dlambda_allow_pm": 2.58
+      },
+      {
+        "case": "兩根 1 m 光纖溫度不同",
+        "medium": "光纖",
+        "L_m": 1.0,
+        "kind": "整段溫差",
+        "rad_per_K": 43.80961,
+        "dT_allow_K": 0.00226,
+        "dlambda_allow_pm": null
+      }
+    ]
+  },
+  "verdict": [
+    {
+      "item": "時序",
+      "need": "skew ≤ 18.69 ps",
+      "have": "晶片內最差 0.3346 ps",
+      "ok": true
+    },
+    {
+      "item": "功率",
+      "need": "每根資料光纖 ≥ -4.74 dBm",
+      "have": "5 根合計 6.4 dBm（一般雷射＋光放大器可達）",
+      "ok": true
+    },
+    {
+      "item": "相位",
+      "need": "相對相位偏差 ≤ 0.099 rad",
+      "have": "1 m 光纖溫差需 ≤ 2.3 mK",
+      "ok": false
+    }
+  ],
+  "checks": {
+    "o2_o4_latest_equal": true,
+    "n_mzi": true,
+    "timing_ok": true,
+    "power_ok": true,
+    "phase_is_gap": true
+  }
+}

@@ -1,0 +1,478 @@
+{
+ "inputs": {
+  "review_checks": {
+   "file": "lut4/s4_review/out/review_checks.json",
+   "source": "this round (layout step output)",
+   "sha256": "6ffd19ff429c0592beaa5a2ed57914d38239732974ab5c27f270c0cbd4ac157e"
+  },
+  "chip_info": {
+   "file": "lut4/s5_chip/out/chip_info.json",
+   "source": "this round (layout step output)",
+   "sha256": "f235d13bd6487f7e5c3ebc0d7ab240d9057be0be6d9896fa7fc8ed76c5501731"
+  }
+ },
+ "base_margin": {
+  "AND2": 1.148393643831223,
+  "OR2": 1.1235109533221812,
+  "XOR2": 0.7502359905743186,
+  "NAND2": 1.062313250369125,
+  "AND4": 0.8782329734327394,
+  "XOR4": 0.06925008338947106,
+  "MUX": 0.7764425010309165
+ },
+ "route": {
+  "3 dB/cm": {
+   "rel_loss_db": {
+    "o1": 0.0649,
+    "o2": 0.02,
+    "o3": 0.0,
+    "o4": 0.02,
+    "o5": 0.0649
+   },
+   "all_pass": true,
+   "margin": {
+    "AND2": 1.1405,
+    "OR2": 1.1183,
+    "XOR2": 0.7457,
+    "NAND2": 1.0574,
+    "AND4": 0.8742,
+    "XOR4": 0.0696,
+    "MUX": 0.778
+   }
+  },
+  "4 dB/cm": {
+   "rel_loss_db": {
+    "o1": 0.0865,
+    "o2": 0.0267,
+    "o3": 0.0,
+    "o4": 0.0267,
+    "o5": 0.0865
+   },
+   "all_pass": true,
+   "margin": {
+    "AND2": 1.1374,
+    "OR2": 1.1166,
+    "XOR2": 0.7428,
+    "NAND2": 1.0558,
+    "AND4": 0.8729,
+    "XOR4": 0.0696,
+    "MUX": 0.7757
+   }
+  }
+ },
+ "rails_unified": [
+  {
+   "rail": 1,
+   "length_um": 4216.0,
+   "n_mzi": 2,
+   "prop_db": [
+    1.26,
+    1.69
+   ],
+   "mmi_db": 1.8,
+   "total_db": [
+    3.06,
+    3.49
+   ]
+  },
+  {
+   "rail": 2,
+   "length_um": 4089.8,
+   "n_mzi": 4,
+   "prop_db": [
+    1.23,
+    1.64
+   ],
+   "mmi_db": 3.6,
+   "total_db": [
+    4.83,
+    5.24
+   ]
+  },
+  {
+   "rail": 3,
+   "length_um": 4023.1,
+   "n_mzi": 4,
+   "prop_db": [
+    1.21,
+    1.61
+   ],
+   "mmi_db": 3.6,
+   "total_db": [
+    4.81,
+    5.21
+   ]
+  },
+  {
+   "rail": 4,
+   "length_um": 4078.1,
+   "n_mzi": 3,
+   "prop_db": [
+    1.22,
+    1.63
+   ],
+   "mmi_db": 2.7,
+   "total_db": [
+    3.92,
+    4.33
+   ]
+  },
+  {
+   "rail": 5,
+   "length_um": 4204.3,
+   "n_mzi": 1,
+   "prop_db": [
+    1.26,
+    1.68
+   ],
+   "mmi_db": 0.9,
+   "total_db": [
+    2.16,
+    2.58
+   ]
+  }
+ ],
+ "tia_mc": {
+  "0.01": {
+   "AND2": 1.0,
+   "OR2": 1.0,
+   "XOR2": 1.0,
+   "NAND2": 1.0,
+   "AND4": 1.0,
+   "XOR4": 1.0,
+   "MUX": 1.0
+  },
+  "0.02": {
+   "AND2": 1.0,
+   "OR2": 1.0,
+   "XOR2": 1.0,
+   "NAND2": 1.0,
+   "AND4": 1.0,
+   "XOR4": 1.0,
+   "MUX": 1.0
+  },
+  "0.03": {
+   "AND2": 1.0,
+   "OR2": 1.0,
+   "XOR2": 1.0,
+   "NAND2": 1.0,
+   "AND4": 1.0,
+   "XOR4": 1.0,
+   "MUX": 1.0
+  },
+  "0.05": {
+   "AND2": 1.0,
+   "OR2": 1.0,
+   "XOR2": 1.0,
+   "NAND2": 1.0,
+   "AND4": 0.9995,
+   "XOR4": 0.9965,
+   "MUX": 0.9995
+  },
+  "0.08": {
+   "AND2": 0.9995,
+   "OR2": 0.9985,
+   "XOR2": 0.993,
+   "NAND2": 0.996,
+   "AND4": 0.9905,
+   "XOR4": 0.9485,
+   "MUX": 0.9935
+  }
+ },
+ "tia_sigma_ok": 0.03,
+ "tia_hard": {
+  "0x0069": {
+   "margin": 0.134,
+   "single": {
+    "o2": 0.06,
+    "o3": 0.082,
+    "o4": 0.057
+   },
+   "mc": {
+    "0.01": 1.0,
+    "0.02": 0.9615,
+    "0.03": 0.822,
+    "0.05": 0.5065,
+    "0.08": 0.249
+   }
+  }
+ },
+ "k_lambda_rad_per_nm": 0.1287,
+ "k_T_rad_per_K": 0.00855,
+ "dlambda_tol_nm": {
+  "AND2": 2.0,
+  "OR2": 2.0,
+  "XOR2": 2.0,
+  "NAND2": 2.0,
+  "AND4": 2.0,
+  "XOR4": 0.9,
+  "MUX": 2.0
+ },
+ "dT_tol_K": {
+  "AND2": 40.0,
+  "OR2": 40.0,
+  "XOR2": 40.0,
+  "NAND2": 40.0,
+  "AND4": 40.0,
+  "XOR4": 13.5,
+  "MUX": 40.0
+ },
+ "er": {
+  "10": {
+   "AND2": {
+    "pass": true,
+    "margin": 0.4061218354208811
+   },
+   "OR2": {
+    "pass": false,
+    "margin": -0.32059253063346205
+   },
+   "XOR2": {
+    "pass": false,
+    "margin": -0.18818163029968726
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 0.4377479570148841
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 0.1950239880696376
+   },
+   "XOR4": {
+    "pass": false,
+    "margin": -0.2784981181931844
+   },
+   "MUX": {
+    "pass": false,
+    "margin": -0.19064145405707
+   }
+  },
+  "15": {
+   "AND2": {
+    "pass": true,
+    "margin": 0.749842506886383
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 0.32121203865993087
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 0.22513940642643337
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 0.7200665035124336
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 0.5146944010735353
+   },
+   "XOR4": {
+    "pass": false,
+    "margin": -0.133087634802474
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 0.27245698189975753
+   }
+  },
+  "20": {
+   "AND2": {
+    "pass": true,
+    "margin": 0.9353477178730372
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 0.6739635290786259
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 0.4577529148449133
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 0.8751525417056651
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 0.6972899397498828
+   },
+   "XOR4": {
+    "pass": false,
+    "margin": -0.03166315121120361
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 0.519042307399999
+   }
+  },
+  "25": {
+   "AND2": {
+    "pass": true,
+    "margin": 1.0291583012764227
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 0.8712236454140361
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 0.5898679496515942
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 0.9612022155091462
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 0.8008664048789016
+   },
+   "XOR4": {
+    "pass": true,
+    "margin": 0.02798718463749761
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 0.6542433722204077
+   }
+  },
+  "30": {
+   "AND2": {
+    "pass": true,
+    "margin": 1.0815226756354868
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 0.9818012153270486
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 0.664574954464757
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 1.009224168370992
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 0.8491795387314816
+   },
+   "XOR4": {
+    "pass": true,
+    "margin": 0.05416357912834699
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 0.723386533697057
+   }
+  },
+  "35": {
+   "AND2": {
+    "pass": true,
+    "margin": 1.110846253536764
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 1.04387289010331
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 0.7067164751749369
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 1.036112735538289
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 0.8732032795000761
+   },
+   "XOR4": {
+    "pass": true,
+    "margin": 0.061761957005658744
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 0.7465829309171034
+   }
+  },
+  "40": {
+   "AND2": {
+    "pass": true,
+    "margin": 1.1272971938502034
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 1.078743363422352
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 0.7304557198828778
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 1.0511965545579143
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 0.8782329734327394
+   },
+   "XOR4": {
+    "pass": true,
+    "margin": 0.06613157240170492
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 0.7596436390811364
+   }
+  }
+ },
+ "er_min_db": 25,
+ "budget": {
+  "assumptions": {
+   "PD_A_per_W": 1.0,
+   "TIA_pA_rtHz": 20.0,
+   "EC_dB_each": 2.0,
+   "k_snr": 7.0,
+   "in_loss_db": 2.49,
+   "out_loss_db": 2.25,
+   "noise": "只計 TIA；shot、RIN、比較器偏移未計"
+  },
+  "cases": {
+   "1 MHz": {
+    "XOR4": {
+     "margin": 0.0693,
+     "Pu_uW": 4.796,
+     "per_data_fiber_dBm": -20.7,
+     "R_fiber_dBm": -11.16,
+     "total_mW": 0.1105
+    },
+    "AND2": {
+     "margin": 1.1484,
+     "Pu_uW": 0.289,
+     "per_data_fiber_dBm": -32.9,
+     "R_fiber_dBm": -23.36,
+     "total_mW": 0.0067
+    }
+   },
+   "10 GHz": {
+    "XOR4": {
+     "margin": 0.0693,
+     "Pu_uW": 479.593,
+     "per_data_fiber_dBm": -0.7,
+     "R_fiber_dBm": 8.84,
+     "total_mW": 11.0527
+    },
+    "AND2": {
+     "margin": 1.1484,
+     "Pu_uW": 28.92,
+     "per_data_fiber_dBm": -12.9,
+     "R_fiber_dBm": -3.36,
+     "total_mW": 0.6665
+    }
+   }
+  }
+ }
+}

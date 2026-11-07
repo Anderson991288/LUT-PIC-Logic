@@ -1,0 +1,106 @@
+<section class="step" id="m3-s2" data-milestone="M3" data-step="s2" data-title="佈局審查">
+<div class="bridge">
+<p><b>承接</b>：M3 s1 交出 <code>b7_core.gds</code> 與 <code>layout_info.json</code>，並用「讀回 MMI 與 heater 的位置」確認了接線、heater 編號與埠位，DRC 為 0。</p>
+<p><b>本步要回答</b>：M3 s1 的核對還是用 MMI cell 的位置推回接線，沒有確認波導確實把它們連起來。光確實會沿著電路圖的路徑走嗎？heater 蓋在對的那段波導上嗎？金屬離光路夠遠嗎？哪些問題要處理、交給哪一步？</p>
+<p><b>交給下一步</b>：審查表 <code>review_checks.json</code>（12 項通過、3 項有處置）與抽出的光路 <code>extracted.json</code>。處置事項：光學埠間距 30 µm 要在 M3 s3 用扇出拉開；各軌的固定相位差與熱串擾由晶片完成後的校正處理（需求 K1，M3 s5）。</p>
+<p class="terms"><b>名詞對照</b>：連通塊（connected region，聯集後彼此相連的一整塊圖形）、節點（波導段的端點所接的地方：MMI 的埠或晶片的光學埠）、光路抽取（只從佈局圖形重建「哪一段接到哪裡」）、斷路（該接的沒接上）、短路（不該接的接在一起）、熱串擾（thermal crosstalk，一個 heater 的熱影響到旁邊的波導）、處置（審查發現的事項不一定要改佈局，但要寫明如何處理、交給哪一步）、扇出（fan-out，用彎道把緊密的埠距拉開，在 M3 s3 實作）、群折射率（group index，決定路徑長度差隨波長變化的折射率）、熱光係數（折射率隨溫度變化的比例）、有效折射率（effective index，光在波導中感受到的折射率）</p>
+</div>
+
+<figure class="concept"><img src="figures/m3/s2_concept.png" alt="本步概念圖：從 GDS 抽光路、找 heater、重算 U、其他審查"><figcaption><b>本步概念</b>　只看 GDS 裡的圖形與文字標記：先把波導聯集成一段一段的光路，再找出每個 heater 蓋在哪一段，用理想 MMI 與 heater 相位重算 U，和 M1 的結果比對；最後檢查金屬、間距與熱串擾，並用故障注入確認審查本身能檢出錯誤。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能從佈局圖形抽出光路並重算 U；能說明「MMI 位置對」和「光路接通」的差別；會寫審查表，區分「通過」與「有處置」；知道熱串擾與金屬吸收各要看哪一段幾何。</p>
+<div class="example">
+<p>類比：工程完工後的驗收，不能只看設計圖上的標示，要實際沿著管線走一遍：水龍頭確實接到這條水管嗎？有沒有兩條管線被接錯在一起？M3 s1 確認了「水龍頭裝在對的位置」，本步要確認「管線確實接通，而且接到對的地方」。</p>
+<p>審查發現的事項不一定都要拆掉重做。例如埠距太小，下一步本來就要加扇出；這類事項寫成「處置」，註明交給哪一步。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 從圖形抽出光路</h4>
+<p>把 MMI 以外的所有波導多邊形聯集，相連的部分會合成一個連通塊。每個連通塊就是一段波導；它的兩端應該各接一個節點（MMI 的一個埠，或晶片的一個光學埠）。所以：</p>
+<ul>
+<li>某個連通塊接到 3 個以上節點 → 有短路；</li>
+<li>某個連通塊只接到 1 個節點，或某個 MMI 埠沒有任何連通塊接上 → 有斷路。</li>
+</ul>
+<p>MMI 的四個埠不查 PDK，而是從 MMI cell 自己的多邊形找：最左、最右兩端的尖端，上下各一個。晶片的光學埠是所有波導最左、最右的端點，名稱取最近的文字標記。</p>
+<h4>2. 由抽出的光路重算 U</h4>
+<p>每段波導從左端節點傳到右端節點；如果這段波導上方蓋著 heater，光場乘上 e<sup>iφ</sup>，φ 是這個 heater 的相位（heater 編號 → 規格的（MZI, θ／φ）→ 相位設定檔的值）。MMI 把左邊兩個埠的光場 a<sub>上</sub>、a<sub>下</sub> 混成右邊兩個埠：</p>
+<math display="block"><mrow><mrow><mo>[</mo><mtable><mtr><mtd><msub><mi>b</mi><mtext>上</mtext></msub></mtd></mtr><mtr><mtd><msub><mi>b</mi><mtext>下</mtext></msub></mtd></mtr></mtable><mo>]</mo></mrow><mo>=</mo><mi>H</mi><mrow><mo>[</mo><mtable><mtr><mtd><msub><mi>a</mi><mtext>上</mtext></msub></mtd></mtr><mtr><mtd><msub><mi>a</mi><mtext>下</mtext></msub></mtd></mtr></mtable><mo>]</mo></mrow><mo>,</mo><mspace width="1em"/><mi>H</mi><mo>=</mo><mfrac><mn>1</mn><msqrt><mn>2</mn></msqrt></mfrac><mrow><mo>[</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mi>i</mi></mtd></mtr><mtr><mtd><mi>i</mi></mtd><mtd><mn>1</mn></mtd></mtr></mtable><mo>]</mo></mrow></mrow></math>
+<p>a、b 是 MMI 左、右兩側埠上的光場（√P<sub>u</sub>），「上」「下」由埠的 y 座標決定。從 5 個輸入各送一次單位光場，傳到 5 個輸出，就得到由佈局算出的 U。它和 M1 用接線表算出的 U 應只差數值誤差；若 heater 蓋錯段、標記貼錯、波導接錯，都會造成明顯的差。</p>
+<h4>3. 金屬與光路的距離</h4>
+<p>要看兩件事，各看不同的幾何：</p>
+<ul>
+<li><b>熱串擾</b>：發熱的是蓋在波導上的加熱條本體（電流密度最高），所以看「本體」到其他波導的距離；</li>
+<li><b>光吸收</b>：任何金屬太靠近波導都會吸光，所以看「整塊 TiN（含落墊）與 Ti/AL」到不在它下方的波導的距離。條形波導的光場在側面約 1 µm 內就衰減殆盡，本設計取 3 µm 為下限。</li>
+</ul>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\m3_layout\s2_review\review.py
+.\lab design\m3_layout\s2_review\figs.py</code></pre>
+<p><code>review.py</code> 只讀 GDS（位置一律取自 GDS），依序抽光路、找 heater、重算 U 與真值表、做其他審查與故障注入，最後寫出審查表。預期輸出：</p>
+<pre><code> V1 通過　光路連通：33 塊，每塊恰接 2 個節點
+ V3 通過　由佈局重算 U：最大差 3.6e-16
+ V4 通過　由佈局重算真值表：80/80
+ V8 通過　加熱條本體到其他波導：29.25 µm
+V8b 通過　金屬到其他波導：TiN 8.77 µm、Ti/AL 7.77 µm
+V10 通過　故障注入：斷路 抓到、短路 抓到、對調 抓到
+V11 通過　S 彎曲率：最小 22.7 µm
+ P1 處置　各軌固定相位差：每顆 MZI 多 11.72 µm（M3 s1 參數算 11.72）；各軌經過的 MZI 數 [2, 4, 3, 3, 2]；約 0.13 rad/nm、0.0085 rad/K（每顆）（…）</code></pre>
+<p>練習：打開 <code>extracted.json</code>，找出蓋著 H05 的那段波導，看它的兩個節點是哪兩個 MMI 的哪個埠；對照圖 M3-4，確認它是 MZI-3 的上臂。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/m3/s2_extract.png" alt="只從 GDS 抽出的光路，每段波導一種顏色"><figcaption>圖 M3-4　只從 GDS 抽出的光路（縱向放大）。每個顏色是一個連通塊（一段波導），灰色是 MMI；直通段和引線在接縫處相連，所以合成較長的一段。每段恰好接兩個節點，沒有短路或斷路。紅字是每塊 TiN 旁的 heater 標記。</figcaption></figure>
+<figure><img src="figures/m3/s2_zoom.png" alt="三張審查放大圖：S 彎接 MMI、落墊到上一軌、加熱條本體到下臂"><figcaption>圖 M3-5　審查放大圖（等比例）。(a) S 彎接到 MMI 輸入埠，寬度與 MMI 埠相同，沒有跳變。(b) TiN 離其他波導最近的地方：落墊到上一軌 <span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['min_tin_to_other_wg_um']" data-fmt="{:.2f}">8.77</span> µm。(c) 加熱條本體只蓋上臂，到最近的其他波導（下臂與上一軌幾乎等距）<span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['min_heater_body_to_other_wg_um']" data-fmt="{:.1f}">29.2</span> µm。</figcaption></figure>
+<figure><img src="figures/m3/s2_checks.png" alt="左：由佈局重算的 U 與 M1 的差；右：審查表"><figcaption>圖 M3-6　左：由佈局重算的 U 與接線表＋相位的 U 之差，五個函數都在 10<sup>−15</sup> 以下，真值表各 16/16。右：審查表。</figcaption></figure>
+<p>下表 V 開頭的編號是已通過的檢查項目，P 開頭的編號是要交給其他步驟處理的項目。P1–P3 只是審查編號，與功率 P2、P4 及 PAD 編號 P01–P14 無關。</p>
+<table>
+<tr><th>編號</th><th>項目</th><th>結果</th><th>判定</th></tr>
+<tr><td>V1</td><td>光路連通</td><td><span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['n_components']" data-fmt="{:d}">33</span> 段，每段恰接 2 個節點</td><td>通過</td></tr>
+<tr><td>V2</td><td>MMI、heater 個數</td><td>14、14</td><td>通過</td></tr>
+<tr><td>V3</td><td>由佈局重算 U</td><td>最大差 <span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['U_err_max']" data-fmt="{:.1e}">3.6e-16</span></td><td>通過</td></tr>
+<tr><td>V4</td><td>由佈局重算真值表</td><td><span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['passed']" data-fmt="{:d}">80</span>/80</td><td>通過</td></tr>
+<tr><td>V5</td><td>光學埠</td><td>輸入 5、輸出 5，間距 30 µm</td><td>通過</td></tr>
+<tr><td>V6</td><td>Ti/AL 不蓋波導</td><td>交集面積 <span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['al_over_wg_um2']" data-fmt="{:g}">0</span> µm²</td><td>通過</td></tr>
+<tr><td>V7</td><td>TiN 只在相位區蓋波導</td><td>每塊只蓋 1 段，蓋住約 103 µm（本體 100 µm＋兩端短條各 1.5 µm）</td><td>通過</td></tr>
+<tr><td>V8</td><td>加熱條本體到其他波導</td><td><span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['min_heater_body_to_other_wg_um']" data-fmt="{:.2f}">29.25</span> µm（≥ 10 µm）</td><td>通過</td></tr>
+<tr><td>V8b</td><td>金屬到其他波導</td><td>TiN <span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['min_tin_to_other_wg_um']" data-fmt="{:.2f}">8.77</span> µm、Ti/AL <span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['min_al_to_wg_um']" data-fmt="{:.2f}">7.77</span> µm（≥ 3 µm）</td><td>通過</td></tr>
+<tr><td>V9</td><td>heater 之間</td><td>最近 <span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['min_heater_to_heater_um']" data-fmt="{:.1f}">38.5</span> µm</td><td>通過</td></tr>
+<tr><td>V10</td><td>故障注入</td><td>斷路、短路、heater 標記對調都被檢出</td><td>通過</td></tr>
+<tr><td>V11</td><td>S 彎曲率</td><td>由 GDS 中心線三點擬圓，最小 <span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['sbend_rmin_gds_um']" data-fmt="{:.1f}">22.7</span> µm（≥ 10 µm）</td><td>通過</td></tr>
+<tr><td>P1</td><td>各軌固定相位差</td><td>由 GDS 量：每經過一顆 MZI 多走 <span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['mzi_extra_gds_um']" data-fmt="{:.2f}">11.72</span> µm；各軌經過的 MZI 數 2、4、3、3、2；每顆約 <span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['dphi_dlam_rad_nm']" data-fmt="{:.2f}">0.13</span> rad/nm、<span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['dphi_dT_rad_K']" data-fmt="{:.4f}">0.0085</span> rad/K（群折射率 4.2、熱光係數 1.8×10<sup>−4</sup>/K 的量級估計）</td><td>處置：由校正吸收（K1，M3 s5）；校正後需控溫、穩定雷射波長</td></tr>
+<tr><td>P2</td><td>光學埠間距</td><td>30 µm，比光纖陣列的間距小</td><td>處置：M3 s3 用扇出波導拉開</td></tr>
+<tr><td>P3</td><td>熱串擾</td><td>本體到最近其他波導 <span class="num" data-json="design/m3_layout/s2_review/out/review_checks.json" data-expr="d['min_heater_body_to_other_wg_um']" data-fmt="{:.1f}">29.2</span> µm，未模擬溫度分布</td><td>處置：量測校正時一併處理（K1）</td></tr>
+</table>
+<p>驗收「審查項全部通過或有處置」：12 項通過、3 項有處置，沒有未通過的項目。和 M3 s1 相比，本步多確認了兩件 M3 s1 沒有確認的事：波導確實把 MMI 接通（V1），以及 heater 蓋在對的那段波導、相位接到對的地方（V3、V4）。</p>
+<p><b>實際遇到的情況</b>：</p>
+<ul>
+<li><b>第一版的距離檢查把落墊算成熱源</b>：一開始只量「整塊 TiN 到其他波導」，得到 8.77 µm，低於自訂的 10 µm 而判為未通過。查看位置後發現是落墊到上一軌的距離，而落墊很寬、幾乎不發熱。於是把檢查拆成兩項：熱串擾看加熱條本體（28.55 µm），光吸收看整塊 TiN 與 Ti/AL（下限 3 µm）。判準要依物理意義選對幾何，而不是對整塊圖形套同一個數字。</li>
+<li><b>複查時發現的兩點</b>：(1)「本體」原本取加熱條周圍 1 µm，包含了短條，量到的 28.55 µm 實際是短條到上一軌；改成只取緊貼波導的條狀部分，得到 29.25 µm。(2) 程式說明寫要由 GDS 重算 S 彎曲率卻沒有實作，補上中心線三點擬圓（V11），P1 也改成由 GDS 量長度。</li>
+<li><b>MMI cell 裡還有子 cell</b>：第一次讀 MMI 的多邊形時讀到空的，因為 PDK 的 MMI 由子 cell 組成，要先攤平。</li>
+<li>文字標記原本讀不到：共用的 GDS 讀取工具只讀多邊形，本步加上讀 TEXT，heater 與埠的名稱才能從 GDS 取得。</li>
+</ul>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>只確認元件位置</b>：MMI 放對位置，不代表波導把它們接通；要抽出光路檢查。</li>
+<li><b>用畫圖時的變數審查自己</b>：審查程式只讀 GDS，才會發現座標換算、cell 原點、標記貼錯等問題。</li>
+<li><b>把所有發現都當成要改佈局</b>：有些事項交給下一步更合理（例如扇出、校正），但要寫清楚交給哪一步。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：如果把 H01、H02 的文字標記貼反，M3 s1 的讀回比對和本步的重算 U，哪個會檢出？</summary>
+<p>M3 s1 用 heater cell 的位置推回編號，再和 layout_info 記錄的編號比，不看 GDS 的文字，所以檢查不出。本步用文字標記決定每塊 TiN 的編號，再依編號取相位，U 會和 M1 不同，所以能檢出（故障注入的「對調」就是這一種）。</p></details>
+<details class="quiz"><summary>自我檢查 2：直通段和引線為什麼合成一個連通塊，而不是好幾塊？</summary>
+<p>它們在接縫處端點相接（同一個 y、同一個 x），聯集後就是同一塊圖形。對光來說它們本來就是同一條波導，所以這不是錯誤；檢查的重點是每塊兩端各接一個節點。</p></details>
+<details class="quiz"><summary>自我檢查 3：P1 的固定相位差為什麼不在佈局上修正？</summary>
+<p>修正需要知道 MMI 內部與彎道的有效折射率，這些只有量測或精細模擬才知道；而且製程誤差也會造成類似的相位差。每顆 MZI 都有 φ heater 可以調整，晶片完成後一起校正（K1）比較實際。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>輸入</td><td>M3 s1 的 GDS（多邊形與文字標記；layout_info 只取 cell 名稱與幾何參數做說明）；接線表、相位設定檔、真值表；規格</td></tr>
+<tr><td>抽取</td><td>shapely（Python 的平面幾何套件）聯集；節點接觸容差 0.01 µm；MMI 用理想 H</td></tr>
+<tr><td>判準</td><td>U 差 &lt; 1e-12；加熱條本體到其他波導 ≥ 10 µm；金屬到其他波導 ≥ 3 µm</td></tr>
+<tr><td>故障注入</td><td>刪除一段 MZI 臂（斷路）、加一條跨兩軌的波導（短路）、對調 H01／H02 標記</td></tr>
+</table>
+<div class="auto-code" data-files="design/m3_layout/s2_review/review.py design/m3_layout/s2_review/figs.py"></div>
+<div class="auto-history" data-file="design/m3_layout/s2_review/HISTORY.md"></div>
+</section>

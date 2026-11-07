@@ -1,0 +1,2439 @@
+{
+ "ps_per_mm": 14.243186864961093,
+ "tol_mm": 0.05,
+ "internal_skew_ps": 1.8,
+ "t_req_ps": 23.0,
+ "dt_ps": 0.5,
+ "betas": [
+  0.5,
+  0.75,
+  1.0
+ ],
+ "receiver": "數位二階 Butterworth 7 GHz（雙線性）",
+ "seed8": 20261031,
+ "fan_c": [
+  0.9,
+  2.4,
+  3.6,
+  4.8
+ ],
+ "fan_d": [
+  0.9,
+  3.4,
+  5.4,
+  7.4
+ ],
+ "cases": [
+  {
+   "label": "x1x8, stress",
+   "fn": "x1x8",
+   "L_mm": [
+    2.8,
+    3.7
+   ],
+   "alpha_db_mm": 0.3,
+   "raw_span_ps": 12.82,
+   "influence": [
+    0.1395,
+    0.1366
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      0.45,
+      0.0
+     ],
+     "total_mm": 0.45
+    },
+    {
+     "pad_mm": [
+      0.675,
+      0.0
+     ],
+     "total_mm": 0.675
+    },
+    {
+     "pad_mm": [
+      0.9,
+      0.0
+     ],
+     "total_mm": 0.9
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 64.5,
+     "nominal": 65.0
+    }
+   ],
+   "chosen": 0,
+   "chosen_summary": {
+    "pad_mm": [
+     0.0,
+     0.0
+    ],
+    "total_mm": 0.0,
+    "worst": 64.5,
+    "nominal": 65.0
+   },
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 64.5,
+     "nominal": 65.0
+    },
+    "full": {
+     "pad_mm": [
+      0.9,
+      0.0
+     ],
+     "total_mm": 0.9,
+     "worst": 64.5,
+     "nominal": 64.5
+    }
+   },
+   "corners": 8,
+   "evaluations": 27,
+   "draft": {
+    "span": 12.8,
+    "chosen_mm": 0.0,
+    "window": 63,
+    "full_mm": 0.9,
+    "full_window": 63,
+    "none_window": 63
+   },
+   "time_s": 4.3,
+   "diff": {
+    "window": 1.5,
+    "full_mm": 0.0,
+    "full_window": 1.5,
+    "none_window": 1.5
+   }
+  },
+  {
+   "label": "AND4, fan-in A",
+   "fn": "AND4",
+   "L_mm": [
+    1.2,
+    1.55,
+    1.9,
+    2.2
+   ],
+   "alpha_db_mm": 0.3,
+   "raw_span_ps": 14.24,
+   "influence": [
+    0.0887,
+    0.0887,
+    0.088,
+    0.0879
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      0.5,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.5
+    },
+    {
+     "pad_mm": [
+      0.75,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.75
+    },
+    {
+     "pad_mm": [
+      0.5,
+      0.325,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.825
+    },
+    {
+     "pad_mm": [
+      0.5,
+      0.325,
+      0.15,
+      0.0
+     ],
+     "total_mm": 0.975
+    },
+    {
+     "pad_mm": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.0
+    },
+    {
+     "pad_mm": [
+      0.75,
+      0.4875,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.2375
+    },
+    {
+     "pad_mm": [
+      0.75,
+      0.4875,
+      0.225,
+      0.0
+     ],
+     "total_mm": 1.4625
+    },
+    {
+     "pad_mm": [
+      1.0,
+      0.65,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.65
+    },
+    {
+     "pad_mm": [
+      1.0,
+      0.65,
+      0.3,
+      0.0
+     ],
+     "total_mm": 1.95
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 47.5,
+     "nominal": 48.5
+    }
+   ],
+   "chosen": 0,
+   "chosen_summary": {
+    "pad_mm": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "total_mm": 0.0,
+    "worst": 47.5,
+    "nominal": 48.5
+   },
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 47.5,
+     "nominal": 48.5
+    },
+    "full": {
+     "pad_mm": [
+      1.0,
+      0.65,
+      0.3,
+      0.0
+     ],
+     "total_mm": 1.95,
+     "worst": 46.5,
+     "nominal": 47.0
+    }
+   },
+   "corners": 32,
+   "evaluations": 99,
+   "draft": {
+    "span": 14.2,
+    "chosen_mm": 0.0,
+    "window": 48,
+    "full_mm": 1.95,
+    "full_window": 47,
+    "none_window": 48
+   },
+   "time_s": 9.5,
+   "diff": {
+    "window": -0.5,
+    "full_mm": 0.0,
+    "full_window": -0.5,
+    "none_window": -0.5
+   }
+  },
+  {
+   "label": "MAJ4, fan-in A",
+   "fn": "MAJ4",
+   "L_mm": [
+    1.2,
+    1.55,
+    1.9,
+    2.2
+   ],
+   "alpha_db_mm": 0.3,
+   "raw_span_ps": 14.24,
+   "influence": [
+    0.0926,
+    0.0926,
+    0.0927,
+    0.0926
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.15,
+      0.0
+     ],
+     "total_mm": 0.15
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.225,
+      0.0
+     ],
+     "total_mm": 0.225
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.3,
+      0.0
+     ],
+     "total_mm": 0.3
+    },
+    {
+     "pad_mm": [
+      0.5,
+      0.0,
+      0.15,
+      0.0
+     ],
+     "total_mm": 0.65
+    },
+    {
+     "pad_mm": [
+      0.5,
+      0.325,
+      0.15,
+      0.0
+     ],
+     "total_mm": 0.975
+    },
+    {
+     "pad_mm": [
+      0.75,
+      0.0,
+      0.225,
+      0.0
+     ],
+     "total_mm": 0.975
+    },
+    {
+     "pad_mm": [
+      1.0,
+      0.0,
+      0.3,
+      0.0
+     ],
+     "total_mm": 1.3
+    },
+    {
+     "pad_mm": [
+      0.75,
+      0.4875,
+      0.225,
+      0.0
+     ],
+     "total_mm": 1.4625
+    },
+    {
+     "pad_mm": [
+      1.0,
+      0.65,
+      0.3,
+      0.0
+     ],
+     "total_mm": 1.95
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 48.5,
+     "nominal": 49.5
+    }
+   ],
+   "chosen": 0,
+   "chosen_summary": {
+    "pad_mm": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "total_mm": 0.0,
+    "worst": 48.5,
+    "nominal": 49.5
+   },
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 48.5,
+     "nominal": 49.5
+    },
+    "full": {
+     "pad_mm": [
+      1.0,
+      0.65,
+      0.3,
+      0.0
+     ],
+     "total_mm": 1.95,
+     "worst": 50.0,
+     "nominal": 50.5
+    }
+   },
+   "corners": 32,
+   "evaluations": 99,
+   "draft": {
+    "span": 14.2,
+    "chosen_mm": 0.0,
+    "window": 45,
+    "full_mm": 1.95,
+    "full_window": 47,
+    "none_window": 45
+   },
+   "time_s": 9.5,
+   "diff": {
+    "window": 3.5,
+    "full_mm": 0.0,
+    "full_window": 3.0,
+    "none_window": 3.5
+   }
+  },
+  {
+   "label": "XOR2, fan-in A",
+   "fn": "XOR2",
+   "L_mm": [
+    1.2,
+    1.55,
+    1.9,
+    2.2
+   ],
+   "alpha_db_mm": 0.3,
+   "raw_span_ps": 14.24,
+   "influence": [
+    0.075,
+    0.075,
+    0.0,
+    0.0
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.325,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.325
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.4875,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.4875
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.65,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.65
+    },
+    {
+     "pad_mm": [
+      0.5,
+      0.325,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.825
+    },
+    {
+     "pad_mm": [
+      0.5,
+      0.325,
+      0.15,
+      0.0
+     ],
+     "total_mm": 0.975
+    },
+    {
+     "pad_mm": [
+      0.75,
+      0.4875,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.2375
+    },
+    {
+     "pad_mm": [
+      0.75,
+      0.4875,
+      0.225,
+      0.0
+     ],
+     "total_mm": 1.4625
+    },
+    {
+     "pad_mm": [
+      1.0,
+      0.65,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.65
+    },
+    {
+     "pad_mm": [
+      1.0,
+      0.65,
+      0.3,
+      0.0
+     ],
+     "total_mm": 1.95
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 57.5,
+     "nominal": 61.0
+    }
+   ],
+   "chosen": 0,
+   "chosen_summary": {
+    "pad_mm": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "total_mm": 0.0,
+    "worst": 57.5,
+    "nominal": 61.0
+   },
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 57.5,
+     "nominal": 61.0
+    },
+    "full": {
+     "pad_mm": [
+      1.0,
+      0.65,
+      0.3,
+      0.0
+     ],
+     "total_mm": 1.95,
+     "worst": 59.0,
+     "nominal": 61.5
+    }
+   },
+   "corners": 32,
+   "evaluations": 99,
+   "draft": {
+    "span": 14.2,
+    "chosen_mm": 0.0,
+    "window": 57,
+    "full_mm": 1.95,
+    "full_window": 58,
+    "none_window": 57
+   },
+   "time_s": 9.4,
+   "diff": {
+    "window": 0.5,
+    "full_mm": 0.0,
+    "full_window": 1.0,
+    "none_window": 0.5
+   }
+  },
+  {
+   "label": "AND4, fan-in B",
+   "fn": "AND4",
+   "L_mm": [
+    0.9,
+    1.4,
+    1.8,
+    2.2
+   ],
+   "alpha_db_mm": 0.3,
+   "raw_span_ps": 18.52,
+   "influence": [
+    0.0887,
+    0.0887,
+    0.088,
+    0.0879
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      0.65,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.65
+    },
+    {
+     "pad_mm": [
+      0.975,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.975
+    },
+    {
+     "pad_mm": [
+      0.65,
+      0.4,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.05
+    },
+    {
+     "pad_mm": [
+      0.65,
+      0.4,
+      0.2,
+      0.0
+     ],
+     "total_mm": 1.25
+    },
+    {
+     "pad_mm": [
+      1.3,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.3
+    },
+    {
+     "pad_mm": [
+      0.975,
+      0.6,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.575
+    },
+    {
+     "pad_mm": [
+      0.975,
+      0.6,
+      0.3,
+      0.0
+     ],
+     "total_mm": 1.875
+    },
+    {
+     "pad_mm": [
+      1.3,
+      0.8,
+      0.0,
+      0.0
+     ],
+     "total_mm": 2.1
+    },
+    {
+     "pad_mm": [
+      1.3,
+      0.8,
+      0.4,
+      0.0
+     ],
+     "total_mm": 2.5
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 46.0,
+     "nominal": 47.5
+    }
+   ],
+   "chosen": 0,
+   "chosen_summary": {
+    "pad_mm": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "total_mm": 0.0,
+    "worst": 46.0,
+    "nominal": 47.5
+   },
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 46.0,
+     "nominal": 47.5
+    },
+    "full": {
+     "pad_mm": [
+      1.3,
+      0.8,
+      0.4,
+      0.0
+     ],
+     "total_mm": 2.5,
+     "worst": 45.5,
+     "nominal": 46.0
+    }
+   },
+   "corners": 32,
+   "evaluations": 99,
+   "draft": {
+    "span": 18.5,
+    "chosen_mm": 0.0,
+    "window": 46,
+    "full_mm": 2.5,
+    "full_window": 47,
+    "none_window": 46
+   },
+   "time_s": 9.5,
+   "diff": {
+    "window": 0.0,
+    "full_mm": 0.0,
+    "full_window": -1.5,
+    "none_window": 0.0
+   }
+  },
+  {
+   "label": "AND4, fan-in B, 1 dB/mm",
+   "fn": "AND4",
+   "L_mm": [
+    0.9,
+    1.4,
+    1.8,
+    2.2
+   ],
+   "alpha_db_mm": 1.0,
+   "raw_span_ps": 18.52,
+   "influence": [
+    0.0887,
+    0.0887,
+    0.088,
+    0.0879
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      0.65,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.65
+    },
+    {
+     "pad_mm": [
+      0.975,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.975
+    },
+    {
+     "pad_mm": [
+      0.65,
+      0.4,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.05
+    },
+    {
+     "pad_mm": [
+      0.65,
+      0.4,
+      0.2,
+      0.0
+     ],
+     "total_mm": 1.25
+    },
+    {
+     "pad_mm": [
+      1.3,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.3
+    },
+    {
+     "pad_mm": [
+      0.975,
+      0.6,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.575
+    },
+    {
+     "pad_mm": [
+      0.975,
+      0.6,
+      0.3,
+      0.0
+     ],
+     "total_mm": 1.875
+    },
+    {
+     "pad_mm": [
+      1.3,
+      0.8,
+      0.0,
+      0.0
+     ],
+     "total_mm": 2.1
+    },
+    {
+     "pad_mm": [
+      1.3,
+      0.8,
+      0.4,
+      0.0
+     ],
+     "total_mm": 2.5
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 46.0,
+     "nominal": 47.5
+    }
+   ],
+   "chosen": 0,
+   "chosen_summary": {
+    "pad_mm": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "total_mm": 0.0,
+    "worst": 46.0,
+    "nominal": 47.5
+   },
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 46.0,
+     "nominal": 47.5
+    },
+    "full": {
+     "pad_mm": [
+      1.3,
+      0.8,
+      0.4,
+      0.0
+     ],
+     "total_mm": 2.5,
+     "worst": 32.5,
+     "nominal": 33.5
+    }
+   },
+   "corners": 32,
+   "evaluations": 99,
+   "draft": {
+    "span": 18.5,
+    "chosen_mm": 0.0,
+    "window": 46,
+    "full_mm": 2.5,
+    "full_window": 33,
+    "none_window": 46
+   },
+   "time_s": 9.5,
+   "diff": {
+    "window": 0.0,
+    "full_mm": 0.0,
+    "full_window": -0.5,
+    "none_window": 0.0
+   }
+  },
+  {
+   "label": "AND8, stress",
+   "fn": "AND8",
+   "L_mm": [
+    2.8,
+    3.7
+   ],
+   "alpha_db_mm": 0.3,
+   "raw_span_ps": 12.82,
+   "influence": [
+    0.2616,
+    0.2591
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      0.45,
+      0.0
+     ],
+     "total_mm": 0.45
+    },
+    {
+     "pad_mm": [
+      0.675,
+      0.0
+     ],
+     "total_mm": 0.675
+    },
+    {
+     "pad_mm": [
+      0.9,
+      0.0
+     ],
+     "total_mm": 0.9
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 44.0,
+     "nominal": 45.0
+    }
+   ],
+   "chosen": 0,
+   "chosen_summary": {
+    "pad_mm": [
+     0.0,
+     0.0
+    ],
+    "total_mm": 0.0,
+    "worst": 44.0,
+    "nominal": 45.0
+   },
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 44.0,
+     "nominal": 45.0
+    },
+    "full": {
+     "pad_mm": [
+      0.9,
+      0.0
+     ],
+     "total_mm": 0.9,
+     "worst": 42.5,
+     "nominal": 43.5
+    }
+   },
+   "corners": 8,
+   "evaluations": 27,
+   "draft": {
+    "span": 12.8,
+    "chosen_mm": 0.0,
+    "window": 38,
+    "full_mm": 0.9,
+    "full_window": 39,
+    "none_window": 38
+   },
+   "time_s": 4.3,
+   "diff": {
+    "window": 6.0,
+    "full_mm": 0.0,
+    "full_window": 3.5,
+    "none_window": 6.0
+   }
+  },
+  {
+   "label": "MAJ8, stress",
+   "fn": "MAJ8",
+   "L_mm": [
+    2.8,
+    3.7
+   ],
+   "alpha_db_mm": 0.3,
+   "raw_span_ps": 12.82,
+   "influence": [
+    0.2722,
+    0.2708
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      0.45,
+      0.0
+     ],
+     "total_mm": 0.45
+    },
+    {
+     "pad_mm": [
+      0.675,
+      0.0
+     ],
+     "total_mm": 0.675
+    },
+    {
+     "pad_mm": [
+      0.9,
+      0.0
+     ],
+     "total_mm": 0.9
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 32.0,
+     "nominal": 34.5
+    }
+   ],
+   "chosen": 0,
+   "chosen_summary": {
+    "pad_mm": [
+     0.0,
+     0.0
+    ],
+    "total_mm": 0.0,
+    "worst": 32.0,
+    "nominal": 34.5
+   },
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 32.0,
+     "nominal": 34.5
+    },
+    "full": {
+     "pad_mm": [
+      0.9,
+      0.0
+     ],
+     "total_mm": 0.9,
+     "worst": 40.5,
+     "nominal": 41.5
+    }
+   },
+   "corners": 8,
+   "evaluations": 27,
+   "draft": {
+    "span": 12.8,
+    "chosen_mm": 0.0,
+    "window": 30,
+    "full_mm": 0.9,
+    "full_window": 36,
+    "none_window": 30
+   },
+   "time_s": 4.3,
+   "diff": {
+    "window": 2.0,
+    "full_mm": 0.0,
+    "full_window": 4.5,
+    "none_window": 2.0
+   }
+  },
+  {
+   "label": "SYNC, stress",
+   "fn": "SYNC",
+   "L_mm": [
+    2.8,
+    3.7
+   ],
+   "alpha_db_mm": 0.3,
+   "raw_span_ps": 12.82,
+   "influence": [
+    0.2837,
+    0.2745
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      0.45,
+      0.0
+     ],
+     "total_mm": 0.45
+    },
+    {
+     "pad_mm": [
+      0.675,
+      0.0
+     ],
+     "total_mm": 0.675
+    },
+    {
+     "pad_mm": [
+      0.9,
+      0.0
+     ],
+     "total_mm": 0.9
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 40.0,
+     "nominal": 41.5
+    }
+   ],
+   "chosen": 0,
+   "chosen_summary": {
+    "pad_mm": [
+     0.0,
+     0.0
+    ],
+    "total_mm": 0.0,
+    "worst": 40.0,
+    "nominal": 41.5
+   },
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 40.0,
+     "nominal": 41.5
+    },
+    "full": {
+     "pad_mm": [
+      0.9,
+      0.0
+     ],
+     "total_mm": 0.9,
+     "worst": 41.5,
+     "nominal": 42.5
+    }
+   },
+   "corners": 8,
+   "evaluations": 27,
+   "draft": {
+    "span": 12.8,
+    "chosen_mm": 0.0,
+    "window": 38,
+    "full_mm": 0.9,
+    "full_window": 36,
+    "none_window": 38
+   },
+   "time_s": 4.3,
+   "diff": {
+    "window": 2.0,
+    "full_mm": 0.0,
+    "full_window": 5.5,
+    "none_window": 2.0
+   }
+  },
+  {
+   "label": "AND4, fan-in C",
+   "fn": "AND4",
+   "L_mm": [
+    0.9,
+    2.4,
+    3.6,
+    4.8
+   ],
+   "alpha_db_mm": 0.3,
+   "raw_span_ps": 55.55,
+   "influence": [
+    0.0887,
+    0.0887,
+    0.088,
+    0.0879
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      1.95,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.95
+    },
+    {
+     "pad_mm": [
+      2.925,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 2.925
+    },
+    {
+     "pad_mm": [
+      1.95,
+      1.2,
+      0.0,
+      0.0
+     ],
+     "total_mm": 3.15
+    },
+    {
+     "pad_mm": [
+      1.95,
+      1.2,
+      0.6,
+      0.0
+     ],
+     "total_mm": 3.75
+    },
+    {
+     "pad_mm": [
+      3.9,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 3.9
+    },
+    {
+     "pad_mm": [
+      2.925,
+      1.8,
+      0.0,
+      0.0
+     ],
+     "total_mm": 4.725
+    },
+    {
+     "pad_mm": [
+      2.925,
+      1.8,
+      0.9,
+      0.0
+     ],
+     "total_mm": 5.625
+    },
+    {
+     "pad_mm": [
+      3.9,
+      2.4,
+      0.0,
+      0.0
+     ],
+     "total_mm": 6.3
+    },
+    {
+     "pad_mm": [
+      3.9,
+      2.4,
+      1.2,
+      0.0
+     ],
+     "total_mm": 7.5
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 21.0,
+     "nominal": 25.0
+    },
+    {
+     "pad_mm": [
+      1.95,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.95,
+     "worst": 34.5,
+     "nominal": 36.0
+    }
+   ],
+   "chosen": 1,
+   "chosen_summary": {
+    "pad_mm": [
+     1.95,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "total_mm": 1.95,
+    "worst": 34.5,
+    "nominal": 36.0
+   },
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 21.0,
+     "nominal": 25.0
+    },
+    "full": {
+     "pad_mm": [
+      3.9,
+      2.4,
+      1.2,
+      0.0
+     ],
+     "total_mm": 7.5,
+     "worst": 35.0,
+     "nominal": 35.5
+    }
+   },
+   "corners": 32,
+   "evaluations": 132,
+   "draft": null,
+   "time_s": 13.0
+  },
+  {
+   "label": "AND4, fan-in C, 1 dB/mm",
+   "fn": "AND4",
+   "L_mm": [
+    0.9,
+    2.4,
+    3.6,
+    4.8
+   ],
+   "alpha_db_mm": 1.0,
+   "raw_span_ps": 55.55,
+   "influence": [
+    0.0887,
+    0.0887,
+    0.088,
+    0.0879
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      1.95,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.95
+    },
+    {
+     "pad_mm": [
+      2.925,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 2.925
+    },
+    {
+     "pad_mm": [
+      1.95,
+      1.2,
+      0.0,
+      0.0
+     ],
+     "total_mm": 3.15
+    },
+    {
+     "pad_mm": [
+      1.95,
+      1.2,
+      0.6,
+      0.0
+     ],
+     "total_mm": 3.75
+    },
+    {
+     "pad_mm": [
+      3.9,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 3.9
+    },
+    {
+     "pad_mm": [
+      2.925,
+      1.8,
+      0.0,
+      0.0
+     ],
+     "total_mm": 4.725
+    },
+    {
+     "pad_mm": [
+      2.925,
+      1.8,
+      0.9,
+      0.0
+     ],
+     "total_mm": 5.625
+    },
+    {
+     "pad_mm": [
+      3.9,
+      2.4,
+      0.0,
+      0.0
+     ],
+     "total_mm": 6.3
+    },
+    {
+     "pad_mm": [
+      3.9,
+      2.4,
+      1.2,
+      0.0
+     ],
+     "total_mm": 7.5
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 21.0,
+     "nominal": 25.0
+    },
+    {
+     "pad_mm": [
+      1.95,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 1.95,
+     "worst": 23.5,
+     "nominal": 25.0
+    }
+   ],
+   "chosen": 1,
+   "chosen_summary": {
+    "pad_mm": [
+     1.95,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "total_mm": 1.95,
+    "worst": 23.5,
+    "nominal": 25.0
+   },
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 21.0,
+     "nominal": 25.0
+    },
+    "full": {
+     "pad_mm": [
+      3.9,
+      2.4,
+      1.2,
+      0.0
+     ],
+     "total_mm": 7.5,
+     "worst": 0.0,
+     "nominal": 0.0
+    }
+   },
+   "corners": 32,
+   "evaluations": 132,
+   "draft": null,
+   "time_s": 13.4
+  },
+  {
+   "label": "MAJ4, fan-in C",
+   "fn": "MAJ4",
+   "L_mm": [
+    0.9,
+    2.4,
+    3.6,
+    4.8
+   ],
+   "alpha_db_mm": 0.3,
+   "raw_span_ps": 55.55,
+   "influence": [
+    0.0926,
+    0.0926,
+    0.0927,
+    0.0926
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.6,
+      0.0
+     ],
+     "total_mm": 0.6
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.9,
+      0.0
+     ],
+     "total_mm": 0.9
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      1.2,
+      0.0
+     ],
+     "total_mm": 1.2
+    },
+    {
+     "pad_mm": [
+      1.95,
+      0.0,
+      0.6,
+      0.0
+     ],
+     "total_mm": 2.55
+    },
+    {
+     "pad_mm": [
+      1.95,
+      1.2,
+      0.6,
+      0.0
+     ],
+     "total_mm": 3.75
+    },
+    {
+     "pad_mm": [
+      2.925,
+      0.0,
+      0.9,
+      0.0
+     ],
+     "total_mm": 3.825
+    },
+    {
+     "pad_mm": [
+      3.9,
+      0.0,
+      1.2,
+      0.0
+     ],
+     "total_mm": 5.1
+    },
+    {
+     "pad_mm": [
+      2.925,
+      1.8,
+      0.9,
+      0.0
+     ],
+     "total_mm": 5.625
+    },
+    {
+     "pad_mm": [
+      3.9,
+      2.4,
+      1.2,
+      0.0
+     ],
+     "total_mm": 7.5
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 15.0,
+     "nominal": 21.5
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.6,
+      0.0
+     ],
+     "total_mm": 0.6,
+     "worst": 0.0,
+     "nominal": 8.5
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.9,
+      0.0
+     ],
+     "total_mm": 0.9,
+     "worst": 0.0,
+     "nominal": 0.0
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      1.2,
+      0.0
+     ],
+     "total_mm": 1.2,
+     "worst": 0.0,
+     "nominal": 0.0
+    },
+    {
+     "pad_mm": [
+      1.95,
+      0.0,
+      0.6,
+      0.0
+     ],
+     "total_mm": 2.55,
+     "worst": 28.0,
+     "nominal": 30.0
+    }
+   ],
+   "chosen": 4,
+   "chosen_summary": {
+    "pad_mm": [
+     1.95,
+     0.0,
+     0.6,
+     0.0
+    ],
+    "total_mm": 2.55,
+    "worst": 28.0,
+    "nominal": 30.0
+   },
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 15.0,
+     "nominal": 21.5
+    },
+    "full": {
+     "pad_mm": [
+      3.9,
+      2.4,
+      1.2,
+      0.0
+     ],
+     "total_mm": 7.5,
+     "worst": 38.5,
+     "nominal": 39.0
+    }
+   },
+   "corners": 32,
+   "evaluations": 231,
+   "draft": null,
+   "time_s": 23.5
+  },
+  {
+   "label": "MAJ4, fan-in C, 1 dB/mm",
+   "fn": "MAJ4",
+   "L_mm": [
+    0.9,
+    2.4,
+    3.6,
+    4.8
+   ],
+   "alpha_db_mm": 1.0,
+   "raw_span_ps": 55.55,
+   "influence": [
+    0.0926,
+    0.0926,
+    0.0927,
+    0.0926
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.6,
+      0.0
+     ],
+     "total_mm": 0.6
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.9,
+      0.0
+     ],
+     "total_mm": 0.9
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      1.2,
+      0.0
+     ],
+     "total_mm": 1.2
+    },
+    {
+     "pad_mm": [
+      1.95,
+      0.0,
+      0.6,
+      0.0
+     ],
+     "total_mm": 2.55
+    },
+    {
+     "pad_mm": [
+      1.95,
+      1.2,
+      0.6,
+      0.0
+     ],
+     "total_mm": 3.75
+    },
+    {
+     "pad_mm": [
+      2.925,
+      0.0,
+      0.9,
+      0.0
+     ],
+     "total_mm": 3.825
+    },
+    {
+     "pad_mm": [
+      3.9,
+      0.0,
+      1.2,
+      0.0
+     ],
+     "total_mm": 5.1
+    },
+    {
+     "pad_mm": [
+      2.925,
+      1.8,
+      0.9,
+      0.0
+     ],
+     "total_mm": 5.625
+    },
+    {
+     "pad_mm": [
+      3.9,
+      2.4,
+      1.2,
+      0.0
+     ],
+     "total_mm": 7.5
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 15.0,
+     "nominal": 21.5
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.6,
+      0.0
+     ],
+     "total_mm": 0.6,
+     "worst": 0.0,
+     "nominal": 0.0
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.9,
+      0.0
+     ],
+     "total_mm": 0.9,
+     "worst": 0.0,
+     "nominal": 0.0
+    },
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      1.2,
+      0.0
+     ],
+     "total_mm": 1.2,
+     "worst": 0.0,
+     "nominal": 0.0
+    },
+    {
+     "pad_mm": [
+      1.95,
+      0.0,
+      0.6,
+      0.0
+     ],
+     "total_mm": 2.55,
+     "worst": 10.0,
+     "nominal": 12.0
+    },
+    {
+     "pad_mm": [
+      1.95,
+      1.2,
+      0.6,
+      0.0
+     ],
+     "total_mm": 3.75,
+     "worst": 0.0,
+     "nominal": 1.0
+    },
+    {
+     "pad_mm": [
+      2.925,
+      0.0,
+      0.9,
+      0.0
+     ],
+     "total_mm": 3.825,
+     "worst": 0.0,
+     "nominal": 0.0
+    },
+    {
+     "pad_mm": [
+      3.9,
+      0.0,
+      1.2,
+      0.0
+     ],
+     "total_mm": 5.1,
+     "worst": 0.0,
+     "nominal": 0.0
+    },
+    {
+     "pad_mm": [
+      2.925,
+      1.8,
+      0.9,
+      0.0
+     ],
+     "total_mm": 5.625,
+     "worst": 0.0,
+     "nominal": 0.0
+    },
+    {
+     "pad_mm": [
+      3.9,
+      2.4,
+      1.2,
+      0.0
+     ],
+     "total_mm": 7.5,
+     "worst": 0.0,
+     "nominal": 0.0
+    }
+   ],
+   "chosen": null,
+   "chosen_summary": null,
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 15.0,
+     "nominal": 21.5
+    },
+    "full": {
+     "pad_mm": [
+      3.9,
+      2.4,
+      1.2,
+      0.0
+     ],
+     "total_mm": 7.5,
+     "worst": 0.0,
+     "nominal": 0.0
+    }
+   },
+   "corners": 32,
+   "evaluations": 396,
+   "draft": null,
+   "time_s": 40.4
+  },
+  {
+   "label": "XOR2, fan-in D",
+   "fn": "XOR2",
+   "L_mm": [
+    0.9,
+    3.4,
+    5.4,
+    7.4
+   ],
+   "alpha_db_mm": 0.3,
+   "raw_span_ps": 92.58,
+   "influence": [
+    0.075,
+    0.075,
+    0.0,
+    0.0
+   ],
+   "candidates": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0
+    },
+    {
+     "pad_mm": [
+      0.0,
+      2.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 2.0
+    },
+    {
+     "pad_mm": [
+      0.0,
+      3.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 3.0
+    },
+    {
+     "pad_mm": [
+      0.0,
+      4.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 4.0
+    },
+    {
+     "pad_mm": [
+      3.25,
+      2.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 5.25
+    },
+    {
+     "pad_mm": [
+      3.25,
+      2.0,
+      1.0,
+      0.0
+     ],
+     "total_mm": 6.25
+    },
+    {
+     "pad_mm": [
+      4.875,
+      3.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 7.875
+    },
+    {
+     "pad_mm": [
+      4.875,
+      3.0,
+      1.5,
+      0.0
+     ],
+     "total_mm": 9.375
+    },
+    {
+     "pad_mm": [
+      6.5,
+      4.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 10.5
+    },
+    {
+     "pad_mm": [
+      6.5,
+      4.0,
+      2.0,
+      0.0
+     ],
+     "total_mm": 12.5
+    }
+   ],
+   "tried": [
+    {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 21.5,
+     "nominal": 26.5
+    },
+    {
+     "pad_mm": [
+      0.0,
+      2.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 2.0,
+     "worst": 0.0,
+     "nominal": 0.0
+    },
+    {
+     "pad_mm": [
+      0.0,
+      3.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 3.0,
+     "worst": 0.0,
+     "nominal": 0.0
+    },
+    {
+     "pad_mm": [
+      0.0,
+      4.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 4.0,
+     "worst": 0.0,
+     "nominal": 0.0
+    },
+    {
+     "pad_mm": [
+      3.25,
+      2.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 5.25,
+     "worst": 26.5,
+     "nominal": 32.0
+    }
+   ],
+   "chosen": 4,
+   "chosen_summary": {
+    "pad_mm": [
+     3.25,
+     2.0,
+     0.0,
+     0.0
+    ],
+    "total_mm": 5.25,
+    "worst": 26.5,
+    "nominal": 32.0
+   },
+   "reference": {
+    "none": {
+     "pad_mm": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "total_mm": 0.0,
+     "worst": 21.5,
+     "nominal": 26.5
+    },
+    "full": {
+     "pad_mm": [
+      6.5,
+      4.0,
+      2.0,
+      0.0
+     ],
+     "total_mm": 12.5,
+     "worst": 0.0,
+     "nominal": 0.0
+    }
+   },
+   "corners": 32,
+   "evaluations": 231,
+   "draft": null,
+   "time_s": 23.6
+  }
+ ],
+ "within_3ps": {
+  "x1x8, stress": true,
+  "AND4, fan-in A": true,
+  "MAJ4, fan-in A": false,
+  "XOR2, fan-in A": true,
+  "AND4, fan-in B": true,
+  "AND4, fan-in B, 1 dB/mm": true,
+  "AND8, stress": false,
+  "MAJ8, stress": false,
+  "SYNC, stress": false
+ },
+ "diagnosis": {
+  "AND8": {
+   "base": 44.0,
+   "ref_sequence": 40.0,
+   "near_solutions": [
+    {
+     "margin": 0.632,
+     "window": 44.0
+    },
+    {
+     "margin": 0.6333,
+     "window": 44.0
+    },
+    {
+     "margin": 0.6342,
+     "window": 44.0
+    },
+    {
+     "margin": 0.6351,
+     "window": 44.0
+    }
+   ],
+   "near_window_range": [
+    44.0,
+    44.0
+   ],
+   "n_near": 4
+  },
+  "MAJ8": {
+   "base": 32.0,
+   "ref_sequence": 33.0,
+   "near_solutions": [
+    {
+     "margin": 0.6109,
+     "window": 32.5
+    },
+    {
+     "margin": 0.6112,
+     "window": 32.5
+    },
+    {
+     "margin": 0.6114,
+     "window": 32.5
+    },
+    {
+     "margin": 0.6117,
+     "window": 32.0
+    }
+   ],
+   "near_window_range": [
+    32.0,
+    32.5
+   ],
+   "n_near": 4
+  },
+  "SYNC": {
+   "base": 40.0,
+   "ref_sequence": 39.5,
+   "near_solutions": [
+    {
+     "margin": 0.6463,
+     "window": 40.0
+    },
+    {
+     "margin": 0.6482,
+     "window": 40.0
+    },
+    {
+     "margin": 0.6484,
+     "window": 40.0
+    },
+    {
+     "margin": 0.6488,
+     "window": 40.0
+    },
+    {
+     "margin": 0.6494,
+     "window": 40.0
+    }
+   ],
+   "near_window_range": [
+    40.0,
+    40.0
+   ],
+   "n_near": 5
+  }
+ },
+ "checks": {
+  "same_choice": true,
+  "full_length_match": true,
+  "full_eq_shrinks_at_1db": true,
+  "chosen_beats_full_at_1db": true,
+  "stress_needs_meander": true,
+  "stress_chosen_shorter": true,
+  "stress_chosen_passes_full_fails": true
+ },
+ "time_s": 207.3,
+ "workers": 1
+}

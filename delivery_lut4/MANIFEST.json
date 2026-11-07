@@ -1,0 +1,125 @@
+{
+ "name": "Programmable Silicon Photonic 4-input LUT Design：交付包（Model-7a）",
+ "gate": {
+  "drc": true,
+  "lvs": true,
+  "gds_sha": true,
+  "optical": true,
+  "faults": true,
+  "sim": true,
+  "review": true,
+  "delivery_check": true
+ },
+ "files": [
+  {
+   "path": "check_delivery.py",
+   "sha256": "e34334103acaab3c983748aeaedca2550506041c70609dd859a83dad4029cc62",
+   "bytes": 56130
+  },
+  {
+   "path": "figures/s1_core.png",
+   "sha256": "67262054034952a0aed2e05d3367ffac3795c22979f767db2d4845883441d28a",
+   "bytes": 115166
+  },
+  {
+   "path": "figures/s3_chip.png",
+   "sha256": "ea88a81036547b288df55102f625fbe793e5b96128ed6398e6e23c898b6e10da",
+   "bytes": 195873
+  },
+  {
+   "path": "figures/s3_ec.png",
+   "sha256": "30364531d6a27b39329744005155fc430624594ddc15aa45e03852d2611d18d7",
+   "bytes": 109034
+  },
+  {
+   "path": "figures/s3_route.png",
+   "sha256": "8ef7e9d41ef0e77dd77cec8b01f61fd5a107cf3efbdfdcdf90ce71a0a7a3c67b",
+   "bytes": 243225
+  },
+  {
+   "path": "function/lut4_netlist.json",
+   "sha256": "ece36c2a7d0a96a0353aed56c55cc953cbf89a4ca66fb6221e59d384e7a2a10a",
+   "bytes": 3046
+  },
+  {
+   "path": "function/phases.json",
+   "sha256": "aaa4d1246b66772c066454688a4e1a3d61d381ee2d7333f45a9e4f0a331fec1b",
+   "bytes": 4857
+  },
+  {
+   "path": "function/tolerance.json",
+   "sha256": "c07e70f6552cf3edf09d8ef1292ed550a5ccd51dca65288bb2cba12c552fe591",
+   "bytes": 3092
+  },
+  {
+   "path": "function/truth_tables.csv",
+   "sha256": "33ff46e3385819a3f492790f4fd776a523f71e56eabb352b435fa90f7f7c6fe1",
+   "bytes": 7067
+  },
+  {
+   "path": "interfaces/optical_ports.csv",
+   "sha256": "05970352dc8f7389232f9cd0f6f62e35697c6716afe55b690ed923352e89669d",
+   "bytes": 533
+  },
+  {
+   "path": "interfaces/pads.csv",
+   "sha256": "94c85127624292489245d14306e62ddc9e301bd024c1d72855b1733bfe2ba5c1",
+   "bytes": 937
+  },
+  {
+   "path": "interfaces/spec.json",
+   "sha256": "78d5666a9ed5a1ce12e3d68af34e46aef67d4c2130aefb0af637caad7e612f68",
+   "bytes": 10032
+  },
+  {
+   "path": "interfaces/system_requirements.json",
+   "sha256": "a70bbe9288b58a9ca50c4130353f25626406270a7df2ec6970b5c883e53e0988",
+   "bytes": 2096
+  },
+  {
+   "path": "layout/LUT4_chip.gds",
+   "sha256": "c6286b4caddee6daeef4cb6b51d74b2deadd85ccb48ce12c66f3ef13bdc1809f",
+   "bytes": 81832
+  },
+  {
+   "path": "README.md",
+   "sha256": "ad4d45dfba44fe5f16fceae2d5e492ef57f6fd761a82610b38b503bc443fb937",
+   "bytes": 4106
+  },
+  {
+   "path": "verification/connectivity.json",
+   "sha256": "a547fd305bcc21ace947d722066c2a02ef009ccdd23a30cc53a06621d8ceebe2",
+   "bytes": 27344
+  },
+  {
+   "path": "verification/drc_result.json",
+   "sha256": "b2bf7cace42bab032712e12d5b99ab77ac63ef8819ff65fee1a872d56ef02d56",
+   "bytes": 2038
+  },
+  {
+   "path": "verification/gain_box.json",
+   "sha256": "3842e46c0d902a4b3ec58158974b2b2059b1d5696aecf010013fdce086438bc8",
+   "bytes": 8697
+  },
+  {
+   "path": "verification/gain_robust.json",
+   "sha256": "05ca9297b7b58fb37c749a3da24bbe96738c7fa578fe4224a8f947dd0be3bc8b",
+   "bytes": 3459
+  },
+  {
+   "path": "verification/gnd_segments.json",
+   "sha256": "4922c949609aa12e57ad9ab4db55ee4315999902b30aae792c83bc8550410e38",
+   "bytes": 14512
+  },
+  {
+   "path": "verification/review_checks.json",
+   "sha256": "6ffd19ff429c0592beaa5a2ed57914d38239732974ab5c27f270c0cbd4ac157e",
+   "bytes": 5300
+  },
+  {
+   "path": "verification/sim_results.json",
+   "sha256": "bc828ca71760612dc41d1e374d1b89d46cf5b2bcdbd98d2c22e6b09717f009ad",
+   "bytes": 3943
+  }
+ ]
+}

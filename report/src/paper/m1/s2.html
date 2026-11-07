@@ -1,0 +1,77 @@
+<section class="step" id="p-m1-s2" data-milestone="M1" data-step="s2" data-title="消光比的相位重解（靜態校正）">
+<div class="bridge">
+<p><b>承接</b>：M1 s1 指出在宣告的模型下，10 Gb/s 要求最嚴的是輸入光的誤差，並把誤差分成固定的與會漂的兩類。本步先處理固定的一類：資料在片外調變，發射端在「0」時不會全暗，這個殘留光每一次都一樣。晶片仍是課程 M3 交付的 B7（只有 heater MZI）。</p>
+<p><b>本步要回答</b>：「0」不夠暗（消光比有限）時，殘留光會占去多少 margin？殘留是固定的偏移，只調 heater 重新求相位（靜態校正）能補回多少？發射端的消光比至少要多少？</p>
+<p><b>交給下一步</b>：<code>interface_v2.json</code>（消光比與 margin 的關係、消光比需求）。會漂的相位交給 M1 s3（動態校正）；消光比在轉態時的影響交給 M1 s4 驗收；發射端的完整介面規格由 M1 s5 整合。</p>
+<p class="terms"><b>名詞對照</b>：消光比（extinction ratio，ER：調變器「1」與「0」的光功率比，以 dB 表示；越大代表「0」越暗）。</p>
+</div>
+
+<figure class="concept"><img src="figures/paper/m1/s2_concept.png" alt="本步概念圖：片外發射端送 5 路光進只有 heater MZI 的 B7；消光比、功率與相位、時間對齊三項規格"><figcaption><b>本步概念</b>　晶片不變，把 10 Gb/s 的要求寫成片外發射端的規格。功率、相位、時間對齊沿用 M1 s1；新的一項是消光比：「0」時殘留的光會和參考光干涉，本步算出它占去多少 margin，以及重新求 heater 相位能吸收多少。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能說明靜態校正：固定的誤差量一次就能算進模型、重新求相位；能說明有限消光比在干涉電路中的影響和在一般強度判讀中的差別；能說明為什麼固定的誤差可以靠重新校正吸收。</p>
+<div class="example">
+<p>類比：合唱團要求每位歌手在休止符時完全不出聲。若有人休止時仍輕聲哼著，一般的音量計只會多一點點雜音；但若評審是聽「和聲是否對齊」，這一點哼聲會和主旋律互相加強或抵消，影響可能很大。這個哼聲每次都相同，所以指揮可以重新安排聲部（重新求相位），把它納入考量。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 殘留光場</h4>
+<p>理想的輸入是「1」振幅 1、「0」振幅 0。實際的調變器在「0」時仍有一點光，殘留光場寫成</p>
+<math display="block"><mrow><msub><mi>x</mi><mi>j</mi></msub><mo>=</mo><mrow><mo>{</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mtext>「1」</mtext></mtd></mtr><mtr><mtd><msub><mi>a</mi><mn>0</mn></msub><msup><mi>e</mi><mrow><mi>i</mi><mi>ψ</mi></mrow></msup></mtd><mtd><mtext>「0」</mtext></mtd></mtr></mtable></mrow><mo>,</mo><mspace width="1em"/><mtext>ER</mtext><mo>=</mo><mn>10</mn><msub><mi>log</mi><mn>10</mn></msub><mfrac><mn>1</mn><msubsup><mi>a</mi><mn>0</mn><mn>2</mn></msubsup></mfrac></mrow></math>
+<p>a<sub>0</sub> 是殘留的振幅（以「1」為 1），ψ 是殘留光相對「1」的相位，由發射端的調變器決定、事先不知道，所以取 ψ＝0、π/2、π、3π/2 中最差的。ER＝20 dB 時 a<sub>0</sub>＝0.1，殘留光功率只有 1%。</p>
+<h4>2. 為什麼 1% 的光影響很大</h4>
+<p>由 課程 M1 s3，ΔP 有一次項 b<sub>j</sub>：它來自參考光 R 和 x<sub>j</sub> 的干涉，大小正比於 R·|x<sub>j</sub>|。R＝3，所以殘留振幅 a<sub>0</sub> 會被放大成約 2·R·a<sub>0</sub>＝6 a<sub>0</sub> 的功率變化，而且 4 路的殘留可能同向相加。一般的強度判讀只看 a<sub>0</sub><sup>2</sup>（1%），干涉判讀看的是 a<sub>0</sub>（10%）乘上參考光，這就是干涉電路對消光比特別敏感的原因。</p>
+<h4>3. 為什麼重新求相位能補回</h4>
+<p>把輸入寫成 x<sub>j</sub>＝a<sub>0</sub>e<sup>iψ</sup>＋(1−a<sub>0</sub>e<sup>iψ</sup>) 位元<sub>j</sub>：殘留是每一組輸入都一樣的固定偏移，等於多了一份和參考光一起進來的光。它不隨資料改變，所以量到之後，可以把它當成電路的一部分，重新求 14 個相位（課程 M1 s2 的 margin 最大化）。晶片完成後本來就要依量測重新求相位（課程 M2 列出的需求），這一步不需要新元件；前提是殘留的大小與相位已經量到。</p>
+<h4>4. 能補回多少：解析近似</h4>
+<p>殘留讓「1」與「0」的光場差從 1 變成 1−a<sub>0</sub>e<sup>iψ</sup>。重新求相位可以吸收偏移本身，卻補不回這個縮小的差：只靠一次項（參考光與資料干涉）判讀的函數，margin 最多回到 (1−a<sub>0</sub>) m<sub>0</sub>；XOR2 靠二次項（兩路資料互相干涉）判讀，最多回到 (1−a<sub>0</sub>)<sup>2</sup> m<sub>0</sub>。要保留 90% margin，前者要 a<sub>0</sub> ≤ 0.1（ER ≥ 20 dB），後者要 a<sub>0</sub> ≤ 1−√0.9 ≈ 0.051（ER ≥ 25.8 dB）。這是近似，不是嚴格上界：推導只看一次項與二次項的主項，沒有證明所有可調設定或連續的殘留相位都不會超過它；它的依據是數值結果——由 20 dB 的重解結果反推次方 n，再與整段掃描比較，相差不到 1%（④）。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\paper\m1_timing\s2_interface\interface.py
+.\lab design\paper\m1_timing\s2_interface\figs.py
+.\lab design\paper\m1_timing\concept.py</code></pre>
+<p><code>interface.py</code> 對每個函數、每個消光比（10–40 dB，每 0.5 dB）、每個殘留相位 ψ：(1) 用 課程 M1 的相位直接算 16 組輸入的最差 s·ΔP；(2) 以 課程 M1 的相位為起點重新求相位（SLSQP：可處理限制條件的數值最佳化方法，與 課程 M1 s2 相同的 margin 最大化）。再由 20 dB 的結果求解析近似的次方 n，用解析式算需求；最後在需求處讓 4 路的殘留各不相同（大小 0.5–1 倍、相位隨機）抽 8 組重新求相位。約 5 分鐘。預期輸出：</p>
+<pre><code>消光比（保留 90% margin）：沿用原相位 {'AND2': 25.5, 'OR2': 32.0, 'XOR2': 31.0, 'AND4': 26.0, 'OR4': 38.0} → ≥ 38.0 dB
+解析近似 margin≈(1−a0)^n m0：n＝{'AND2': 0.987, 'OR2': 0.99, 'XOR2': 2.032, 'AND4': 0.99, 'OR4': 0.979}（與格點結果最大差 0.0079）→ 需求 {…'XOR2': 25.79…} → ≥ 25.79 dB（XOR2）
+各路不同殘留（8 組）重解後最差 margin 比例：{'AND2': 0.9732, 'OR2': 0.9968, 'XOR2': 0.9298, 'AND4': 0.9851, 'OR4': 0.9906}</code></pre>
+<p>自己動手：把 <code>MARGIN_KEEP</code> 改成 0.8，看消光比需求降多少；再只留 ψ＝0 一個方向，看結果是否變得過於樂觀。</p>
+
+<h3>④ 結果與驗收</h3>
+<h4>消光比需求</h4>
+<figure><img src="figures/paper/m1/s2_er.png" alt="5 個函數的 margin 與發射端消光比的關係：沿用原相位與重新求相位"><figcaption>圖 M1-4　margin（以無殘留時為 1）與發射端消光比的關係，每條線取 4 個殘留相位中最差的。虛線是沿用 課程 M1 的相位：OR4 在 20 dB 時只剩 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_scan']['margin_fixed']['OR4'][20]/d['margin_ideal']['OR4']*100" data-fmt="{:.0f}">20</span>%，要保留 90% 需要 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_fixed_db']" data-fmt="{:g}">38</span> dB。實線是依殘留重新求相位，緊貼黑點線的解析近似：AND2、OR2、AND4、OR4 在 20 dB 保留 90%（幾條線幾乎重疊），最難的 XOR2 需要 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_required_db']" data-fmt="{:.1f}">25.8</span> dB。</figcaption></figure>
+<table>
+<tr><th>函數</th><th>沿用原相位（格點）</th><th>重新求相位（格點）</th></tr>
+<tr><td>AND2</td><td><span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_need_fixed_db']['AND2']" data-fmt="{:g}">25.5</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_need_resolved_db']['AND2']" data-fmt="{:g}">20</span> dB</td></tr>
+<tr><td>OR2</td><td><span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_need_fixed_db']['OR2']" data-fmt="{:g}">32</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_need_resolved_db']['OR2']" data-fmt="{:g}">20</span> dB</td></tr>
+<tr><td>XOR2</td><td><span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_need_fixed_db']['XOR2']" data-fmt="{:g}">31</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_need_resolved_db']['XOR2']" data-fmt="{:g}">26</span> dB</td></tr>
+<tr><td>AND4</td><td><span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_need_fixed_db']['AND4']" data-fmt="{:g}">26</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_need_resolved_db']['AND4']" data-fmt="{:g}">20</span> dB</td></tr>
+<tr><td>OR4</td><td><span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_need_fixed_db']['OR4']" data-fmt="{:g}">38</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_need_resolved_db']['OR4']" data-fmt="{:g}">20</span> dB</td></tr>
+</table>
+<p>重新求相位把整體需求從 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_fixed_db']" data-fmt="{:g}">38</span> dB 降到 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_required_db']" data-fmt="{:.1f}">25.8</span> dB，只用晶片上原有的 heater。表中是掃描格點上第一個保留 90% 的消光比；整體需求 25.8 dB 是用解析近似（XOR2 取 n＝2）算出的連續值，兩者不同（XOR2 格點 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_need_resolved_db']['XOR2']" data-fmt="{:g}">26</span> dB）。重解後的 margin 就落在解析近似上（次方 n 與 1、2 相差不到 0.04），所以剩下的損失是光場差縮小造成的，不是最佳化沒找到。XOR2 的需求較高，是因為它靠二次項判讀，損失是平方。4 路殘留各不相同時（大小 0.5–1 倍、相位隨機，8 組），重新求相位後最差仍保留 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="min(d['per_input_ratio'].values())*100" data-fmt="{:.0f}">93</span>%，所以不必假設 4 個調變器完全相同。</p>
+
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>用強度判讀的直覺看消光比</b>：20 dB 的殘留光只有 1% 功率，但在干涉判讀中是 10% 的振幅、再乘上參考光，影響大得多。</li>
+<li><b>只試一個殘留相位</b>：殘留光的相位由發射端決定，同相時可能幫忙、反相時扣分；要取最差的方向。</li>
+<li><b>以為消光比不夠就要換調變器</b>：固定的殘留可以量測後重新求相位吸收，先算能補回多少，再決定規格。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：ER＝30 dB 時，殘留光場的振幅 a<sub>0</sub> 是多少？殘留光功率是「1」的幾分之一？</summary>
+<p>a<sub>0</sub>＝10<sup>−30/20</sup>≈0.032；功率是 a<sub>0</sub><sup>2</sup>＝10<sup>−3</sup>，即千分之一。</p></details>
+<details class="quiz"><summary>自我檢查 2：為什麼重新求相位能吸收殘留，卻不能吸收 M1 s1 講的光纖相位漂移？</summary>
+<p>殘留是固定的，量一次就能算進去；光纖的相位隨溫度與振動一直在變，量完之後馬上又不同。要處理後者，必須持續量、持續調，這就是 M1 s3 的相位追蹤。</p></details>
+<details class="quiz"><summary>自我檢查 3：如果發射端的消光比只有 20 dB，哪些函數仍可用？要付出什麼？</summary>
+<p>重新求相位後，AND2、OR2、AND4、OR4 在 20 dB 時仍保留 90% margin，XOR2 約剩 8 成（<span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_scan']['margin_resolved']['XOR2'][20]/d['margin_ideal']['XOR2']*100" data-fmt="{:.0f}">81</span>%）。代價是 margin 變小，同樣的錯誤率需要更多功率（margin 少 20%，功率約多 1 dB）。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>輸入</td><td>課程 M1 s5 的相位設定檔（5 個函數）；M1 s1 的預算</td></tr>
+<tr><td>模型</td><td>含 MMI 損耗（每顆 0.33 dB，課程 M2 s3）的 B7，R＝3；相位是此模型下重新校正的相位（<code>model.py</code>，margin 與課程 M2 s3 的重新校正結果相同，最小 0.289，XOR2）；16 組四位元輸入；殘留相位 ψ 取 0、π/2、π、3π/2 中最差</td></tr>
+<tr><td>掃描</td><td>ER 10–40 dB，每 0.5 dB；重新求相位的需求用解析近似計算，格點只用來核對</td></tr>
+<tr><td>重新求相位</td><td>以 課程 M1 的相位為起點，SLSQP（maxiter 400、ftol 1e-10）最大化 margin；需要先量到殘留的大小與相位；另抽 8 組 4 路殘留各不相同的情況</td></tr>
+<tr><td>範圍</td><td>晶片只有 heater MZI，不加調變器；發射端是介面假設；消光比只看固定殘留，轉態時的動態行為留到 M1 s4</td></tr>
+</table>
+<div class="auto-code" data-files="design/paper/m1_timing/s2_interface/interface.py design/paper/m1_timing/s2_interface/figs.py design/paper/m1_timing/concept.py"></div>
+<div class="auto-history" data-file="design/paper/m1_timing/s2_interface/HISTORY.md"></div>
+</section>

@@ -1,0 +1,50 @@
+{
+ "method": "LP upper bound: exists Hermitian 3x3 M with s(x)·v†Mv ≥ 1; class counted if any member feasible",
+ "R": 1.0,
+ "rows": {
+  "amplitude a/3": {
+   "classes_upper_bound": 161,
+   "tables_feasible": 7760,
+   "reference_upper_bound": 161,
+   "match": true,
+   "elapsed_s": 92.3
+  },
+  "PAM4 binary": {
+   "classes_upper_bound": 174,
+   "tables_feasible": 8218,
+   "reference_upper_bound": 174,
+   "match": true,
+   "elapsed_s": 91.3
+  },
+  "PAM4 Gray": {
+   "classes_upper_bound": 116,
+   "tables_feasible": 8218,
+   "reference_upper_bound": 116,
+   "match": true,
+   "elapsed_s": 91.7
+  },
+  "MZM sin(pi a/6)": {
+   "classes_upper_bound": 173,
+   "tables_feasible": 8168,
+   "reference_upper_bound": 173,
+   "match": true,
+   "elapsed_s": 79.3
+  },
+  "phase binary": {
+   "classes_upper_bound": 195,
+   "tables_feasible": 11622,
+   "reference_upper_bound": 195,
+   "match": true,
+   "elapsed_s": 69.3
+  },
+  "phase Gray": {
+   "classes_upper_bound": 89,
+   "tables_feasible": 11622,
+   "reference_upper_bound": 89,
+   "match": true,
+   "elapsed_s": 67.3
+  }
+ },
+ "n_classes_total": 222,
+ "all_match": true
+}

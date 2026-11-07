@@ -1,0 +1,184 @@
+{
+  "step": "M1 s1",
+  "phi_rad": 1.5707963267948966,
+  "T_fixed": 1.0,
+  "table": [
+    {
+      "x1": 0,
+      "x2": 0,
+      "y_up": [
+        0.0,
+        0.0
+      ],
+      "y_dn": [
+        0.0,
+        0.0
+      ],
+      "P_up": 0.0,
+      "P_dn": 0.0,
+      "dP": 0.0,
+      "target": 0,
+      "dec_sign": null,
+      "dec_T": 0
+    },
+    {
+      "x1": 0,
+      "x2": 1,
+      "y_up": [
+        0.0,
+        0.707107
+      ],
+      "y_dn": [
+        0.707107,
+        0.0
+      ],
+      "P_up": 0.5,
+      "P_dn": 0.5,
+      "dP": 0.0,
+      "target": 0,
+      "dec_sign": null,
+      "dec_T": 0
+    },
+    {
+      "x1": 1,
+      "x2": 0,
+      "y_up": [
+        0.0,
+        0.707107
+      ],
+      "y_dn": [
+        -0.707107,
+        0.0
+      ],
+      "P_up": 0.5,
+      "P_dn": 0.5,
+      "dP": 0.0,
+      "target": 0,
+      "dec_sign": null,
+      "dec_T": 0
+    },
+    {
+      "x1": 1,
+      "x2": 1,
+      "y_up": [
+        0.0,
+        1.414214
+      ],
+      "y_dn": [
+        0.0,
+        0.0
+      ],
+      "P_up": 2.0,
+      "P_dn": 0.0,
+      "dP": 2.0,
+      "target": 1,
+      "dec_sign": 1,
+      "dec_T": 1
+    }
+  ],
+  "formula": "dP = 2*x1*x2*sin(phi)",
+  "formula_max_err": 1.1102230246251565e-15,
+  "dP_00_max_over_phi": 0.0,
+  "sign_rule": {
+    "correct": 1,
+    "boundary": 3
+  },
+  "T_rule": {
+    "correct": 4
+  },
+  "wave": [
+    {
+      "x1": 0,
+      "x2": 0,
+      "scale": 1.0,
+      "P_up": 0.0,
+      "P_dn": 0.0,
+      "dP": 0.0,
+      "target": 0,
+      "dec_T": 0,
+      "dec_sign": null
+    },
+    {
+      "x1": 1,
+      "x2": 0,
+      "scale": 1.0,
+      "P_up": 0.5,
+      "P_dn": 0.5,
+      "dP": 0.0,
+      "target": 0,
+      "dec_T": 0,
+      "dec_sign": null
+    },
+    {
+      "x1": 0,
+      "x2": 1,
+      "scale": 1.0,
+      "P_up": 0.5,
+      "P_dn": 0.5,
+      "dP": 0.0,
+      "target": 0,
+      "dec_T": 0,
+      "dec_sign": null
+    },
+    {
+      "x1": 1,
+      "x2": 1,
+      "scale": 1.0,
+      "P_up": 2.0,
+      "P_dn": 0.0,
+      "dP": 2.0,
+      "target": 1,
+      "dec_T": 1,
+      "dec_sign": 1
+    },
+    {
+      "x1": 1,
+      "x2": 1,
+      "scale": 0.4,
+      "P_up": 0.8,
+      "P_dn": 0.0,
+      "dP": 0.8,
+      "target": 1,
+      "dec_T": 0,
+      "dec_sign": 1
+    },
+    {
+      "x1": 0,
+      "x2": 0,
+      "scale": 0.4,
+      "P_up": 0.0,
+      "P_dn": 0.0,
+      "dP": 0.0,
+      "target": 0,
+      "dec_T": 0,
+      "dec_sign": null
+    },
+    {
+      "x1": 0,
+      "x2": 1,
+      "scale": 0.4,
+      "P_up": 0.2,
+      "P_dn": 0.2,
+      "dP": 0.0,
+      "target": 0,
+      "dec_T": 0,
+      "dec_sign": null
+    },
+    {
+      "x1": 1,
+      "x2": 1,
+      "scale": 0.4,
+      "P_up": 0.8,
+      "P_dn": 0.0,
+      "dP": 0.8,
+      "target": 1,
+      "dec_T": 0,
+      "dec_sign": 1
+    }
+  ],
+  "wave_scale_low": 0.4,
+  "wave_T_errors": 2,
+  "wave_T_errors_low_power": 2,
+  "wave_sign_boundary": 5,
+  "wave_sign_wrong": 0
+}

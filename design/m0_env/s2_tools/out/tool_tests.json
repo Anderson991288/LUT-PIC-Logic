@@ -1,0 +1,222 @@
+{
+  "step": "M0 s2",
+  "passed": 24,
+  "total": 24,
+  "cases": [
+    {
+      "name": "原片段不誤報",
+      "injected": "無",
+      "expect": "0 錯誤、0 更正",
+      "passed": true,
+      "messages": []
+    },
+    {
+      "name": "缺少一節",
+      "injected": "刪除 ⑤ 的標題",
+      "expect": "報錯：六節不符",
+      "passed": true,
+      "messages": [
+        "m0/s1.html：六節標題或順序不符，實際為 ['① 問題與範例', '② 原理與推導', '③ 動手做', '④ 結果與驗收', '⑥ 程式與實驗條件']"
+      ]
+    },
+    {
+      "name": "兩節順序顛倒",
+      "injected": "③ ④ 對調",
+      "expect": "報錯：六節不符",
+      "passed": true,
+      "messages": [
+        "m0/s1.html：六節標題或順序不符，實際為 ['① 問題與範例', '② 原理與推導', '④ 結果與驗收', '③ 動手做', '⑤ 常見錯誤與自我檢查', '⑥ 程式與實驗條件']"
+      ]
+    },
+    {
+      "name": "手寫數字過時",
+      "injected": "13／13 改成 999／999",
+      "expect": "以 JSON 值 13／13 輸出並提示",
+      "passed": true,
+      "messages": [
+        "m0/s1.html：f\"{d['passed']}／{d['total']}\" 片段寫 999／999，依 JSON 改為 13／13"
+      ]
+    },
+    {
+      "name": "JSON 鍵名打錯",
+      "injected": "versions 寫成 version",
+      "expect": "報錯：數字無法計算",
+      "passed": true,
+      "messages": [
+        "m0/s1.html：數字 d['version']['ipkiss'] 無法計算（KeyError: 'version'）"
+      ]
+    },
+    {
+      "name": "禁字：本機絕對路徑",
+      "injected": "D＊＊＊＊＊＊＊＊＊＊",
+      "expect": "報錯：禁字",
+      "passed": true,
+      "messages": [
+        "m0.html：禁字「D＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊\">附錄 B　M0 s1</a>。</p> <p>D＊＊＊＊＊＊＊＊＊＊</p></section> …"
+      ]
+    },
+    {
+      "name": "禁字：用「佈局」",
+      "injected": "版＊",
+      "expect": "報錯：禁字",
+      "passed": true,
+      "messages": [
+        "m0.html：禁字「版＊」（用「佈局」）：…m0-s1\">附錄 B　M0 s1</a>。</p> <p>版＊</p></section> …"
+      ]
+    },
+    {
+      "name": "禁字：鋁寫 AL",
+      "injected": "Ti/A＊ 墊",
+      "expect": "報錯：禁字",
+      "passed": true,
+      "messages": [
+        "m0.html：禁字「A＊」（鋁寫 AL）：…s1\">附錄 B　M0 s1</a>。</p> <p>Ti/A＊ 墊</p></section> …"
+      ]
+    },
+    {
+      "name": "禁字：工具名稱",
+      "injected": "C＊＊＊＊",
+      "expect": "報錯：禁字",
+      "passed": true,
+      "messages": [
+        "m0.html：禁字「C＊＊＊＊」（工具名稱）：…m0-s1\">附錄 B　M0 s1</a>。</p> <p>C＊＊＊＊</p></section> …"
+      ]
+    },
+    {
+      "name": "禁字：工具名稱",
+      "injected": ".c＊＊＊＊＊/tools",
+      "expect": "報錯：禁字",
+      "passed": true,
+      "messages": [
+        "m0.html：禁字「c＊＊＊＊＊」（工具名稱）：…0-s1\">附錄 B　M0 s1</a>。</p> <p>.c＊＊＊＊＊/tools</p></section> …"
+      ]
+    },
+    {
+      "name": "禁字：本機絕對路徑",
+      "injected": "Path(\"C＊＊＊＊＊＊＊＊＊\")",
+      "expect": "報錯：禁字",
+      "passed": true,
+      "messages": [
+        "m0.html：禁字「C＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊ B　M0 s1</a>。</p> <p>Path(\"C＊＊＊＊＊＊＊＊＊\")</p></section> …"
+      ]
+    },
+    {
+      "name": "禁字：網路路徑",
+      "injected": "\\＊＊＊＊＊＊＊＊＊hare",
+      "expect": "報錯：禁字",
+      "passed": true,
+      "messages": [
+        "m0.html：禁字「\\＊＊＊＊＊＊＊＊＊」（網路路徑（UNC））：…m0-s1\">附錄 B　M0 s1</a>。</p> <p>\\＊＊＊＊＊＊＊＊＊hare</p></section> …"
+      ]
+    },
+    {
+      "name": "禁字：使用者環境變數路徑",
+      "injected": "%＊＊＊＊＊＊＊＊＊＊＊＊＊x",
+      "expect": "報錯：禁字",
+      "passed": true,
+      "messages": [
+        "m0.html：禁字「%＊＊＊＊＊＊＊＊＊＊＊＊＊」（使用者環境變數路徑）：…m0-s1\">附錄 B　M0 s1</a>。</p> <p>%＊＊＊＊＊＊＊＊＊＊＊＊＊x</p></section> …"
+      ]
+    },
+    {
+      "name": "禁字：計畫代號",
+      "injected": "L＊＊＊＊",
+      "expect": "報錯：禁字",
+      "passed": true,
+      "messages": [
+        "m0.html：禁字「L＊＊＊＊」（計畫代號）：…m0-s1\">附錄 B　M0 s1</a>。</p> <p>L＊＊＊＊</p></section> …"
+      ]
+    },
+    {
+      "name": "圖檔不存在",
+      "injected": "圖檔名打錯",
+      "expect": "報錯：找不到圖",
+      "passed": true,
+      "messages": [
+        "m0/s1.html：找不到圖 figures/m0/s1_missing.png"
+      ]
+    },
+    {
+      "name": "程式檔不存在",
+      "injected": "paths.py 寫成 path.py",
+      "expect": "報錯：auto-code 找不到",
+      "passed": true,
+      "messages": [
+        "m0/s1.html：auto-code 找不到 design/path.py"
+      ]
+    },
+    {
+      "name": "連結錨點不存在",
+      "injected": "連到 appendix.html#app-z",
+      "expect": "報錯：找不到錨點",
+      "passed": true,
+      "messages": [
+        "m0.html：連結 appendix.html#app-z 找不到錨點"
+      ]
+    },
+    {
+      "name": "表格儲存格含直線",
+      "injected": "\\|y2\\|²",
+      "expect": "解析為 2 欄，內容 |y2|²",
+      "passed": true,
+      "messages": [
+        "[['P2', '|y2|²']]"
+      ]
+    },
+    {
+      "name": "段落標題含附註",
+      "injected": "## 符號表（附註）",
+      "expect": "仍能讀到表格",
+      "passed": true,
+      "messages": [
+        "[['x', 'y']]"
+      ]
+    },
+    {
+      "name": "名詞先用後定義",
+      "injected": "M0 s1 寫入 B7、MZI",
+      "expect": "報錯：B7、MZI 尚未定義",
+      "passed": true,
+      "messages": [
+        "m0-s1：「MZI」要到 M1 s2 才定義，這裡先用了：…② 原理與推導MMI 是 B7 中每顆 MZI 的分光元件。 光在波導中用光場 E 描…",
+        "m0-s1：「B7」要到 M1 s2 才定義，這裡先用了：…條流程。   ② 原理與推導MMI 是 B7 中每顆 MZI 的分光元件。 光在波導…"
+      ]
+    },
+    {
+      "name": "程式碼中的名詞不算",
+      "injected": "只在 auto-code 屬性裡出現 B7",
+      "expect": "不報錯",
+      "passed": true,
+      "messages": []
+    },
+    {
+      "name": "③④⑤⑥ 預設收折",
+      "injected": "組裝 M0 s1",
+      "expect": "4 個收折節、①② 展開、標籤成對",
+      "passed": true,
+      "messages": [
+        "m0-s1-do",
+        "m0-s1-result",
+        "m0-s1-check"
+      ]
+    },
+    {
+      "name": "同頁錨點不存在",
+      "injected": "連到 #nope",
+      "expect": "報錯：同頁連結找不到錨點",
+      "passed": true,
+      "messages": [
+        "m0.html：同頁連結 #nope 找不到錨點"
+      ]
+    },
+    {
+      "name": "產生者只認完整檔名",
+      "injected": "過時檔 mmi.gds、s1.png",
+      "expect": "不被當成有產生者",
+      "passed": true,
+      "messages": [
+        "['env.json', 'mmi_test.gds', 's1_mmi_layout.png']"
+      ]
+    }
+  ]
+}

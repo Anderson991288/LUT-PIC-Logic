@@ -1,0 +1,114 @@
+{
+ "source": "reference phase bank replay (Codex phase bank); NOT this project's 24-start scan",
+ "bank": {
+  "file": "reference/three_refined_3142132.npz",
+  "sha256": "a09fe8c975505a770673488cf6b2e9ff4c1e629554880b6247d5feedb5d1b8ec",
+  "sha_prefix_ok": true,
+  "shape": [
+   65536,
+   14
+  ],
+  "column_order": "theta1, phi1, ..., theta7, phi7"
+ },
+ "model": {
+  "code": "3142132",
+  "R": 3.0,
+  "loss_db_per_mzi": 0.9,
+  "readout": "Da = P2 - P4 > 0 AND Db = P4 - P3 > 0",
+  "input": "OOK 0/1 amplitude",
+  "implementation": "independent 5x5 matrix replay (no synth4 import)",
+  "unitary_selftest_err": 1.7763568394002505e-15
+ },
+ "n_masks": 65536,
+ "n_rows": 1048576,
+ "elapsed_s": 0.48,
+ "n_pass": 65536,
+ "n_fail": 0,
+ "n_row_errors": 0,
+ "n_zero_margin_rows": 0,
+ "n_zero_margin_masks": 0,
+ "n_nonpositive_masks": 0,
+ "n_zero_phase_rows": 0,
+ "margin": {
+  "min": 0.05356207528721657,
+  "argmin": "0x8798",
+  "median": 0.1319791537926872,
+  "max": 5.907277731195527,
+  "argmax": "0x0000",
+  "ge_0p05": 65536,
+  "ge_0p1": 49739,
+  "ge_0p15": 25366
+ },
+ "worst10": [
+  [
+   "0x8798",
+   0.053562
+  ],
+  [
+   "0x96A5",
+   0.054003
+  ],
+  [
+   "0x8779",
+   0.054055
+  ],
+  [
+   "0x7A69",
+   0.054829
+  ],
+  [
+   "0xB69C",
+   0.054964
+  ],
+  [
+   "0x926D",
+   0.055594
+  ],
+  [
+   "0xA96A",
+   0.056115
+  ],
+  [
+   "0x3956",
+   0.056208
+  ],
+  [
+   "0xB46B",
+   0.05652
+  ],
+  [
+   "0x5BB6",
+   0.05688
+  ]
+ ],
+ "examples": {
+  "AND2": 1.135173,
+  "OR2": 1.135283,
+  "XOR2": 0.753218,
+  "NAND2": 1.062468,
+  "AND4": 0.539749,
+  "XOR4": 0.067259,
+  "MUX": 0.76964
+ },
+ "stored_margins": {
+  "min": 0.053562075287215904,
+  "argmin": "0x8798",
+  "max_abs_diff_vs_replay": 2.6645352591003757e-15,
+  "n_diff_gt_1e_6": 0
+ },
+ "compare_scan24": {
+  "file": "reference/coverage_margins.npy",
+  "note": "本專案 24 起點掃描（既有證據）與 Codex 相位庫重播是不同資料，只列差異統計",
+  "n_bank_better": 9014,
+  "n_scan_better": 56521,
+  "n_equal_1e_6": 1,
+  "mean_diff": -0.1074648740433764,
+  "median_diff": -0.07133318618140705,
+  "max_bank_minus_scan": 0.417642976599772,
+  "min_bank_minus_scan": -0.9428814574447884,
+  "scan_min": 0.05319077185528382,
+  "scan_argmin": "0x9667",
+  "bank_min": 0.05356207528721657,
+  "bank_argmin": "0x8798"
+ }
+}

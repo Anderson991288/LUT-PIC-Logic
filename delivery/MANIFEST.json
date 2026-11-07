@@ -1,0 +1,113 @@
+{
+ "name": "B7 單顆 PIC 交付包",
+ "files": [
+  {
+   "path": "check_delivery.py",
+   "sha256": "5e13fa2aa0abb4d4dab14140e926121126b780a648f078a57695804268e76b9f",
+   "bytes": 43212,
+   "source": "m3_layout/s5_delivery"
+  },
+  {
+   "path": "figures/chip.png",
+   "sha256": "fb6e027bc0dbe7f9ddb4948a182077b91222dbd4495bbdb7c7a061e54fad2152",
+   "bytes": 190420,
+   "source": "figures/m3/s3_chip.png"
+  },
+  {
+   "path": "figures/core.png",
+   "sha256": "12fb7ef20b7633786f0ac777dd58cbf7523aa3ac3932cc68732bc7fbdc374d88",
+   "bytes": 114648,
+   "source": "figures/m3/s1_core.png"
+  },
+  {
+   "path": "figures/nets.png",
+   "sha256": "bccca15b8c0e258d75b3bc2a64f4af8dbcb4d26c92c34173feca39431c34426b",
+   "bytes": 150761,
+   "source": "figures/m3/s4_nets.png"
+  },
+  {
+   "path": "interfaces/b7_netlist.json",
+   "sha256": "c6603813c4bf82202332709c70894070d03bd78b59315811a933e5c21cfaf6d4",
+   "bytes": 2921,
+   "source": "m1_logic/s5_handoff"
+  },
+  {
+   "path": "interfaces/chip_info.json",
+   "sha256": "b4291ef20af770082efd8afb394b4c207b9b1e2d2f889ddd755d84276d7a7c1b",
+   "bytes": 22068,
+   "source": "m3_layout/s3_chip"
+  },
+  {
+   "path": "interfaces/optical_ports.csv",
+   "sha256": "c77a2e3021e2e1cca36646b0a29928ac771164825dd6cf38f2c116b6d567e196",
+   "bytes": 753,
+   "source": "m3_layout/s3_chip＋m2_circuit/s1_spec"
+  },
+  {
+   "path": "interfaces/pads.csv",
+   "sha256": "2a94ce7b417ac1dde0042dc3cdab4c115bb776635574be505fcfa47fe0efebd4",
+   "bytes": 1260,
+   "source": "m3_layout/s3_chip＋m2_circuit/s1_spec"
+  },
+  {
+   "path": "interfaces/phases.json",
+   "sha256": "9f21805c3155e64d63c56e06458ad66921cb008d91d681f24fa62d2c89ed367b",
+   "bytes": 3647,
+   "source": "m1_logic/s5_handoff"
+  },
+  {
+   "path": "interfaces/spec.json",
+   "sha256": "495fcdbab6d0e63d39f86711b5e9ded5c4892975d087c09748da57c137734b09",
+   "bytes": 7863,
+   "source": "m2_circuit/s1_spec"
+  },
+  {
+   "path": "interfaces/tolerance.json",
+   "sha256": "76dbb469134da05608eeb8c5aef6d6d070541b3881630f06040889561995445d",
+   "bytes": 1516,
+   "source": "m2_circuit/s1_spec"
+  },
+  {
+   "path": "interfaces/truth_tables.csv",
+   "sha256": "e902b15b423083d2ca29cb9c251fefd03579148d98962bca5e69588552d4b974",
+   "bytes": 3549,
+   "source": "m1_logic/s5_handoff"
+  },
+  {
+   "path": "layout/chip.gds",
+   "sha256": "a3f27b4d47f17e2f48406e8d324edfb11cc70914ca98a2c41d494a0ef274fd2c",
+   "bytes": 81376,
+   "source": "m3_layout/s3_chip"
+  },
+  {
+   "path": "README.md",
+   "sha256": "a899ce1795a86102c8400b1b35463899ec9130185835008b850dc015fe10b32a",
+   "bytes": 7833,
+   "source": "m3_layout/s5_delivery"
+  },
+  {
+   "path": "verification/connectivity.json",
+   "sha256": "d1ec0368d4713ecb7d5e212a2fac10b19b422968ec5240e31bc31a9f926fc474",
+   "bytes": 7547,
+   "source": "m3_layout/s4_verify"
+  },
+  {
+   "path": "verification/drc_result.json",
+   "sha256": "d15a2e82570f999ff9d23151488840df2d9e58eedd19e188f015e7af280a0274",
+   "bytes": 2038,
+   "source": "m3_layout/s4_verify"
+  },
+  {
+   "path": "verification/review_checks.json",
+   "sha256": "5eb57d55d527fc5c54bc8fbf21492ab681044e901a6a9be2c16216993e2d5a59",
+   "bytes": 5086,
+   "source": "m3_layout/s2_review"
+  },
+  {
+   "path": "verification/sim_results.json",
+   "sha256": "9cbdaddcb65151b316c3ad779e554e51a9ed4a7eb30a9ec60d2003cd5bcdc4b8",
+   "bytes": 6558,
+   "source": "m2_circuit/s3_sim"
+  }
+ ]
+}

@@ -1,0 +1,80 @@
+{
+ "n": 65536,
+ "realizable": 65535,
+ "ge_0p05": 65534,
+ "ge_0p1": 65530,
+ "median": 0.6203983959631179,
+ "min": 0.04257848100087813,
+ "argmin": "0x96E9",
+ "xor4": 0.09694312524368637,
+ "xnor4": 0.308496980547738,
+ "worst10": [
+  [
+   "0x96E9",
+   0.0426
+  ],
+  [
+   "0xB46B",
+   0.0674
+  ],
+  [
+   "0x7B96",
+   0.0942
+  ],
+  [
+   "0x966B",
+   0.0968
+  ],
+  [
+   "0x6996",
+   0.0969
+  ],
+  [
+   "0x6997",
+   0.1179
+  ],
+  [
+   "0x69D6",
+   0.1602
+  ],
+  [
+   "0x698F",
+   0.1651
+  ],
+  [
+   "0xD67D",
+   0.1757
+  ],
+  [
+   "0xD6E1",
+   0.1801
+  ]
+ ],
+ "unrealizable": [
+  "0x9F69"
+ ],
+ "code": "3142132",
+ "loss_db": 0.9,
+ "starts": 24,
+ "real_threshold": 0.001,
+ "seconds_per_mask_mean": 1.1247,
+ "seconds_per_mask_max": 2.6467,
+ "wall_s": 12291.8,
+ "workers": 6,
+ "phases_file": "coverage_phases.npz",
+ "phase_margin_recheck_max_diff": 1.163513729807164e-13,
+ "source": "this round (full 65,536 rerun)",
+ "masks_file": null,
+ "mask_list": null,
+ "reference_compare": {
+  "reference_npy": "coverage_margins.npy",
+  "n": 65536,
+  "max_abs_diff": 0.0,
+  "argmax": "0x0000",
+  "n_within_1e_3": 65536,
+  "n_within_1e_6": 65536,
+  "mismatches": 0,
+  "rows": 65536,
+  "mismatches_list": []
+ }
+}

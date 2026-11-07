@@ -1,0 +1,76 @@
+{
+ "source": "this round (independent full replay; synth4 not imported)",
+ "encoding": "EPM",
+ "topology": "3142132",
+ "loss_db_per_mzi": 0.9,
+ "R": 3.0,
+ "round1_24_starts": {
+  "tables": 65536,
+  "rows": 1048576,
+  "passed_tables": 65535,
+  "failed_tables": 1,
+  "wrong_rows": 4,
+  "boundary_rows": 0,
+  "missing": 0,
+  "min_margin_pu": -2.6218975149761015e-05,
+  "worst_mask": "0x9F69",
+  "median_margin_pu": 0.6203982270444938,
+  "ge_0p05": 65534,
+  "ge_0p1": 65530,
+  "tolerance_pu": 1e-08,
+  "max_abs_diff_vs_synth": 1.1723955140041653e-13,
+  "max_abs_diff_vs_reference_margins": 1.1723955140041653e-13
+ },
+ "merged_round1_plus_refine": {
+  "tables": 65536,
+  "rows": 1048576,
+  "passed_tables": 65536,
+  "failed_tables": 0,
+  "wrong_rows": 0,
+  "boundary_rows": 0,
+  "missing": 0,
+  "min_margin_pu": 0.23500495546838188,
+  "worst_mask": "0x967A",
+  "median_margin_pu": 0.6203982270444938,
+  "ge_0p05": 65536,
+  "ge_0p1": 65536,
+  "tolerance_pu": 1e-08
+ },
+ "refined_masks": 40,
+ "round1_failures": [
+  "0x9F69"
+ ],
+ "merged_bank": "out/merged_phases.npz",
+ "merged_bank_sha256": "dbdf8ffc3c461b3001dd30557b62eb1adb3cca8c0c29957ef8d10900e46bea71",
+ "negative_tests": {
+  "wrong_encoding_OOK": {
+   "failed_tables": 65534,
+   "wrong_rows": 521833,
+   "logic_detected": true,
+   "max_margin_shift_pu": 9.395897834476393,
+   "detected": true
+  },
+  "swap_theta_phi": {
+   "failed_tables": 65536,
+   "wrong_rows": 523288,
+   "logic_detected": true,
+   "max_margin_shift_pu": 8.830408495892637,
+   "detected": true
+  },
+  "topology_1421324": {
+   "failed_tables": 65534,
+   "wrong_rows": 525078,
+   "logic_detected": true,
+   "max_margin_shift_pu": 8.42023161650256,
+   "detected": true
+  },
+  "R_2p9": {
+   "failed_tables": 0,
+   "wrong_rows": 0,
+   "logic_detected": false,
+   "max_margin_shift_pu": 0.3898090847522697,
+   "detected": true
+  }
+ },
+ "elapsed_s": 3.8
+}

@@ -1,0 +1,107 @@
+<section class="step" id="m2-s1" data-milestone="M2" data-step="s1" data-title="PIC 功能與介面規格">
+<div class="bridge">
+<p><b>承接</b>：M1 s5 交出三個交接檔：接線表（固定光路）、相位設定檔（五個函數各 14 個相位）、真值表（80 組驗收答案）。本步只讀這三個檔案。</p>
+<p><b>本步要回答</b>：哪些功能做在晶片上、哪些交給外部設備？光從哪裡進出、14 個相位如何接到電氣接點？外部設備要多準，晶片才會正確運作？</p>
+<p><b>交給下一步</b>：介面規格 <code>spec.json</code>：10 個光學埠、14 個相位控制通道（heater 與 PAD 的編號）、GND 回流，以及 12 條需求（每條都寫明數值與驗證方式）。M2 s3 的模擬與 M3 的佈局都依這份規格。</p>
+<p class="terms"><b>名詞對照</b>：介面規格（interface specification，晶片與外部設備之間的約定）、EC（edge coupler，邊緣耦合器：在晶片側面讓光纖的光進出波導）、GC（grating coupler，光柵耦合器：從晶片上方以斜角耦光；本設計沒有使用）、光纖陣列（fiber array，多條光纖等間距排成一排）、heater（加熱器：在波導上方的電阻細線，通電發熱改變相位）、TiN（titanium nitride，氮化鈦：heater 細線的材料）、Ti/AL（鈦／鋁金屬：本晶片唯一的導線層，PAD 也由它構成）、PAD（接觸墊：晶片表面讓探針或打線接觸的金屬方塊）、GND（ground，共用的電流回流端）、dB（decibel，功率比的對數單位：損耗 L dB 表示輸出功率是輸入的 10<sup>−L/10</sup>）、熱光效應（thermo-optic effect，溫度改變折射率）、P<sub>π</sub>（讓相位改變 π 所需的 heater 功率）、MPW（multi-project wafer，多個設計共用一片晶圓的投片；投片指把佈局送交晶圓廠製作）、西緣／東緣（佈局圖的左緣／右緣）、單模（single mode，只傳一種光場分布）、監看埠（monitor port，不參與判讀、用來量測與校正的輸出）、探針（probe，量測時壓在 PAD 上供電的細針）、打線（wire bonding，用細金屬線把 PAD 接到封裝）</p>
+</div>
+
+<figure class="concept"><img src="figures/m2/s1_concept.png" alt="本步概念圖：晶片與外部設備的邊界"><figcaption><b>本步概念</b>　晶片只負責光場混合與 heater；光源、參考光、偵測與判讀、heater 驅動都在外部。規格要寫清楚每個介面，以及外部設備可以差多少。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能畫出晶片與外部設備的邊界；能從規格找到任一訊號的光學埠、任一相位的 heater 與 PAD；知道參考光、輸入相位與 heater 各需要多準，數字從哪裡算出來。</p>
+<div class="example">
+<p>類比：買一台家電，說明書會寫插頭規格、電壓範圍、耗電量。家電廠商不負責電力來源，但會說清楚「電壓在 100–120 V 之間都能用」。晶片也一樣：它不包含雷射、資料調變與偵測器，但要清楚寫出外部設備要提供什麼、可以差多少。這份約定就是介面規格。</p>
+<p>規格必須在畫佈局之前定下來：光學埠放在哪一邊、需要幾個電氣接點，會直接決定晶片的佈局；寫錯了，晶片做好才發現接不上。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 晶片與外部設備的邊界</h4>
+<table>
+<tr><th>功能</th><th>做在哪裡</th><th>理由</th></tr>
+<tr><td>光場混合（B7）</td><td>晶片</td><td>本課程設計的核心</td></tr>
+<tr><td>14 個相位的調整</td><td>晶片（heater）＋外部（驅動電源）</td><td>heater 必須貼在波導上；驅動電源與控制在外部</td></tr>
+<tr><td>光進出晶片</td><td>晶片邊緣的 EC＋外部光纖陣列</td><td>見下一點</td></tr>
+<tr><td>雷射、資料調變、參考光</td><td>外部</td><td>本平台是被動製程（只有波導與 heater），做不了雷射與高速調變</td></tr>
+<tr><td>偵測與判讀</td><td>外部（兩個 PD 相減、TIA、比較器）</td><td>M1 s1 的判讀鏈；本平台沒有偵測器</td></tr>
+</table>
+<h4>2. 光學埠：10 個 EC</h4>
+<p>B7 有 5 個輸入、5 個輸出。判讀只用 o2、o4。M1 把不讀取的 o1、o3、o5 稱為終端；在晶片上，它們同樣引出晶片，作為<b>監看埠</b>：理想無損時 5 個輸出的總功率等於 5 個輸入的總功率，監看埠可以用來檢查耦合損耗、校正相位。輸入放在晶片西緣、輸出放在東緣，各用一組光纖陣列。</p>
+<p>這個平台的元件庫提供 GC（實測每個 5.5–6.5 dB 損耗 [2]、需要斜角光纖），沒有 EC。本設計不使用 GC，而是選 EC，因為 10 個埠可以分成兩排、各用一組光纖陣列從晶片側面耦合，且一般而言 EC 的頻寬較寬、損耗較低。代價是 EC 要自己設計，不是晶圓廠驗證過的元件；它的形狀與損耗在 M3 s3 處理，這是本設計的一個風險。</p>
+<h4>3. 電氣介面：heater 與 PAD</h4>
+<p>每個相位用一個 heater 調整。heater 是 TiN 細線，做在波導上方的包覆層上；通電發熱後，波導的折射率隨溫度改變，相位跟著改變（熱光效應）。在 heater 不太熱的範圍內，相位與功率成正比：</p>
+<math display="block"><mrow><mi>φ</mi><mo>=</mo><mi>π</mi><mfrac><msub><mi>P</mi><mtext>h</mtext></msub><msub><mi>P</mi><mi>π</mi></msub></mfrac><mspace width="1em"/><mo>⇒</mo><mspace width="1em"/><msub><mi>P</mi><mtext>h</mtext></msub><mo>=</mo><mfrac><mrow><mo>(</mo><mi>φ</mi><mspace width="0.2em"/><mo>mod</mo><mspace width="0.2em"/><mn>2</mn><mi>π</mi><mo>)</mo></mrow><mi>π</mi></mfrac><msub><mi>P</mi><mi>π</mi></msub></mrow></math>
+<p>φ 是要加上的相位（rad），P<sub>h</sub> 是 heater 功率（mW），P<sub>π</sub> 是相位改變 π 所需的功率。同一平台、同樣層疊的 TiN heater 實測 P<sub>π</sub> 約 <span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="d['P_pi_mW']" data-fmt="{:g}">13</span> mW [1]。因為相位以 2π 為週期，每個 heater 最多需要約 2P<sub>π</sub>。heater 的兩端各接到一個 PAD（Ti/AL 接觸墊）：一端是各自的訊號 PAD，另一端接到 GND PAD。所以需要 14 個訊號 PAD，加上至少一個 GND PAD。GND PAD 的數量在 M3 s3 做佈局時決定，最後的佈局是相鄰兩個 heater 共用一塊 GND PAD。</p>
+<h4>4. 外部設備要多準：三個容許範圍</h4>
+<p>M1 的相位是在「R＝3、5 路輸入相位都對齊」的條件下算出來的。外部設備做不到完全準確，所以要算出容許範圍。注意：以下每一項都是<b>單獨評估</b>，假設 MMI 理想、其他項目都沒有誤差；幾項誤差同時存在、或 MMI 有損耗時，範圍會變小（M2 s3 會看到這一點）。</p>
+<ul>
+<li><b>參考光 R</b>：相位固定，把 R 的振幅從 2 掃到 4（步長 0.005），找出五個函數 80 組都判對的範圍。</li>
+<li><b>輸入之間的相對相位</b>：5 路光從同一顆雷射分出，經過長度不同的光纖與調變路徑到達晶片，每一路會多出一個相位 δ<sub>j</sub>，等於把輸入光場 v 的每一項乘上 e<sup>iδ<sub>j</sub></sup>。讓 δ<sub>j</sub> 服從標準差 σ 的常態分佈，重複 500 次，看真值表全對的比例。</li>
+<li><b>heater 相位精度</b>：M1 s4 已算出每個相位的誤差標準差 ≤ 0.05 rad 時五個函數都全對；換成 heater 功率約 0.05/π × P<sub>π</sub>。</li>
+</ul>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\m2_circuit\s1_spec\spec.py
+.\lab design\m2_circuit\s1_spec\figs.py</code></pre>
+<p><code>spec.py</code> 先核對三個交接檔（接線表的 SHA-256、接線與 B7 相同、每個函數 14 個相位），再算三個容許範圍，最後寫出 <code>spec.json</code> 與 <code>tolerance.json</code>。預期輸出包含：</p>
+<pre><code>一致性：{'netlist_sha': True, 'ops_match': True, 'n_phase': True}
+R 範圍（五個函數都對）：[2.56, 3.41] …
+寫出 design/m2_circuit/s1_spec/out/spec.json、tolerance.json</code></pre>
+<p>練習：打開 <code>spec.json</code> 的 <code>phase_channels</code>，找出控制 MZI-5 外相位 φ5 的 heater 與 PAD 編號；再找出 o4 對應的佈局埠名與它在晶片哪一緣。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/m2/s1_boundary.png" alt="晶片與外部設備的邊界：左側光源與參考光，晶片內 B7、10 個 EC、上方的訊號 PAD 與共用 GND PAD，右側偵測器與判讀"><figcaption>圖 M2-1　晶片與外部設備的邊界。紫框內是晶片：B7、14 個 heater、西緣 5 個輸入 EC、東緣 5 個輸出 EC、上方的 14 個訊號 PAD（橘）與共用 GND PAD（灰，實際塊數到 M3 s3 才決定，這裡畫一塊代表）。本圖為示意，PAD 全畫在上方；實際佈局分在上下兩緣。左側是光源端（同一顆雷射分出資料光與參考光），右側是接收端（o2、o4 經 PD、TIA、比較器判讀，o1、o3、o5 監看），右上是 heater 驅動。</figcaption></figure>
+<figure><img src="figures/m2/s1_channels.png" alt="B7 接線圖，每顆 MZI 標出兩個 heater 與 PAD 編號，左右標出 EC 埠名"><figcaption>圖 M2-2　14 個相位控制通道。heater 依 MZI 順序編號，每顆 MZI 先 θ 後 φ：H01、H02 是 MZI-1 的 θ1、φ1，……，H13、H14 是 MZI-7 的 θ7、φ7；每個 heater 接到同編號的訊號 PAD。左右兩側是各光學埠的佈局埠名。</figcaption></figure>
+<figure><img src="figures/m2/s1_tolerance.png" alt="左：五個函數可容許的 R 範圍；右：五個函數的 heater 總功率"><figcaption>圖 M2-3　左：相位固定時，各函數判讀全對的 R 範圍；AND4 最窄，決定了整體範圍（藍底）。AND2 為 2–3.95，下限到掃描邊界；OR2、XOR2、OR4 兩端都到掃描邊界（邊界外沒有計算）。右：五個函數的 14 個 heater 總功率，以及「每個 heater 都需要接近 2π」的最壞情況。相位剛好是 2π 的整數倍時等於 0 相位，不需要功率。</figcaption></figure>
+<table>
+<tr><th>容許範圍</th><th>結果</th></tr>
+<tr><td>參考光 R</td><td><span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="d['R_range_all'][0]" data-fmt="{:g}">2.56</span>–<span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="d['R_range_all'][1]" data-fmt="{:g}">3.41</span>（設計值 3）；換成功率是 <span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="d['R_power_range_pct'][0]" data-fmt="{:+g}">−27.2</span>％ 到 <span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="d['R_power_range_pct'][1]" data-fmt="{:+g}">+29.2</span>％；由 AND4 決定</td></tr>
+<tr><td>輸入相對相位</td><td>σ＝<span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="d['input_phase_sigma_ok']" data-fmt="{:g}">0.1</span> rad 時五個函數 500 次都全對；σ＝0.2 rad 時最低 <span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="min(d['input_phase_pass']['0.2'].values())" data-fmt="{:.1%}">99.6%</span></td></tr>
+<tr><td>heater 總功率</td><td><span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="min(v['total_mW'] for v in d['heater_power'].values())" data-fmt="{:.0f}">134</span>–<span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="max(v['total_mW'] for v in d['heater_power'].values())" data-fmt="{:.0f}">181</span> mW（依函數）；最壞情況 <span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="d['worst_case_total_mW']" data-fmt="{:g}">364</span> mW</td></tr>
+<tr><td>相位精度換成功率</td><td>0.05 rad ≈ <span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="d['phase_step_mW_per_0p05rad']" data-fmt="{:.2f}">0.21</span> mW</td></tr>
+</table>
+<p><b>介面需求</b>（完整內容在 <code>spec.json</code> 的 <code>requirements</code>）。編號的首字母是類別：O 光學、E 電氣、R 判讀、F 功能、K 校正。大寫 O1–O5 是需求編號，小寫 o1–o5 是輸出埠；R1 是需求編號，R 是參考光。後續步驟的「需求 K1」即本表的校正需求。</p>
+<table>
+<tr><th>編號</th><th>項目</th><th>規格</th><th>驗證</th></tr>
+<tr><td>O1</td><td>光學輸入</td><td>5 路，單模、TE、1550 nm，全部來自同一顆雷射</td><td>M2 s3 模擬；量測</td></tr>
+<tr><td>O2</td><td>參考光 R</td><td>振幅 3（功率為一路資料「1」的 9 倍），容許 2.56–3.41</td><td>本步計算</td></tr>
+<tr><td>O3</td><td>輸入相對相位</td><td>固定且已知，誤差標準差 ≤ 0.1 rad（500 次全對：95% 信心下失敗率 &lt; 0.6%）</td><td>本步計算</td></tr>
+<tr><td>O4</td><td>光學輸出</td><td>5 路全部引出：o2、o4 判讀，o1、o3、o5 監看</td><td>M3 佈局</td></tr>
+<tr><td>O5</td><td>光學耦合</td><td>10 個 EC，輸入西緣、輸出東緣，各一組光纖陣列</td><td>M3 s3</td></tr>
+<tr><td>E1</td><td>相位控制通道</td><td>14 個，每個一個 heater、一個訊號 PAD</td><td>M3 s4 連接檢查</td></tr>
+<tr><td>E2</td><td>回流</td><td>所有 heater 的地端都接到 GND PAD，至少 1 個；分成數個時在晶片外部共地</td><td>M3 s4 連接檢查</td></tr>
+<tr><td>E3</td><td>相位範圍與精度</td><td>0–2π；誤差標準差 ≤ 0.05 rad</td><td>M1 s4 模擬</td></tr>
+<tr><td>E4</td><td>heater 功率</td><td>P<sub>π</sub>≈13 mW；最壞情況約 364 mW</td><td>本步計算；量測校正</td></tr>
+<tr><td>R1</td><td>判讀</td><td>ΔP＝P(o2) − P(o4)，ΔP＞0 判 1；偵測器極性不可接反</td><td>M2 s3；量測</td></tr>
+<tr><td>F1</td><td>功能</td><td>五個函數各 16 組，共 80 組全對</td><td>M2 s3 模擬</td></tr>
+<tr><td>K1</td><td>校正</td><td>O2、O3、E3 是單項評估；晶片完成後依量測重新求 14 個相位（M1 的相位只當起點），並重算容許範圍</td><td>M3 s5 交付；量測</td></tr>
+</table>
+<p>一致性檢查：接線表 SHA-256 相符、接線與 B7 相同、每個函數 14 個相位，三項都通過。</p>
+<p><b>實際遇到的情況</b>：一開始憑直覺把輸入相對相位的規格寫成「≤ 0.05 rad」，和 heater 精度一樣。實際計算後，σ＝0.1 rad 時五個函數仍然 500 次全對，於是改成由計算結果自動填入（0.1 rad）。規格寫得比需要嚴格，會讓外部光路的成本無謂提高；寫得太鬆則晶片會失敗，兩者都要靠計算決定。</p>
+<p>另一個錯誤是複查數字時發現的：有幾個相位在數值上是 2π−10<sup>−13</sup>，取 mod 2π 後仍接近 2π，被算成約 26 mW 的 heater 功率，但它實際等於 0 相位。修正後各函數總功率從原本高估的 158–236 mW 降為 <span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="min(v['total_mW'] for v in d['heater_power'].values())" data-fmt="{:.0f}">134</span>–<span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="max(v['total_mW'] for v in d['heater_power'].values())" data-fmt="{:.0f}">181</span> mW。數值計算中，週期量的邊界值要特別處理。</p>
+<p><b>參考文獻</b>：[1] B. Pant et al., “Study into the spread of heat from thermo-optic silicon photonic elements,” Opt. Express 29(22), 36461 (2021)（同平台 108×2 µm TiN heater 的 P<sub>π</sub> 實測）：https://opg.optica.org/oe/fulltext.cfm?uri=oe-29-22-36461；[2] CORNERSTONE 晶片量測的公開模型檔（gdsfactory cspdk）：https://github.com/gdsfactory/cspdk；平台規範見 CORNERSTONE MPW 設計規範：https://cornerstone.sotonfab.co.uk/mpw/live-calls/</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>把模型的「R＝3」當成 3 mW</b>：R 是以一路資料「1」為單位的光場振幅；實際功率要看雷射與耦合損耗，規格只規定比例。</li>
+<li><b>忘了輸入之間的相位</b>：M1 的計算假設 5 路輸入相位對齊。實驗時從分光到晶片的路徑長度不同，就會多出相位差，必須量測並補償。</li>
+<li><b>以為 heater 數等於 PAD 數</b>：14 個 heater 需要 14 個訊號 PAD，再加上 GND PAD。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：控制 φ5 的是哪個 heater、哪個 PAD？</summary>
+<p>H10、P10。依 MZI 順序、每顆先 θ 後 φ：MZI-5 的 θ5 是第 9 個、φ5 是第 10 個。</p></details>
+<details class="quiz"><summary>自我檢查 2：參考光的功率掉了 20%，判讀還會對嗎？</summary>
+<p>功率變成 0.8 倍，振幅是 3×√0.8≈2.68，在 2.56–3.41 之內，五個函數仍全對。但這是在其他條件都理想（MMI 無損耗、輸入相位與 heater 都準確）時的結論；其他誤差同時存在時，容許範圍會變小，所以晶片完成後要依量測重新校正（需求 K1）。</p></details>
+<details class="quiz"><summary>自我檢查 3：監看埠 o1、o3、o5 對校正有什麼幫助？</summary>
+<p>理想無損時 5 個輸出總功率等於 5 個輸入總功率，可以用來估計耦合損耗；監看埠的功率也隨相位變化，可以在不動判讀埠的情況下，逐一找出各 heater 的功率與相位關係。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>輸入</td><td>只讀 M1 s5 的三個交接檔</td></tr>
+<tr><td>R 掃描</td><td>振幅 2.0–4.0，步長 0.005；相位固定</td></tr>
+<tr><td>輸入相位誤差</td><td>5 路各加 N(0, σ²)，σ＝0.02、0.05、0.1、0.2 rad，各 500 次，種子 700＋k</td></tr>
+<tr><td>heater</td><td>P<sub>π</sub>＝13 mW（同平台實測）；功率與相位成正比；未含熱串擾（一個 heater 的熱影響到旁邊的波導）與製程造成的相位偏移</td></tr>
+</table>
+<div class="auto-code" data-files="design/m2_circuit/s1_spec/spec.py design/m2_circuit/s1_spec/figs.py"></div>
+<div class="auto-history" data-file="design/m2_circuit/s1_spec/HISTORY.md"></div>
+</section>

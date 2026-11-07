@@ -1,0 +1,416 @@
+{
+  "gds_sha256": "a3f27b4d47f17e2f48406e8d324edfb11cc70914ca98a2c41d494a0ef274fd2c",
+  "core_sha_match": true,
+  "core_polygons": [
+    226,
+    226
+  ],
+  "electrical": {
+    "al_nets": 21,
+    "tin_regions": 14,
+    "pads": [
+      "GN1",
+      "GN2",
+      "GN3",
+      "GN4",
+      "GN5",
+      "GS1",
+      "GS2",
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13",
+      "P14"
+    ],
+    "gnd_pads": [
+      "GN1",
+      "GN2",
+      "GN3",
+      "GN4",
+      "GN5",
+      "GS1",
+      "GS2"
+    ],
+    "channels": [
+      {
+        "heater": "H04",
+        "contacts": 2,
+        "nets": [
+          "P04",
+          "GS1"
+        ],
+        "expect": [
+          "P04",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H03",
+        "contacts": 2,
+        "nets": [
+          "GS1",
+          "P03"
+        ],
+        "expect": [
+          "P03",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H06",
+        "contacts": 2,
+        "nets": [
+          "P06",
+          "GN2"
+        ],
+        "expect": [
+          "P06",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H02",
+        "contacts": 2,
+        "nets": [
+          "P02",
+          "GN1"
+        ],
+        "expect": [
+          "P02",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H01",
+        "contacts": 2,
+        "nets": [
+          "GN1",
+          "P01"
+        ],
+        "expect": [
+          "P01",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H10",
+        "contacts": 2,
+        "nets": [
+          "P10",
+          "GN3"
+        ],
+        "expect": [
+          "P10",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H09",
+        "contacts": 2,
+        "nets": [
+          "P09",
+          "GN4"
+        ],
+        "expect": [
+          "P09",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H05",
+        "contacts": 2,
+        "nets": [
+          "GN2",
+          "P05"
+        ],
+        "expect": [
+          "P05",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H08",
+        "contacts": 2,
+        "nets": [
+          "GN3",
+          "P08"
+        ],
+        "expect": [
+          "P08",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H07",
+        "contacts": 2,
+        "nets": [
+          "GN4",
+          "P07"
+        ],
+        "expect": [
+          "P07",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H14",
+        "contacts": 2,
+        "nets": [
+          "P14",
+          "GS2"
+        ],
+        "expect": [
+          "P14",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H13",
+        "contacts": 2,
+        "nets": [
+          "GS2",
+          "P13"
+        ],
+        "expect": [
+          "P13",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H12",
+        "contacts": 2,
+        "nets": [
+          "P12",
+          "GN5"
+        ],
+        "expect": [
+          "P12",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H11",
+        "contacts": 2,
+        "nets": [
+          "GN5",
+          "P11"
+        ],
+        "expect": [
+          "P11",
+          "GND"
+        ],
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "route_resistance_ohm": {
+      "P02/H02": 5.14,
+      "GN1/H02": 5.24,
+      "GN1/H01": 5.24,
+      "P01/H01": 5.18,
+      "P06/H06": 5.63,
+      "GN2/H06": 5.56,
+      "GN2/H05": 6.17,
+      "P05/H05": 5.99,
+      "P10/H10": 6.71,
+      "P08/H08": 5.17,
+      "GN3/H08": 5.14,
+      "GN3/H10": 6.29,
+      "P09/H09": 6.19,
+      "P07/H07": 5.45,
+      "GN4/H07": 5.61,
+      "GN4/H09": 6.81,
+      "P12/H12": 5.92,
+      "GN5/H12": 6.09,
+      "GN5/H11": 5.55,
+      "P11/H11": 5.6,
+      "P04/H04": 5.7,
+      "GS1/H04": 5.84,
+      "GS1/H03": 5.74,
+      "P03/H03": 5.8,
+      "P14/H14": 5.7,
+      "GS2/H14": 5.84,
+      "GS2/H13": 5.74,
+      "P13/H13": 5.8
+    },
+    "route_resistance_max_ohm": 6.81,
+    "series_resistance_ohm": {
+      "H02": 10.38,
+      "H01": 10.42,
+      "H06": 11.19,
+      "H05": 12.16,
+      "H10": 13.0,
+      "H08": 10.31,
+      "H09": 13.0,
+      "H07": 11.06,
+      "H12": 12.01,
+      "H11": 11.15,
+      "H04": 11.54,
+      "H03": 11.54,
+      "H14": 11.54,
+      "H13": 11.54
+    },
+    "series_resistance_max_ohm": 13.0,
+    "dphi_at_2pi_rad_1kohm": 0.16,
+    "gnd_pairing": {
+      "GN1": [
+        "H01",
+        "H02"
+      ],
+      "GN2": [
+        "H05",
+        "H06"
+      ],
+      "GN3": [
+        "H08",
+        "H10"
+      ],
+      "GN4": [
+        "H07",
+        "H09"
+      ],
+      "GN5": [
+        "H11",
+        "H12"
+      ],
+      "GS1": [
+        "H03",
+        "H04"
+      ],
+      "GS2": [
+        "H13",
+        "H14"
+      ]
+    },
+    "note": "各 GND PAD（GN1…、GS1…）在晶片上互不相連，量測時每個 GND PAD 都要接到驅動器的地"
+  },
+  "optical": {
+    "ec": [
+      {
+        "ec": "x1_in0",
+        "side": "W",
+        "core_port": [
+          "in0"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "o1_out0",
+        "side": "E",
+        "core_port": [
+          "out0"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "x2_in1",
+        "side": "W",
+        "core_port": [
+          "in1"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "o2_out1",
+        "side": "E",
+        "core_port": [
+          "out1"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "x3_in2",
+        "side": "W",
+        "core_port": [
+          "in2"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "o3_out2",
+        "side": "E",
+        "core_port": [
+          "out2"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "x4_in3",
+        "side": "W",
+        "core_port": [
+          "in3"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "o4_out3",
+        "side": "E",
+        "core_port": [
+          "out3"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "R_in4",
+        "side": "W",
+        "core_port": [
+          "in4"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "o5_out4",
+        "side": "E",
+        "core_port": [
+          "out4"
+        ],
+        "ok": true
+      }
+    ],
+    "errors": []
+  },
+  "faults": {
+    "Ti/AL 短路": true,
+    "Ti/AL 斷路": true,
+    "TiN 斷路": true,
+    "原理圖對調": true,
+    "PAD 標記對調": true,
+    "EC 標記對調": true,
+    "DRC：Ti/AL 太窄": true,
+    "DRC：TiN 太近": true
+  },
+  "checks": {
+    "drc_clean": true,
+    "one_gds99": true,
+    "core_unchanged": true,
+    "n_al_nets": true,
+    "n_heaters": true,
+    "lvs_clean": true,
+    "every_heater_two_contacts": true,
+    "optical_clean": true,
+    "gnd_pairing": true,
+    "faults_caught": true
+  }
+}

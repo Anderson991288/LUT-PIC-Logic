@@ -1,0 +1,73 @@
+{
+ "netlist_sha256": "a03cc3f003f356ee78c7f65b5421d4c3d24914641f82d2feb566469e77de6f2a",
+ "sha_match": true,
+ "nominal": {
+  "rows": 112,
+  "bits_ok": 112,
+  "powers_ok": 112,
+  "max_power_diff": 4.992701625461393e-07,
+  "margin_match": true,
+  "margins": {
+   "AND2": 2.059042,
+   "OR2": 1.678267,
+   "XOR2": 1.346436,
+   "NAND2": 1.678267,
+   "AND4": 1.886804,
+   "XOR4": 0.308497,
+   "MUX": 1.313091
+  }
+ },
+ "tampers": {
+  "ook_01_vectors": {
+   "bits_ok": 72,
+   "powers_ok": 0,
+   "max_power_diff": 8.477043,
+   "caught": true,
+   "min_margin": -5.761291
+  },
+  "swap_theta_phi": {
+   "bits_ok": 54,
+   "powers_ok": 0,
+   "max_power_diff": 8.60561,
+   "caught": true,
+   "min_margin": -4.869123
+  },
+  "wiring_mzi3_to_34": {
+   "bits_ok": 63,
+   "powers_ok": 0,
+   "max_power_diff": 8.28494,
+   "caught": true,
+   "min_margin": -1.607567
+  },
+  "readout_o2_o3_swapped": {
+   "bits_ok": 58,
+   "powers_ok": 0,
+   "max_power_diff": 4.754114,
+   "caught": true,
+   "min_margin": -3.441019
+  },
+  "R_2p9": {
+   "bits_ok": 112,
+   "powers_ok": 0,
+   "max_power_diff": 0.376467,
+   "caught": true,
+   "min_margin": 0.289413
+  },
+  "R_inverted": {
+   "bits_ok": 78,
+   "powers_ok": 17,
+   "max_power_diff": 9.990282,
+   "caught": true,
+   "min_margin": -5.761291
+  },
+  "no_loss_a1": {
+   "bits_ok": 112,
+   "powers_ok": 0,
+   "max_power_diff": 4.937869,
+   "caught": true,
+   "min_margin": 0.338603
+  }
+ },
+ "all_ok": true,
+ "convention": "T＝a·H·diag(e^{iθ},1)·H·diag(e^{iφ},1)；E± 向量 1−2x；R＝+3；Da＝P2−P4、Db＝P4−P3"
+}

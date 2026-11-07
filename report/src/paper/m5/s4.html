@@ -1,0 +1,97 @@
+<section class="step" id="p-m5-s4" data-milestone="M5" data-step="s4" data-title="全類別的時序篩選">
+<div class="bridge">
+<p><b>承接</b>：M3 s2 的 soft-min 合成與 M3 s3 的詳細模擬只做了表 I 的 9 個代表函數；M5 s3 把盒證明改寫成「輸入二次式係數就能用」的版本。草稿 II-B 說 4 輸入函數在無損時有 181 類 margin 為正，但時序只驗證了少數代表閘。</p>
+<p><b>本步要回答</b>：靜態可實現的 4 輸入類別中，有多少在 10 Gb/s、13.2 ps 盒下真的有取樣窗、能被認證？能不能只看靜態量就預先判斷，省掉逐類的動態模擬？</p>
+<p><b>交給下一步</b>：<code>screen.json</code>（222 類的三層結果、推測與檢驗）；「靜態可實現」與「有時序窗」的分開計數；一條在同類成員上沒有判錯的篩選規則。M6（尚未開始）的單元庫（先逐一驗證一小組常用邏輯單元）沿用同一套三層驗收；靜態與時序的分開計數交給 M7 修改草稿 II-B。這一步的全類別結果是補充資料，後續不再以列舉全部函數為目標。</p>
+<p class="terms"><b>名詞對照</b>：NPN 等價類（NPN class）＝把輸入重新排列（P）、把某些輸入取反（N）、把輸出取反（N）後能互相變成的函數歸為一類，4 輸入的 65536 個函數共 222 類；預先登記（pre-registration）＝在看到檢驗結果之前就把推測方法與判定門檻寫死（本步只做到「程式中先於動態計算固定」，沒有獨立的時間戳記）；同類成員一致性＝用同一 NPN 類的其他成員檢查規則；成員與代表同類、結果相關，不是獨立的保留資料。</p>
+</div>
+
+<figure class="concept"><img src="figures/paper/m5/s4_concept.png" alt="本步概念圖：靜態、動態、認證三層篩選，先只用靜態量推測再檢驗"><figcaption><b>本步概念</b>　先只用靜態量推測，再逐類實際驗收；認證不過記為「未確認」，不是失敗。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p>一間餐廳的菜單上有 222 道菜都「做得出來」（靜態可實現），但尖峰時段 10 分鐘內要出餐（10 Gb/s 的取樣窗），能準時出的有幾道？只試做了 9 道招牌菜都很快，就說 222 道都行，顯然不夠。可以全部試做一次；也可以依食譜（靜態量）推測哪些會慢，再試做幾道驗證猜得準不準。本步兩件事都做：222 類全部實際驗收，並檢驗「只看食譜」能猜到什麼程度。</p>
+<p>學習目標：(1) 了解 NPN 類別，以及為什麼在本電路上同一類的成員 margin 不完全相同；(2) 把靜態合成、動態窗、盒證明三層串成全類別的篩選；(3) 用預先登記與同類成員，誠實地檢驗「靜態量能否預測時序」，並說清楚這種檢驗的限度；(4) 分清楚「靜態可實現」與「有時序窗」兩種計數。</p>
+
+<h3>② 原理與推導</h3>
+<h4>1. NPN 類別與成員的差異</h4>
+<p>同一 NPN 類的函數在邏輯上只差輸入、輸出的接法。但在本電路上不完全等價：輸入取反要把 0／1 的光場互換，參考光只從波導 5 進來、四個輸入波導的位置也不對稱，所以同一類不同成員合成出的 margin 可能不同。草稿以每類的代表計數；本步每類另抽 2 個成員重新合成，檢查判定是否一致。</p>
+<h4>2. 該類自己的護欄、m／g 與 ρ</h4>
+<p>表 I 用「各函數自己的輸出功率」算護欄，覆蓋率統計則用保守的 0.20 P<sub>u</sub>。本步對每一類的 0.9 dB 相位，以 M3 s3 的雜訊模型（不經濾波）算 16 組字的靜態護欄，取最大值：</p>
+<math display="block"><mi>g</mi><mo>=</mo><munder><mi>max</mi><mi mathvariant="bold">x</mi></munder><mrow><mo>[</mo><mo>|</mo><msub><mi>V</mi><mi>off</mi></msub><mo>|</mo><mo>+</mo><mi>Q</mi><msqrt><msubsup><mi>σ</mi><mi>c</mi><mn>2</mn></msubsup><mo>+</mo><msup><mi>c</mi><mn>2</mn></msup><msup><mrow><mo>(</mo><mo>|</mo><mi>D</mi><mo>(</mo><mi mathvariant="bold">x</mi><mo>)</mo><mo>|</mo><mo>+</mo><msub><mi>ε</mi><mi>PD</mi></msub><msub><mi>P</mi><mi>sum</mi></msub><mo>(</mo><mi mathvariant="bold">x</mi><mo>)</mo><mo>)</mo></mrow><mn>2</mn></msup></msqrt><mo>]</mo></mrow></math>
+<p>g 的單位是 P<sub>u</sub>，σ<sub>c</sub>、c²、ε<sub>PD</sub>、Q、V<sub>off</sub> 與 M3 s3 相同（Γ(<b>x</b>) 是括號內的那一項）。m／g 是靜態 margin 除以 g，但 m 來自最差的那組字、g 來自護欄最大的那組字，兩者不一定是同一組，所以 m／g &lt; 1 推不出任何一組字落在自己的護欄內。改用逐字比：</p>
+<math display="block"><mi>ρ</mi><mo>=</mo><munder><mi>min</mi><mi mathvariant="bold">x</mi></munder><mfrac><mrow><msub><mi>s</mi><mi>f</mi></msub><mo>(</mo><mi mathvariant="bold">x</mi><mo>)</mo><mi>D</mi><mo>(</mo><mi mathvariant="bold">x</mi><mo>)</mo></mrow><mrow><mi>Γ</mi><mo>(</mo><mi mathvariant="bold">x</mi><mo>)</mo></mrow></mfrac></math>
+<p>s<sub>f</sub>(<b>x</b>) 是判讀方向（±1）。ρ &lt; 1 表示至少有一組字的判讀量低於它自己的護欄；若這組字持續夠久，接收端輸出穩定到靜態值，任何取樣相位都不安全。這在<b>穩態下是嚴格的必要條件</b>；序列中那組字只出現在很短的片段時，接收端還沒穩定，才可能例外，所以仍要由資料檢驗。</p>
+<h4>3. 預先登記的推測</h4>
+<p>在程式中先於任何一類的動態計算，寫死三種指標（沒有獨立的時間戳記，只有程式順序可證）：A 只用 m；B 用 ln(m／g)；C 用 ln(m／g) 加有效輸入數 n<sub>eff</sub>（M4 s2 的弱耦合判定）。以表 I 的 9 個函數為校正組，各自用最小平方擬合「盒內抽樣共同窗 ≈ a＋b·指標（＋c·n<sub>eff</sub>）」，預測值 ≥ 23 ps 判「有窗」，離 23 ps 不到 5 ps 標「邊界」。</p>
+<h4>4. 修正規則（事後提出）與同類成員一致性</h4>
+<p>第一次執行後才提出：ρ &lt; 1 判「無窗」（第 2 點的必要條件）；ρ ≥ r<sub>hi</sub> 判「有窗」，r<sub>hi</sub> 是校正組 ρ 的最小值（只在校正組涵蓋的範圍內內插，不外推）；兩者之間是「邊界」，要實際跑動態。門檻來自校正組與必要條件，沒有用代表類別的資料調整；但規則的形式是看過結果後才選的，用同一批資料檢驗會高估。所以另用每類的 2 個 NPN 成員（不同的函數、各自重新合成的相位）實際跑動態窗。成員與代表同類、結果相關，這只是<b>一致性檢查</b>，不是獨立的保留資料；真正獨立的檢驗留給 M6 的單元庫。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\paper\m5_cascade\s4_screen\screen.py
+.\lab design\paper\m5_cascade\s4_screen\figs.py
+.\lab design\paper\m5_cascade\concept.py</code></pre>
+<p><code>screen.py</code> 依序做：(1) 用 384 個輸入變換與輸出取反把 65536 個函數分成 222 類；(2) 每類代表在無損與 0.9 dB 下合成（8 個起點，起點不一致時再加 8 個；0.9 dB 另從無損解暖啟動一次），每類另抽 2 個成員在 0.9 dB 下合成；(3) 算靜態量並固定預先登記的推測；(4) 0.9 dB margin 為正的類別與成員跑對齊窗、盒內 41 點共同窗與單葉認證（單葉不過而共同窗 ≥ 23 ps 時切 16 葉）；(5) 修正規則、同類成員一致性與邊界校正。合成有快取，第一次約 44 分鐘，之後約 1.5 分鐘；動態與認證約 10 分鐘（6 個 worker）。</p>
+<p>實際遇到的錯誤：(1) 第一次執行時，預先登記的三種指標幾乎把每一類都判成「有窗」，錯了 98–137 類（見 ④）。原因是校正組的 9 個函數全部有窗、m／g 都在 1.8 以上，擬合線外推到 m／g＝1 時仍預測約 32 ps，要到 m／g ≈ 0.4 才降到 23 ps。於是提出必要條件與「不外推」的修正規則，並加上同類成員的檢查。(2) 第一版的修正規則用 m／g，複查時發現它不是嚴格的必要條件，改用 ρ 後重算：無窗區由 97 類變成 91 類，「有窗」「無窗」兩區仍沒有判錯。(3) 與草稿的計算程式逐類比較，0.9 dB 有 27 類的 margin 低 5% 以上；加了暖啟動後有 19 類的最佳解來自暖啟動，但各門檻的類別數都沒有改變。</p>
+<p>自己動手：把邊界校正的 5 類改成 10 類，看指標 B 在邊界區的錯誤數會不會降到可以省掉動態模擬的程度。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/paper/m5/s4_screen.png" alt="(a) 三層篩選的類別數；(b) ρ 與盒內抽樣共同窗"><figcaption>圖 M5-4　(a) 222 類在各層通過的數目：靜態（灰）、動態（藍）、認證（紅：單葉；橘：含切細）。(b) 每一類的 ρ 與盒內抽樣共同窗；實心是線性可分、空心是線性不可分，黑色大圈是校正組。灰帶是修正規則的邊界區（1 ≤ ρ &lt; r<sub>hi</sub>）：左邊的類別全部無窗，右邊全部有窗。預先登記的指標用的是 m／g，不畫在這張圖上，結果見表。</figcaption></figure>
+<h4>1. 靜態：與草稿 II-B 比較</h4>
+<table>
+<tr><th>計數（類）</th><th>本研究</th><th>草稿</th></tr>
+<tr><td>無損 margin &gt; 0</td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['lossless']['pos']" data-fmt="{:g}">181</span></td><td>181</td></tr>
+<tr><td>無損 ≥ 0.1 P<sub>u</sub>（函數比例）</td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['lossless']['ge01']" data-fmt="{:g}">178</span>（<span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['lossless']['ge01_func_pct']" data-fmt="{:g}">86.4</span>%）</td><td>177（85.8%）</td></tr>
+<tr><td>無損 ≥ 0.20 P<sub>u</sub>（函數比例）</td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['lossless']['ge_guard']" data-fmt="{:g}">131</span>（<span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['lossless']['ge_guard_func_pct']" data-fmt="{:g}">61.2</span>%）</td><td>136（63.7%）</td></tr>
+<tr><td>0.9 dB ≥ 0.1 P<sub>u</sub></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['lossy']['ge01']" data-fmt="{:g}">137</span></td><td>137</td></tr>
+<tr><td>0.9 dB 超過自己的護欄（m／g ≥ 1）</td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['lossy']['ge_own_guard']" data-fmt="{:g}">84</span></td><td>—</td></tr>
+</table>
+<p>無損與 0.9 dB 的 0.1 P<sub>u</sub> 計數與草稿差 0–1 類；過 0.20 P<sub>u</sub> 的少 5 類。與草稿的計算程式的逐類 margin比較：無損的比值中位數 0.998，0.9 dB 為 0.993；0.9 dB 有 27 類低 5% 以上（多為局部解），其中 2 類剛好落在 0.1 P<sub>u</sub> 門檻兩側（0.099 對 0.101、0.098 對 0.103）。NPN 成員：<span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['member_check']['n']" data-fmt="{:d}">442</span> 個成員中 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['member_check']['agree_01']" data-fmt="{:d}">437</span> 個與代表的「≥ 0.1 P<sub>u</sub>」判定一致，不一致的都在門檻 ±0.01 內；margin 比值 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['member_check']['ratio'][0]" data-fmt="{:.2f}">0.78</span>–<span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['member_check']['ratio'][1]" data-fmt="{:.2f}">1.23</span>，證實同一類在本電路上不完全等價。</p>
+<h4>2. 動態與認證</h4>
+<p>0.9 dB margin 為正的 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['dynamic']['evaluated']" data-fmt="{:g}">181</span> 類中，對齊窗 ≥ 23 ps 的有 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['dynamic']['aligned_ge']" data-fmt="{:g}">66</span> 類，13.2 ps 盒內抽樣共同窗 ≥ 23 ps 的只有 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['dynamic']['box_ge']" data-fmt="{:g}">44</span> 類（占全部函數的 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['dynamic']['box_ge_func_pct']" data-fmt="{:g}">12.8</span>%）；能認證的 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['dynamic']['cert_ge']" data-fmt="{:g}">34</span> 類（單葉 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['dynamic']['cert1_ge']" data-fmt="{:g}">16</span> 類，其餘切 16 葉），另外 10 類有窗但未確認。扣掉常數與只依賴 1 個輸入的兩類（窗都是整個 2 UI），依賴 ≥ 2 個輸入的有窗 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['dynamic']['box_ge_support2']" data-fmt="{:g}">42</span> 類、可認證 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['dynamic']['cert_ge_support2']" data-fmt="{:g}">32</span> 類。也就是說，0.9 dB 下 margin ≥ 0.1 P<sub>u</sub> 的 137 類裡，在 13.2 ps 盒下有共同窗的不到三分之一。回歸檢查：AND4、MAJ4、XOR2 的對齊、抽樣共同、單葉認證都與 M3 s3、M4 s3 完全相同。</p>
+<h4>3. 預先登記的推測：失敗</h4>
+<table>
+<tr><th>指標</th><th>推測有窗→實際有窗</th><th>推測有窗→實際無窗</th><th>推測無窗→實際無窗</th><th>邊界</th><th>校正組 RMSE（ps）</th></tr>
+<tr><td>A：m</td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['A']['table'].get('有窗→有窗', 0)" data-fmt="{:d}">44</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['A']['table'].get('有窗→無窗', 0)" data-fmt="{:d}">137</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['A']['table'].get('無窗→無窗', 0)" data-fmt="{:d}">0</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['A']['n_border']" data-fmt="{:d}">0</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['A']['rmse_cal']" data-fmt="{:.1f}">6.9</span></td></tr>
+<tr><td>B：ln(m／g)</td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['B']['table'].get('有窗→有窗', 0)" data-fmt="{:d}">44</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['B']['table'].get('有窗→無窗', 0)" data-fmt="{:d}">98</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['B']['table'].get('無窗→無窗', 0)" data-fmt="{:d}">1</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['B']['n_border']" data-fmt="{:d}">38</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['B']['rmse_cal']" data-fmt="{:.1f}">6.1</span></td></tr>
+<tr><td>C：ln(m／g)＋n<sub>eff</sub></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['C']['table'].get('有窗→有窗', 0)" data-fmt="{:d}">44</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['C']['table'].get('有窗→無窗', 0)" data-fmt="{:d}">137</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['C']['table'].get('無窗→無窗', 0)" data-fmt="{:d}">0</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['C']['n_border']" data-fmt="{:d}">0</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['prediction']['C']['rmse_cal']" data-fmt="{:.1f}">1.6</span></td></tr>
+</table>
+<p>三種指標都沒有漏掉有窗的類別，但把幾乎所有無窗的類別也判成有窗。C 在校正組上擬合得最好（RMSE，即均方根誤差，1.6 ps），預測卻最差，這是典型的過度擬合：9 個校正點全部有窗，沒有任何「無窗」的例子，曲線只能外推。</p>
+<h4>4. 修正規則：同類成員上沒有判錯</h4>
+<table>
+<tr><th>修正規則的判定</th><th>代表：實際有窗</th><th>代表：實際無窗</th><th>同類成員：實際有窗</th><th>同類成員：實際無窗</th></tr>
+<tr><td>有窗（ρ ≥ <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['r_hi']" data-fmt="{:.2f}">1.8</span>）</td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['reps'].get('有窗→有窗', 0)" data-fmt="{:d}">24</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['reps'].get('有窗→無窗', 0)" data-fmt="{:d}">0</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['members'].get('有窗→有窗', 0)" data-fmt="{:d}">47</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['members'].get('有窗→無窗', 0)" data-fmt="{:d}">0</span></td></tr>
+<tr><td>無窗（ρ &lt; 1）</td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['reps'].get('無窗→有窗', 0)" data-fmt="{:d}">0</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['reps'].get('無窗→無窗', 0)" data-fmt="{:d}">91</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['members'].get('無窗→有窗', 0)" data-fmt="{:d}">0</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['members'].get('無窗→無窗', 0)" data-fmt="{:d}">180</span></td></tr>
+<tr><td>邊界（要跑動態）</td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['reps'].get('邊界→有窗', 0)" data-fmt="{:d}">20</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['reps'].get('邊界→無窗', 0)" data-fmt="{:d}">46</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['members'].get('邊界→有窗', 0)" data-fmt="{:d}">37</span></td><td><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['members'].get('邊界→無窗', 0)" data-fmt="{:d}">97</span></td></tr>
+</table>
+<p><span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['n_members_dyn']" data-fmt="{:d}">361</span> 個同類成員中，規則判「有窗」或「無窗」的 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['members_decided']" data-fmt="{:d}">227</span> 個全部正確；<span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['n_members_dyn'] - d['revised']['members_decided']" data-fmt="{:d}">134</span> 個落在邊界，其中 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="100 * d['revised']['members_border_window_rate']" data-fmt="{:.0f}">28</span>% 有窗。代表類別上，規則不跑動態就能決定 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['reps_decided']" data-fmt="{:d}">115</span>／<span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['n_reps']" data-fmt="{:d}">181</span> 類（<span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="100 * d['revised']['reps_decided'] / d['revised']['n_reps']" data-fmt="{:.0f}">64</span>%）。成員與代表同類，這只說明規則在同類函數上一致，不能當成獨立驗證。</p>
+<p><b>邊界校正</b>：在邊界區依 ρ 的 10–90 百分位挑 5 類（ρ <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['border']['picked_ratio'][0]" data-fmt="{:.2f}">1.04</span>–<span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['border']['picked_ratio'][4]" data-fmt="{:.2f}">1.63</span>）加進校正組，重新擬合後預測其餘 61 類：指標 B 錯 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['border']['table'].get('B:無窗→有窗', 0)" data-fmt="{:d}">12</span>＋<span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['border']['table'].get('B:有窗→無窗', 0)" data-fmt="{:d}">0</span> 類、C 錯 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['border']['table'].get('C:無窗→有窗', 0)" data-fmt="{:d}">12</span>＋<span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['border']['table'].get('C:有窗→無窗', 0)" data-fmt="{:d}">0</span> 類（錯誤率約 20%，都是把有窗判成無窗），校正組 RMSE 升到 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['revised']['border']['rmse']['B']" data-fmt="{:.1f}">9.1</span> ps。邊界區的窗寬還和線性可分與否、哪幾路弱耦合有關，只靠 ρ 分不開；所以邊界類別仍要實際跑動態。</p>
+<p><b>驗收</b>：(a) 222 類三層結果齊全，類別數與函數總數正確（通過）；(b) 靜態計數與草稿差 0–5 類（通過，列出差異）；(c) 預先登記的推測失敗，列出原因與錯誤數；修正規則在代表與同類成員上 0 個判錯（通過，但規則是事後提出、成員與代表同類，不是獨立驗證）；(d) NPN 成員判定一致 437／442（通過）；(e) 回歸檢查通過。</p>
+<p><b>本步結論</b>：(1) 靜態計數重現草稿：無損 181 類有正 margin，0.9 dB 有 137 類 ≥ 0.1 P<sub>u</sub>；(2) <b>靜態可實現不等於有時序窗</b>：13.2 ps 盒下有共同窗的只有 44 類、能認證的 34 類。論文若寫「181／222 類可實現」，要同時寫出有時序窗的類別數，這一點列入 M7 草稿修改清單；(3) 只用「都通過」的代表閘外推到全部類別不可靠，連靜態的必要條件都會違反；(4) ρ 是有用的篩選量：在本資料中，ρ &lt; 1 的類別都無窗（這在穩態下是必要條件），ρ ≥ 1.80 的類別都有窗，可省下約三分之二的動態模擬；邊界區仍要逐類驗收。對外只能寫成「依靜態指標篩選，在同類成員上一致」，不能寫成全類別的時序保證；(5) 全部類別跑完也只要約 10 分鐘，論文的補充資料可以直接放逐類結果，不需要靠推測。後續研究不再以列舉全部函數為目標，改為經認證的單元庫加邏輯合成（M6，尚未開始）；本步的結果作為補充資料。適用範圍：單顆 macro、0.9 dB／MZI、每類一組合成相位（局部解）、宣告的情境序列與 13.2 ps 盒。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>把靜態可實現當成有時序窗</b>：0.9 dB 下 137 類 ≥ 0.1 P<sub>u</sub>，有共同窗的只有 44 類。</li>
+<li><b>只用「都通過」的例子校正</b>：沒有反例，擬合線只能外推；校正組要包含會失敗的例子。</li>
+<li><b>用同一批資料提出又檢驗規則</b>：看過結果才提出的規則，要用獨立的資料檢驗；同類成員與代表相關，只能當一致性檢查。</li>
+<li><b>分子分母取自不同的情況</b>：m／g 的 m 與 g 來自不同的字，比值小於 1 不代表任何一組字失敗；必要條件要逐字比。</li>
+<li><b>以為同一 NPN 類完全等價</b>：參考光與波導位置不對稱，成員的 margin 差到 ±20%。</li>
+<li><b>擬合越好預測越準</b>：指標 C 在校正組上 RMSE 最小，預測卻最差。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：為什麼 ρ &lt; 1 的類別不可能有窗？為什麼 m／g &lt; 1 就不能這樣推論？</summary>
+<p>ρ &lt; 1 表示某一組字的判讀量低於它自己的護欄。若這組字持續夠久，接收端輸出穩定到靜態值，任何取樣相位都不安全；動態時再加上轉態與 skew 只會更差。唯一的例外是序列中那組字只出現在很短的片段、接收端還沒穩定。m／g 的 m 來自最差的那組字，g 卻是 16 組字中護欄最大者，最差那組字自己的護欄可能比 g 小很多，所以 m &lt; g 時那組字仍可能在自己的護欄之上。本步改用 ρ 後，無窗區由 97 類變成 91 類。</p></details>
+<details class="quiz"><summary>自我檢查 2：既然全部類別只要 10 分鐘就能跑完，推測規則還有什麼用？</summary>
+<p>本步的電路只有一顆 macro、4 個輸入。換成串接的 8 輸入函數，類別數暴增（8 輸入的 NPN 類約 10<sup>70</sup> 個），盒證明也要 256 個葉盒（M5 s3），逐類驗收不可行。那時有兩條路：用靜態指標先刪掉一定無窗的候選，只對邊界與有窗的候選做動態驗收；或只證明一小組標準單元，再用邏輯合成組合（M6 採用後者）。本步在可以全部驗收的 4 輸入上，檢驗了第一條路什麼時候可靠、什麼時候不可靠。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>類別</td><td>4 輸入 NPN 222 類；每類代表＋2 個成員（種子 4）</td></tr>
+<tr><td>合成</td><td>M3 s2 的 soft-min（退火 4–1024、L-BFGS-B），8 個起點，不一致時再加 8 個；0.9 dB 另從無損解暖啟動</td></tr>
+<tr><td>動態</td><td>M3 s3 的詳細模擬（類比二階 Butterworth 7 GHz、時變護欄、Euler 情境序列），對齊與盒內 41 點（13.2 ps 盒）</td></tr>
+<tr><td>認證</td><td>M5 s3 的輸入係數版盒證明，情境序列；單葉，必要時切 16 葉</td></tr>
+<tr><td>推測</td><td>校正組：表 I 的 9 個函數；邊界校正：邊界區 5 類；邊界帶 ±5 ps</td></tr>
+<tr><td>重現</td><td>動態與認證層讀 <code>static.jsonl</code> 快取；靜態合成全部重新執行一次（<code>rerun_static.py</code>），<span class="num" data-json="design/paper/m5_cascade/s4_screen/out/static_rerun_check.json" data-expr="d['n_exact']" data-fmt="{:d}">0</span>／<span class="num" data-json="design/paper/m5_cascade/s4_screen/out/static_rerun_check.json" data-expr="d['n_cache']" data-fmt="{:d}">0</span> 筆的 margin 與相位都與快取相同</td></tr>
+</table>
+<div class="auto-code" data-files="design/paper/m5_cascade/s4_screen/screen.py design/paper/m5_cascade/s4_screen/figs.py design/paper/m5_cascade/concept.py"></div>
+<div class="auto-history" data-file="design/paper/m5_cascade/s4_screen/HISTORY.md"></div>
+</section>

@@ -1,0 +1,440 @@
+{
+ "base_margin": {
+  "AND2": 2.0590418200694134,
+  "OR2": 1.678266859731996,
+  "XOR2": 1.3464355288548044,
+  "NAND2": 1.6782666347856694,
+  "AND4": 1.8868039371917504,
+  "XOR4": 0.30849655627015754,
+  "MUX": 1.313091342626095
+ },
+ "layout_inputs": {
+  "review_checks.json": "lut4v2/s4_review/out（本次產物）",
+  "chip_info.json": "lut4v2/s5_chip/out（本次產物）"
+ },
+ "route": {
+  "3 dB/cm": {
+   "rel_loss_db": {
+    "o1": 0.0649,
+    "o2": 0.02,
+    "o3": 0.0,
+    "o4": 0.02,
+    "o5": 0.0649
+   },
+   "all_pass": true,
+   "margin": {
+    "AND2": 2.0496,
+    "OR2": 1.669,
+    "XOR2": 1.338,
+    "NAND2": 1.669,
+    "AND4": 1.8781,
+    "XOR4": 0.3045,
+    "MUX": 1.3065
+   }
+  },
+  "4 dB/cm": {
+   "rel_loss_db": {
+    "o1": 0.0865,
+    "o2": 0.0267,
+    "o3": 0.0,
+    "o4": 0.0267,
+    "o5": 0.0865
+   },
+   "all_pass": true,
+   "margin": {
+    "AND2": 2.0464,
+    "OR2": 1.6659,
+    "XOR2": 1.3347,
+    "NAND2": 1.6659,
+    "AND4": 1.8753,
+    "XOR4": 0.3029,
+    "MUX": 1.3044
+   }
+  }
+ },
+ "rails_unified": [
+  {
+   "rail": 1,
+   "length_um": 4216.0,
+   "n_mzi": 2,
+   "prop_db": [
+    1.26,
+    1.69
+   ],
+   "mmi_db": 1.8,
+   "total_db": [
+    3.06,
+    3.49
+   ]
+  },
+  {
+   "rail": 2,
+   "length_um": 4089.8,
+   "n_mzi": 4,
+   "prop_db": [
+    1.23,
+    1.64
+   ],
+   "mmi_db": 3.6,
+   "total_db": [
+    4.83,
+    5.24
+   ]
+  },
+  {
+   "rail": 3,
+   "length_um": 4023.1,
+   "n_mzi": 4,
+   "prop_db": [
+    1.21,
+    1.61
+   ],
+   "mmi_db": 3.6,
+   "total_db": [
+    4.81,
+    5.21
+   ]
+  },
+  {
+   "rail": 4,
+   "length_um": 4078.1,
+   "n_mzi": 3,
+   "prop_db": [
+    1.22,
+    1.63
+   ],
+   "mmi_db": 2.7,
+   "total_db": [
+    3.92,
+    4.33
+   ]
+  },
+  {
+   "rail": 5,
+   "length_um": 4204.3,
+   "n_mzi": 1,
+   "prop_db": [
+    1.26,
+    1.68
+   ],
+   "mmi_db": 0.9,
+   "total_db": [
+    2.16,
+    2.58
+   ]
+  }
+ ],
+ "tia_mc": {
+  "0.01": {
+   "AND2": 1.0,
+   "OR2": 1.0,
+   "XOR2": 1.0,
+   "NAND2": 1.0,
+   "AND4": 1.0,
+   "XOR4": 1.0,
+   "MUX": 1.0
+  },
+  "0.02": {
+   "AND2": 1.0,
+   "OR2": 1.0,
+   "XOR2": 1.0,
+   "NAND2": 1.0,
+   "AND4": 1.0,
+   "XOR4": 1.0,
+   "MUX": 1.0
+  },
+  "0.03": {
+   "AND2": 1.0,
+   "OR2": 1.0,
+   "XOR2": 1.0,
+   "NAND2": 1.0,
+   "AND4": 1.0,
+   "XOR4": 1.0,
+   "MUX": 1.0
+  },
+  "0.05": {
+   "AND2": 1.0,
+   "OR2": 1.0,
+   "XOR2": 1.0,
+   "NAND2": 1.0,
+   "AND4": 1.0,
+   "XOR4": 0.997,
+   "MUX": 1.0
+  },
+  "0.08": {
+   "AND2": 1.0,
+   "OR2": 1.0,
+   "XOR2": 0.9985,
+   "NAND2": 1.0,
+   "AND4": 1.0,
+   "XOR4": 0.9615,
+   "MUX": 0.9985
+  }
+ },
+ "tia_sigma_ok": 0.03,
+ "tia_hard": {
+  "0x0069": {
+   "margin": 0.5168,
+   "single": {
+    "o2": 0.31,
+    "o3": 0.6,
+    "o4": 0.267
+   },
+   "mc": {
+    "0.01": 1.0,
+    "0.02": 1.0,
+    "0.03": 1.0,
+    "0.05": 1.0,
+    "0.08": 0.9945
+   }
+  }
+ },
+ "k_lambda_rad_per_nm": 0.1287,
+ "k_T_rad_per_K": 0.00855,
+ "dlambda_tol_nm": {
+  "AND2": 2.0,
+  "OR2": 2.0,
+  "XOR2": 2.0,
+  "NAND2": 2.0,
+  "AND4": 2.0,
+  "XOR4": 1.49,
+  "MUX": 2.0
+ },
+ "dT_tol_K": {
+  "AND2": 40.0,
+  "OR2": 40.0,
+  "XOR2": 40.0,
+  "NAND2": 40.0,
+  "AND4": 40.0,
+  "XOR4": 22.4,
+  "MUX": 39.6
+ },
+ "dphi": {
+  "2": {
+   "AND2": {
+    "pass": true,
+    "margin": 2.059817659889822
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 1.6498360667482226
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 1.259175963415586
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 1.6278019320555006
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 1.8844742564449533
+   },
+   "XOR4": {
+    "pass": true,
+    "margin": 0.28125216841407474
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 1.2503318831325243
+   }
+  },
+  "5": {
+   "AND2": {
+    "pass": true,
+    "margin": 2.035968100882655
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 1.5687950431379978
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 1.1308111048958223
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 1.513842434970401
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 1.8722518461989002
+   },
+   "XOR4": {
+    "pass": true,
+    "margin": 0.23861182957198068
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 1.1577710651540873
+   }
+  },
+  "10": {
+   "AND2": {
+    "pass": true,
+    "margin": 1.9519166021680372
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 1.4361071383352835
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 0.9244777304659006
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 1.3268472340632012
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 1.8287071936472712
+   },
+   "XOR4": {
+    "pass": true,
+    "margin": 0.16615207995916004
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 1.0083349704925346
+   }
+  },
+  "15": {
+   "AND2": {
+    "pass": true,
+    "margin": 1.881321052022101
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 1.3072679471077655
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 0.729008943257027
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 1.1447544834049386
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 1.7565013806357546
+   },
+   "XOR4": {
+    "pass": true,
+    "margin": 0.09243071211271792
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 0.8659203575537898
+   }
+  },
+  "20": {
+   "AND2": {
+    "pass": true,
+    "margin": 1.8247187252082175
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 1.1832580134959123
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 0.5458923787671384
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 0.9689500187787297
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 1.6561839370004368
+   },
+   "XOR4": {
+    "pass": true,
+    "margin": 0.01800879015614587
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 0.7316110875346126
+   }
+  },
+  "30": {
+   "AND2": {
+    "pass": true,
+    "margin": 1.575921211689312
+   },
+   "OR2": {
+    "pass": true,
+    "margin": 0.953457144633509
+   },
+   "XOR2": {
+    "pass": true,
+    "margin": 0.22218581422153072
+   },
+   "NAND2": {
+    "pass": true,
+    "margin": 0.6414998196651189
+   },
+   "AND4": {
+    "pass": true,
+    "margin": 1.3744761991034902
+   },
+   "XOR4": {
+    "pass": false,
+    "margin": -0.13067011200826417
+   },
+   "MUX": {
+    "pass": true,
+    "margin": 0.4913278089069648
+   }
+  }
+ },
+ "dphi_max_deg": 20,
+ "budget": {
+  "assumptions": {
+   "PD_A_per_W": 1.0,
+   "TIA_pA_rtHz": 20.0,
+   "EC_dB_each": 2.0,
+   "k_snr": 7.0,
+   "in_loss_db": 2.49,
+   "out_loss_db": 2.25,
+   "noise": "只計 TIA；shot、RIN、比較器偏移未計"
+  },
+  "cases": {
+   "1 MHz": {
+    "XOR4": {
+     "margin": 0.3085,
+     "Pu_uW": 1.077,
+     "per_data_fiber_dBm": -27.19,
+     "R_fiber_dBm": -17.65,
+     "total_mW": 0.0248
+    },
+    "AND2": {
+     "margin": 2.059,
+     "Pu_uW": 0.161,
+     "per_data_fiber_dBm": -35.44,
+     "R_fiber_dBm": -25.89,
+     "total_mW": 0.0037
+    }
+   },
+   "10 GHz": {
+    "XOR4": {
+     "margin": 0.3085,
+     "Pu_uW": 107.657,
+     "per_data_fiber_dBm": -7.19,
+     "R_fiber_dBm": 2.35,
+     "total_mW": 2.4811
+    },
+    "AND2": {
+     "margin": 2.059,
+     "Pu_uW": 16.13,
+     "per_data_fiber_dBm": -15.44,
+     "R_fiber_dBm": -5.89,
+     "total_mW": 0.3717
+    }
+   }
+  }
+ }
+}

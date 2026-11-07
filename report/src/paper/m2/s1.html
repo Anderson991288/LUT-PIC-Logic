@@ -1,0 +1,79 @@
+<section class="step" id="p-m2-s1" data-milestone="M2" data-step="s1" data-title="與固定加總模型比較">
+<div class="bridge">
+<p><b>承接</b>：M1 用時域流程完成 10 Gb/s 的時序分析、靜態與動態校正，以及校正後的聯合驗收。接下來要回答一個問題：為什麼不能用更簡單的評估方式？</p>
+<p><b>本步要回答</b>：可程式光子電路的數位運算研究（Liang、Jiang、Chiu，DCPPC，ASP-DAC 2026，第 V-A 節；評估指標沿用 Matsuo 等人，ISVLSI 2020）用固定的指標評估電路——每顆 MZI 延遲 1 ps、依角色扣 0／1／3 dB。這種只數 MZI 的方式，用在同一顆 B7 上，能不能預測時域流程的結果？哪裡不同？</p>
+<p><b>交給下一步</b>：<code>baseline.json</code>（5 個函數、5 種情境的兩種預測）與比較圖。這是論文的比較基準；M2 s2 依本步發現的差異整理規格與限制。</p>
+<p class="terms"><b>名詞對照</b>：固定加總模型（fixed additive model）＝每顆 MZI 給定固定延遲與固定衰減，沿路徑相加來評估電路的方式；時域流程＝M1 建立的模擬流程，用隨時間變化的波形計算干涉與取樣窗。</p>
+</div>
+
+<figure class="concept"><img src="figures/paper/m2/s1_concept.png" alt="本步概念圖：固定加總模型與時域流程，在 skew 容許、功率、相位與殘留光三方面的預測對照"><figcaption><b>本步概念</b>　同一顆 B7、同一組情境，兩種模型的預測逐項對照；不同之處就是時域流程必須存在的理由。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p>估計開車時間，最簡單的方法是「每個路口 1 分鐘，數一數經過幾個路口」。路口少、車少時這樣就夠了；但塞車、號誌配合不好時，數路口就估不準。固定加總模型就像數路口：它非常適合合成階段比較不同電路的大小與延遲。本步要看的是：當資料本身是光、判讀靠兩個輸出的干涉時，數 MZI 還準不準。</p>
+<p>學習目標：(1) 把固定加總模型的三個指標（延遲、衰減、偵測門檻）用在 B7 上；(2) 列出它與時域流程意見不同的情境；(3) 說明不同的原因來自哪個物理機制。</p>
+
+<h3>② 原理與推導</h3>
+<h4>1. 固定加總模型</h4>
+<p>沿一條從輸入到判讀埠的路徑，延遲與衰減都直接相加：</p>
+<math display="block"><mrow><msub><mi>τ</mi><mtext>path</mtext></msub><mo>=</mo><msub><mi>N</mi><mtext>MZI</mtext></msub><mo>×</mo><mn>1</mn><mspace width="0.2em"/><mtext>ps</mtext><mo>,</mo><mspace width="1em"/><msub><mi>L</mi><mtext>path</mtext></msub><mo>=</mo><munder><mo>∑</mo><mtext>路徑上的 MZI</mtext></munder><msub><mi>L</mi><mtext>角色</mtext></msub><mo>,</mo><mspace width="1em"/><msub><mi>L</mi><mtext>角色</mtext></msub><mo>∈</mo><mo>{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo>}</mo><mspace width="0.2em"/><mtext>dB</mtext></mrow></math>
+<p>N<sub>MZI</sub> 是路徑經過的 MZI 數；L<sub>角色</sub> 依 MZI 的角色：只做繞線 0 dB、計算 1 dB、合併 3 dB。B7 的 MZI 不由資料控制，所以本步用以下對應（假設）：θ 距 0、π、2π 不到 0.05 rad 的 MZI 只做繞線；其餘 MZI 若兩個輸入都有光就是合併，否則是計算。取所有輸入到 o2、o4 的路徑中衰減最大者。要注意的是，原研究的計算 MZI 由電訊號的布林變數控制，資料不是光；這裡把它的指標用在資料本身是光的 B7 上，比較的是兩種<b>評估方式</b>的預測，不是兩種電路的性能，也不移植原研究的數字。</p>
+<p>原研究沒有 skew 的指標，本步替它補一個與它一致的假設（這是本研究的假設，不是原研究的主張）：沒有干涉，skew 的容許只看邊緣，判讀在最後一路到達後成立，允許的 skew＝UI − t<sub>e</sub> − T<sub>req</sub>（M1 s1 的一階估計），所有函數都一樣。固定模型也沒有相位與殘留光的項，相位漂移與消光比都不會改變它的預測。</p>
+<h4>2. 時域流程（M1）</h4>
+<p>判讀量 ΔP＝|y<sub>2</sub>|²−|y<sub>4</sub>|² 是輸入光場的二次式：各路光同時存在時互相干涉，轉態時的干涉、各路不同時到達、相位偏差、「0」的殘留光都會改變 ΔP。所以 skew 容許要看取樣窗內的 margin（M1 s4），功率需求由最差那組輸入的 margin 與雜訊反推（M1 s1），相位與殘留光則需要校正（M1 s2、s3）。</p>
+<h4>3. 比較的情境</h4>
+<p>5 個函數 × 5 種情境：skew 0、15、20 ps；未追蹤的輸入相位漂移（每路 −0.3、0、＋0.3 rad 的最差組合）；消光比 20 dB 且不重新求相位。判定一律換成功率代價（dB）：固定模型「通過」就是預測 0 dB；時域流程在 skew 情境用 M1 s4 的總功率代價（含 skew 0 時就有的轉態代價，因為固定模型兩者都沒有；表中另列 skew 造成的額外代價），在相位與消光比情境用 −10 log<sub>10</sub>(margin 比例)。固定模型「通過」而時域流程代價 ≥ 1 dB 或沒有窗，或固定模型「不通過」而時域流程代價 &lt; 1 dB，就算意見不同。程式與本文用同一個準則，每個情境的判定理由都寫在 <code>baseline.json</code> 的 <code>cases</code>。另做兩個敏感度：固定模型加 3 dB 安全係數（代價 ≥ 3 dB 才算不同）；MZI 角色判定的容差換成 0.02、0.1 rad。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\paper\m2_evidence\s1_baseline\baseline.py
+.\lab design\paper\m2_evidence\s1_baseline\figs.py
+.\lab design\paper\m2_evidence\concept.py</code></pre>
+<p><code>baseline.py</code> 讀 M1 各步的 JSON，對每個函數判定 7 顆 MZI 的角色、找最差路徑，再算相位漂移與消光比情境的靜態 margin（只需矩陣運算），約 5 秒。預期輸出（節錄）：</p>
+<pre><code>XOR2：固定模型 路徑 4 顆 MZI、6 dB、延遲 4 ps、skew 容許 18.69 ps（角色 {'1': 'comb', '2': 'route', …, '7': 'comb'}）｜時域流程 晶片內差 0.3346 ps、1 dB 點 25.5 ps、skew 0／15／20 ps 代價 {'0': 0.609, '15': 0.946, '20': 1.214}、靜態需求 -6.74 dBm、漂移 0.3 rad 後 margin 46%、消光比 20 dB 不重解 68%
+功率排序：固定模型 ['AND4', 'OR4', 'AND2', 'OR2', 'XOR2']；時域流程 ['XOR2', 'OR4', 'AND4', 'AND2', 'OR2']
+意見不同 9／25 個情境：…
+加 3 dB 安全係數後意見不同 8／25；角色敏感度： {'0.02': ['AND4', 'OR4', 'AND2', 'OR2', 'XOR2'], …}
+檢查： {'delay_negligible_both': True, 'ranking_same': False, 'ranking_reversed_all_tols': True}</code></pre>
+<p>自己動手：把合併 MZI 的衰減從 3 dB 改成 1 dB，看固定模型的功率排序會不會變成以 XOR2 最難。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/paper/m2/s1_baseline.png" alt="固定加總模型與時域流程的對照：skew 容許、功率需求、相位漂移與殘留光的影響"><figcaption>圖 M2-1　同一顆 B7 的 5 個函數，兩種模型的預測。(a) skew 容許：固定模型各函數都是 <span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND2']['fixed']['skew_allow_ps']" data-fmt="{:.1f}">18.7</span> ps；時域流程（額外代價 1 dB 的點）從 <span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="min(v['flow']['skew_allow_1db_ps'] for v in d['functions'].values())" data-fmt="{:g}">18</span> 到 <span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="max(v['flow']['skew_allow_1db_ps'] for v in d['functions'].values())" data-fmt="{:g}">27.6</span> ps，且 skew 0 時就有代價（下方數字）。(b) 功率：固定模型以四輸入函數最難，時域流程以 XOR2 最難。(c) 相位漂移與殘留光：固定模型沒有這兩項（灰線 100%），時域流程中 margin 明顯下降。</figcaption></figure>
+<table>
+<tr><th>函數</th><th>固定：路徑衰減</th><th>時域：靜態需求</th><th>固定：skew 容許</th><th>時域：1 dB 點</th><th>時域：skew 0 代價</th><th>漂移 0.3 rad 後</th><th>消光比 20 dB、不重解</th></tr>
+<tr><td>AND2</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND2']['fixed']['path_loss_db']" data-fmt="{:g}">6</span> dB</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND2']['flow']['pu_static_dbm']" data-fmt="{:.2f}">−12.99</span> dBm</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND2']['fixed']['skew_allow_ps']" data-fmt="{:.1f}">18.7</span> ps</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND2']['flow']['skew_allow_1db_ps']" data-fmt="{:g}">27.6</span> ps</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND2']['flow']['skew_penalty_db']['0']" data-fmt="{:.2f}">0.55</span> dB</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND2']['flow']['drift_ratio']*100" data-fmt="{:.0f}">81</span>%</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND2']['flow']['er20_ratio']*100" data-fmt="{:.0f}">81</span>%</td></tr>
+<tr><td>OR2</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR2']['fixed']['path_loss_db']" data-fmt="{:g}">6</span> dB</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR2']['flow']['pu_static_dbm']" data-fmt="{:.2f}">−13.01</span> dBm</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR2']['fixed']['skew_allow_ps']" data-fmt="{:.1f}">18.7</span> ps</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR2']['flow']['skew_allow_1db_ps']" data-fmt="{:g}">26.8</span> ps</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR2']['flow']['skew_penalty_db']['0']" data-fmt="{:.2f}">0.59</span> dB</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR2']['flow']['drift_ratio']*100" data-fmt="{:.0f}">91</span>%</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR2']['flow']['er20_ratio']*100" data-fmt="{:.0f}">61</span>%</td></tr>
+<tr><td>XOR2</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['XOR2']['fixed']['path_loss_db']" data-fmt="{:g}">6</span> dB</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['XOR2']['flow']['pu_static_dbm']" data-fmt="{:.2f}">−6.74</span> dBm</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['XOR2']['fixed']['skew_allow_ps']" data-fmt="{:.1f}">18.7</span> ps</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['XOR2']['flow']['skew_allow_1db_ps']" data-fmt="{:g}">25.5</span> ps</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['XOR2']['flow']['skew_penalty_db']['0']" data-fmt="{:.2f}">0.61</span> dB</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['XOR2']['flow']['drift_ratio']*100" data-fmt="{:.0f}">46</span>%</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['XOR2']['flow']['er20_ratio']*100" data-fmt="{:.0f}">68</span>%</td></tr>
+<tr><td>AND4</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND4']['fixed']['path_loss_db']" data-fmt="{:g}">12</span> dB</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND4']['flow']['pu_static_dbm']" data-fmt="{:.2f}">−11.85</span> dBm</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND4']['fixed']['skew_allow_ps']" data-fmt="{:.1f}">18.7</span> ps</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND4']['flow']['skew_allow_1db_ps']" data-fmt="{:g}">18.7</span> ps</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND4']['flow']['skew_penalty_db']['0']" data-fmt="{:.2f}">1.11</span> dB</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND4']['flow']['drift_ratio']*100" data-fmt="{:.0f}">49</span>%</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['AND4']['flow']['er20_ratio']*100" data-fmt="{:.0f}">81</span>%</td></tr>
+<tr><td>OR4</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR4']['fixed']['path_loss_db']" data-fmt="{:g}">12</span> dB</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR4']['flow']['pu_static_dbm']" data-fmt="{:.2f}">−11.77</span> dBm</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR4']['fixed']['skew_allow_ps']" data-fmt="{:.1f}">18.7</span> ps</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR4']['flow']['skew_allow_1db_ps']" data-fmt="{:g}">18</span> ps</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR4']['flow']['skew_penalty_db']['0']" data-fmt="{:.2f}">1.38</span> dB</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR4']['flow']['drift_ratio']*100" data-fmt="{:.0f}">91</span>%</td><td><span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['functions']['OR4']['flow']['er20_ratio']*100" data-fmt="{:.0f}">20</span>%</td></tr>
+</table>
+<p>依 1 dB 準則，25 個情境中兩種模型有 <span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['n_disagree']" data-fmt="{:d}">9</span> 個意見不同；給固定模型加 3 dB 安全係數後仍有 <span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['n_disagree_safety']" data-fmt="{:d}">8</span> 個——原本太樂觀的情境少了，skew 20 ps 的二輸入函數卻變成固定模型太保守。MZI 角色的容差換成 0.02 或 0.1 rad，固定模型的功率排序不變。一致與不同之處如下：</p>
+<ul>
+<li><b>兩種模型一致的地方</b>：晶片內延遲。固定模型的判讀路徑是 4 顆 MZI、4 ps；佈局換算的判讀路徑差只有 0.335 ps。兩者都遠小於 100 ps 的 UI，都認為晶片內延遲不是問題。</li>
+<li><b>理由不同的「不通過」</b>：二輸入函數在 skew 20 ps 時，固定模型判不通過；時域流程的總代價 1.06–1.21 dB，其中 0.55–0.61 dB 是 skew 0 就有的轉態代價，skew 本身只多 0.51–0.61 dB。依 1 dB 準則兩者都算不通過，但時域流程的 1 dB 點在 25–28 ps，干涉使二輸入函數的判讀量在單一路轉態時仍有餘裕；只要接收端能接受約 1.2 dB 的代價，固定模型就太保守。</li>
+<li><b>固定模型太樂觀</b>：四輸入函數在 skew 0 時就要多給 1.1–1.4 dB（轉態時的干涉加上接收端頻寬），1 dB 點與一階估計相當或更小；相位漂移 0.3 rad 讓 XOR2、AND4 的 margin 掉到一半以下；消光比 20 dB 且不重新求相位時，OR4 只剩 20%。固定模型對這些都預測「不受影響」。</li>
+<li><b>功率排序相反</b>：固定模型依路徑衰減，認為四輸入函數最難（12 dB）、XOR2 與二輸入函數一樣（6 dB）；時域流程中 XOR2 的靜態需求比其他函數高約 5 dB，因為它靠兩路資料互相干涉判讀，margin 最小。決定總功率的是 XOR2，固定模型會選錯。</li>
+</ul>
+<p>結論：固定加總模型適合合成階段比較電路大小與延遲，本步也確認兩種模型對晶片內延遲的判斷一致；但對資料本身是光、靠干涉判讀的電路，它在 skew 容許、功率排序、相位與殘留光三方面都會給出不同的答案，而且有高估也有低估，不能用一個安全係數修正（加 3 dB 後仍有 8 個情境不同）。這是時域流程（M1）存在的理由，也是論文的比較基準。這裡的時域流程結果也來自模型，不是量測；兩種模型的差異說明「要看干涉」，但時域流程本身的準確度要由 M2 s4 的模型偏差與日後量測檢驗。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>把基準模型當成錯的</b>：固定加總模型是為合成階段設計的，指標本來就不包含干涉與相位；本步的比較說明它的適用範圍，不是否定它。</li>
+<li><b>以為功率衰減越大越難判讀</b>：判讀靠兩個輸出的差，難易由 margin 決定；衰減小但兩路互相抵消的函數（XOR2）反而最難。</li>
+<li><b>只看單一方向的差異</b>：固定模型有時太保守、有時太樂觀，所以不能乘一個係數就變成時域流程的結果。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：為什麼二輸入函數在 skew 20 ps 時，固定模型判不通過，時域流程卻只多 1 dB 左右？</summary>
+<p>固定模型假設判讀要等最後一路到達、在邊緣之外才能取樣，所以 skew 一超過 UI − t<sub>e</sub> − T<sub>req</sub> 就不通過。實際上判讀量是光場的二次式，二輸入函數只有 x1、x2 影響判讀；一路先轉態時，參考光與另一路的干涉仍讓判讀量保持在正確的一側，只是 margin 變小，換算成要多給的功率約 1 dB。</p></details>
+<details class="quiz"><summary>自我檢查 2：如果把合併 MZI 的衰減改成 1 dB，固定模型會不會變成以 XOR2 最難？</summary>
+<p>不會。XOR2、AND2、OR2 的最差判讀路徑上都是 2 顆合併 MZI，四輸入函數是 4 顆；只要合併 MZI 的衰減不是負的，四輸入函數的路徑衰減就不會比 XOR2 小，而 XOR2 永遠與 AND2、OR2 相同。XOR2 難在兩路資料互相干涉造成的小 margin，這不在路徑衰減裡。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>固定模型參數</td><td>每顆 MZI 1 ps；繞線 0 dB、計算 1 dB、合併 3 dB（DCPPC 第 V-A 節，指標沿用 Matsuo 等人）；skew 容許＝UI − t<sub>e</sub> − T<sub>req</sub>（本研究補的假設）</td></tr>
+<tr><td>MZI 角色</td><td>θ 距 0、π、2π 小於 0.05 rad 為繞線；其餘依兩個輸入是否都有光分為合併或計算（本步的假設）；敏感度 0.02、0.1 rad</td></tr>
+<tr><td>判定準則</td><td>功率代價 1 dB（固定模型通過＝0 dB）；敏感度：固定模型加 3 dB 安全係數</td></tr>
+<tr><td>時域流程</td><td>M1 s1 的功率需求、M1 s2 的消光比、M1 s4 的取樣窗（理想消光比）；漂移與消光比情境為靜態 margin</td></tr>
+<tr><td>情境</td><td>skew 0、15、20 ps；漂移每路 −0.3、0、＋0.3 rad 的最差組合；消光比 20 dB、ψ 取 4 個方向中最差</td></tr>
+</table>
+<div class="auto-code" data-files="design/paper/m2_evidence/s1_baseline/baseline.py design/paper/m2_evidence/s1_baseline/figs.py design/paper/m2_evidence/concept.py"></div>
+<div class="auto-history" data-file="design/paper/m2_evidence/s1_baseline/HISTORY.md"></div>
+</section>

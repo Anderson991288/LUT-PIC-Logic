@@ -1,0 +1,176 @@
+{
+  "model": {
+    "pdk": "CORNERSTONE SOI220nm_1550nm_TE_STRIP_2x2_MMI",
+    "wavelength_um": 1.55,
+    "lossy_mmi_db": 0.45
+  },
+  "U_err_pdk": 1.1430445635548515e-15,
+  "U_err_lossy": 1.246531298897714e-15,
+  "reflection_max": 0.0,
+  "functions": {
+    "AND2": {
+      "U_err_pdk": 1.0299525296675035e-15,
+      "U_err_lossy": 1.246531298897714e-15,
+      "energy_err_pdk": 1.1102230246251565e-15,
+      "passed": 16,
+      "margin": 2.059042,
+      "margin_handoff": 2.059042
+    },
+    "OR2": {
+      "U_err_pdk": 1.1430445635548515e-15,
+      "U_err_lossy": 1.1157603309187458e-15,
+      "energy_err_pdk": 1.1102230246251565e-15,
+      "passed": 16,
+      "margin": 1.678267,
+      "margin_handoff": 1.678267
+    },
+    "XOR2": {
+      "U_err_pdk": 9.036560719766055e-16,
+      "U_err_lossy": 8.252325904466732e-16,
+      "energy_err_pdk": 8.881784197001252e-16,
+      "passed": 16,
+      "margin": 1.346436,
+      "margin_handoff": 1.346436
+    },
+    "NAND2": {
+      "U_err_pdk": 8.95090418262362e-16,
+      "U_err_lossy": 9.727329446859754e-16,
+      "energy_err_pdk": 8.881784197001252e-16,
+      "passed": 16,
+      "margin": 1.678267,
+      "margin_handoff": 1.678267
+    },
+    "AND4": {
+      "U_err_pdk": 1.1116099371267112e-15,
+      "U_err_lossy": 9.485749680535094e-16,
+      "energy_err_pdk": 1.3322676295501878e-15,
+      "passed": 16,
+      "margin": 1.886804,
+      "margin_handoff": 1.886804
+    },
+    "XOR4": {
+      "U_err_pdk": 8.252325904466732e-16,
+      "U_err_lossy": 8.688869536365456e-16,
+      "energy_err_pdk": 1.3322676295501878e-15,
+      "passed": 16,
+      "margin": 0.308497,
+      "margin_handoff": 0.308497
+    },
+    "MUX": {
+      "U_err_pdk": 1.0605390551611693e-15,
+      "U_err_lossy": 9.820925191391734e-16,
+      "energy_err_pdk": 1.5543122344752192e-15,
+      "passed": 16,
+      "margin": 1.313091,
+      "margin_handoff": 1.313091
+    }
+  },
+  "passed": 112,
+  "total": 112,
+  "faults": {
+    "swap_out": {
+      "U_err_max": 1.625661032260045,
+      "passed": 62,
+      "caught": true
+    },
+    "phi_low": {
+      "U_err_max": 1.106346029029905,
+      "passed": 61,
+      "caught": true
+    }
+  },
+  "loss_sweep": [
+    {
+      "loss_db": 0.0,
+      "passed": 112,
+      "margin_min": 0.338603
+    },
+    {
+      "loss_db": 0.1,
+      "passed": 112,
+      "margin_min": 0.342545
+    },
+    {
+      "loss_db": 0.2,
+      "passed": 112,
+      "margin_min": 0.344324
+    },
+    {
+      "loss_db": 0.3,
+      "passed": 112,
+      "margin_min": 0.344232
+    },
+    {
+      "loss_db": 0.4,
+      "passed": 112,
+      "margin_min": 0.34253
+    },
+    {
+      "loss_db": 0.5,
+      "passed": 112,
+      "margin_min": 0.339449
+    },
+    {
+      "loss_db": 0.6,
+      "passed": 112,
+      "margin_min": 0.335195
+    },
+    {
+      "loss_db": 0.7,
+      "passed": 112,
+      "margin_min": 0.329951
+    },
+    {
+      "loss_db": 0.8,
+      "passed": 112,
+      "margin_min": 0.321501
+    },
+    {
+      "loss_db": 0.9,
+      "passed": 112,
+      "margin_min": 0.308497
+    },
+    {
+      "loss_db": 1.0,
+      "passed": 112,
+      "margin_min": 0.272403
+    },
+    {
+      "loss_db": 1.1,
+      "passed": 112,
+      "margin_min": 0.234608
+    },
+    {
+      "loss_db": 1.2,
+      "passed": 112,
+      "margin_min": 0.200786
+    },
+    {
+      "loss_db": 1.3,
+      "passed": 112,
+      "margin_min": 0.170557
+    },
+    {
+      "loss_db": 1.4,
+      "passed": 112,
+      "margin_min": 0.143576
+    },
+    {
+      "loss_db": 1.5,
+      "passed": 112,
+      "margin_min": 0.119529
+    },
+    {
+      "loss_db": 1.6,
+      "passed": 112,
+      "margin_min": 0.098131
+    }
+  ],
+  "checks": {
+    "pdk_U_match": true,
+    "lossy_U_match": true,
+    "no_reflection": true,
+    "all_pass": true,
+    "faults_caught": true
+  }
+}

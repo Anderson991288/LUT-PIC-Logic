@@ -1,0 +1,309 @@
+{
+  "name": "LUT4 單顆 PIC（Model-7a）",
+  "version": "1.0",
+  "source": {
+    "netlist": "lut4_netlist.json",
+    "netlist_sha256": "a03cc3f003f356ee78c7f65b5421d4c3d24914641f82d2feb566469e77de6f2a",
+    "phases": "phases.json",
+    "truth_table": "truth_tables.csv"
+  },
+  "operation": "靜態驗證：每組輸入穩定後讀取",
+  "optical_ports": [
+    {
+      "port": "in0",
+      "signal": "x1",
+      "direction": "輸入",
+      "coupler": "EC",
+      "edge": "西緣（左）",
+      "note": "資料光 E+／E−（位元 0＝+E、1＝−E）"
+    },
+    {
+      "port": "in1",
+      "signal": "x2",
+      "direction": "輸入",
+      "coupler": "EC",
+      "edge": "西緣（左）",
+      "note": "資料光 E+／E−（位元 0＝+E、1＝−E）"
+    },
+    {
+      "port": "in2",
+      "signal": "x3",
+      "direction": "輸入",
+      "coupler": "EC",
+      "edge": "西緣（左）",
+      "note": "資料光 E+／E−（位元 0＝+E、1＝−E）"
+    },
+    {
+      "port": "in3",
+      "signal": "x4",
+      "direction": "輸入",
+      "coupler": "EC",
+      "edge": "西緣（左）",
+      "note": "資料光 E+／E−（位元 0＝+E、1＝−E）"
+    },
+    {
+      "port": "in4",
+      "signal": "R",
+      "direction": "輸入",
+      "coupler": "EC",
+      "edge": "西緣（左）",
+      "note": "參考光，振幅 3（功率 9 P_u），與位元 0 同相（+E）"
+    },
+    {
+      "port": "out0",
+      "signal": "o1",
+      "direction": "輸出",
+      "coupler": "EC",
+      "edge": "東緣（右）",
+      "note": "監看（總功率核對、校正）"
+    },
+    {
+      "port": "out1",
+      "signal": "o2",
+      "direction": "輸出",
+      "coupler": "EC",
+      "edge": "東緣（右）",
+      "note": "判讀：上界 P(o2)"
+    },
+    {
+      "port": "out2",
+      "signal": "o3",
+      "direction": "輸出",
+      "coupler": "EC",
+      "edge": "東緣（右）",
+      "note": "判讀：下界 P(o3)"
+    },
+    {
+      "port": "out3",
+      "signal": "o4",
+      "direction": "輸出",
+      "coupler": "EC",
+      "edge": "東緣（右）",
+      "note": "判讀：中間 P(o4)"
+    },
+    {
+      "port": "out4",
+      "signal": "o5",
+      "direction": "輸出",
+      "coupler": "EC",
+      "edge": "東緣（右）",
+      "note": "監看（總功率核對、校正）"
+    }
+  ],
+  "phase_channels": [
+    {
+      "channel": "MZI1_theta",
+      "mzi": "MZI-1",
+      "phase": "θ1",
+      "heater": "H01",
+      "pad": "P01",
+      "phase_index": 0,
+      "kind": "theta"
+    },
+    {
+      "channel": "MZI1_phi",
+      "mzi": "MZI-1",
+      "phase": "φ1",
+      "heater": "H02",
+      "pad": "P02",
+      "phase_index": 0,
+      "kind": "phi"
+    },
+    {
+      "channel": "MZI2_theta",
+      "mzi": "MZI-2",
+      "phase": "θ2",
+      "heater": "H03",
+      "pad": "P03",
+      "phase_index": 1,
+      "kind": "theta"
+    },
+    {
+      "channel": "MZI2_phi",
+      "mzi": "MZI-2",
+      "phase": "φ2",
+      "heater": "H04",
+      "pad": "P04",
+      "phase_index": 1,
+      "kind": "phi"
+    },
+    {
+      "channel": "MZI3_theta",
+      "mzi": "MZI-3",
+      "phase": "θ3",
+      "heater": "H05",
+      "pad": "P05",
+      "phase_index": 2,
+      "kind": "theta"
+    },
+    {
+      "channel": "MZI3_phi",
+      "mzi": "MZI-3",
+      "phase": "φ3",
+      "heater": "H06",
+      "pad": "P06",
+      "phase_index": 2,
+      "kind": "phi"
+    },
+    {
+      "channel": "MZI4_theta",
+      "mzi": "MZI-4",
+      "phase": "θ4",
+      "heater": "H07",
+      "pad": "P07",
+      "phase_index": 3,
+      "kind": "theta"
+    },
+    {
+      "channel": "MZI4_phi",
+      "mzi": "MZI-4",
+      "phase": "φ4",
+      "heater": "H08",
+      "pad": "P08",
+      "phase_index": 3,
+      "kind": "phi"
+    },
+    {
+      "channel": "MZI5_theta",
+      "mzi": "MZI-5",
+      "phase": "θ5",
+      "heater": "H09",
+      "pad": "P09",
+      "phase_index": 4,
+      "kind": "theta"
+    },
+    {
+      "channel": "MZI5_phi",
+      "mzi": "MZI-5",
+      "phase": "φ5",
+      "heater": "H10",
+      "pad": "P10",
+      "phase_index": 4,
+      "kind": "phi"
+    },
+    {
+      "channel": "MZI6_theta",
+      "mzi": "MZI-6",
+      "phase": "θ6",
+      "heater": "H11",
+      "pad": "P11",
+      "phase_index": 5,
+      "kind": "theta"
+    },
+    {
+      "channel": "MZI6_phi",
+      "mzi": "MZI-6",
+      "phase": "φ6",
+      "heater": "H12",
+      "pad": "P12",
+      "phase_index": 5,
+      "kind": "phi"
+    },
+    {
+      "channel": "MZI7_theta",
+      "mzi": "MZI-7",
+      "phase": "θ7",
+      "heater": "H13",
+      "pad": "P13",
+      "phase_index": 6,
+      "kind": "theta"
+    },
+    {
+      "channel": "MZI7_phi",
+      "mzi": "MZI-7",
+      "phase": "φ7",
+      "heater": "H14",
+      "pad": "P14",
+      "phase_index": 6,
+      "kind": "phi"
+    }
+  ],
+  "ground": {
+    "pads": "相鄰兩個 heater 共用",
+    "shared": true
+  },
+  "requirements": [
+    {
+      "id": "O1",
+      "item": "光學輸入",
+      "value": "5 路（x1–x4、R），單模、TE、1550 nm，全部來自同一顆雷射（相干）；x1–x4 為二相位 E+／E−（相位 0／π），R 不調變",
+      "verify": "模擬；量測"
+    },
+    {
+      "id": "O2",
+      "item": "參考光 R",
+      "value": "振幅 3，與位元 0 同相（+E）；功率為一路資料光的 9 倍；範例函數都判對的範圍 R＝2.19–3.42",
+      "verify": "本步計算"
+    },
+    {
+      "id": "O3",
+      "item": "輸入之間的相對相位",
+      "value": "5 路輸入在晶片入口的相位須固定且已知；誤差標準差 ≤ 0.05 rad（500 次模擬全對）",
+      "verify": "本步計算"
+    },
+    {
+      "id": "O4",
+      "item": "光學輸出",
+      "value": "5 路全部引出：o2、o4、o3 判讀；o1、o5 監看",
+      "verify": "佈局"
+    },
+    {
+      "id": "O5",
+      "item": "光學耦合",
+      "value": "10 個 EC，輸入在西緣、輸出在東緣，各用一組光纖陣列（250 µm）",
+      "verify": "晶片整合"
+    },
+    {
+      "id": "E1",
+      "item": "相位控制通道",
+      "value": "14 個（每顆 MZI 的 θ、φ 各一），每個通道一個 heater、一個訊號 PAD",
+      "verify": "連接檢查"
+    },
+    {
+      "id": "E2",
+      "item": "回流",
+      "value": "heater 地端在核心內就近連成共用地網，GND PAD 的數量與分組由晶片繞線決定（M2 s5），片外共地",
+      "verify": "連接檢查"
+    },
+    {
+      "id": "E3",
+      "item": "相位範圍與精度",
+      "value": "每個相位 0–2π 可調；誤差標準差 ≤ 0.02 rad",
+      "verify": "本步計算"
+    },
+    {
+      "id": "E4",
+      "item": "heater 功率",
+      "value": "P_π≈13 mW；最壞情況 14 個都接近 2π：約 364 mW",
+      "verify": "本步計算；量測校正"
+    },
+    {
+      "id": "R1",
+      "item": "判讀",
+      "value": "3 組 PD＋TIA（o2、o4、o3）；比較器 A：P(o2)＞P(o4)，比較器 B：P(o4)＞P(o3)；兩者 AND；門檻都是 0",
+      "verify": "模擬、量測"
+    },
+    {
+      "id": "R2",
+      "item": "TIA 增益匹配",
+      "value": "三路增益差須小於各函數容許量中的最小值（見 tolerance.json）；以出廠修整達成",
+      "verify": "本步計算"
+    },
+    {
+      "id": "F1",
+      "item": "功能",
+      "value": "範例函數 AND2、OR2、XOR2、NAND2、AND4、XOR4、MUX；每個 16 組全對（換函數只改 14 個相位）",
+      "verify": "模擬"
+    },
+    {
+      "id": "K1",
+      "item": "校正",
+      "value": "容許範圍是單項評估；晶片完成後依量測（MMI 損耗與分光、heater 的 P_π）重新求 14 個相位",
+      "verify": "量測"
+    }
+  ],
+  "checks": {
+    "netlist_sha": true,
+    "n_phase": true
+  }
+}

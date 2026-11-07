@@ -1,0 +1,82 @@
+{
+ "scan.npz": {
+  "tables": 65536,
+  "min_old": 0.02253717147055101,
+  "min_new": 0.02253717147055101,
+  "argmin_old": "0x8669",
+  "argmin_new": "0x8669",
+  "positive_new": 65536,
+  "max_abs_margin_diff": 0.0,
+  "n_diff_gt_1e6": 0,
+  "median_old": 0.12051408285401655,
+  "median_new": 0.12051408285401655
+ },
+ "verified_scan.npz": {
+  "tables": 65536,
+  "min_old": 0.050000515878673046,
+  "min_new": 0.050000515878673046,
+  "argmin_old": "0x48C7",
+  "argmin_new": "0x48C7",
+  "positive_new": 65536,
+  "max_abs_margin_diff": 0.0,
+  "n_diff_gt_1e6": 0,
+  "median_old": 0.12126946805856306,
+  "median_new": 0.12126946805856306
+ },
+ "pilot.json": {
+  "numbers": 408,
+  "max_abs_diff": 0,
+  "other_diff": 0,
+  "keys_only_old": 0,
+  "keys_only_new": 0
+ },
+ "summary.json": {
+  "numbers": 85,
+  "max_abs_diff": 0,
+  "other_diff": 0,
+  "keys_only_old": 0,
+  "keys_only_new": 0
+ },
+ "window_low_class.json": {
+  "numbers": 2177,
+  "max_abs_diff": 0,
+  "other_diff": 0,
+  "keys_only_old": 0,
+  "keys_only_new": 0
+ },
+ "port_screen.json": {
+  "numbers": 8160,
+  "max_abs_diff": 0,
+  "other_diff": 0,
+  "keys_only_old": 0,
+  "keys_only_new": 0
+ },
+ "port_screen_refined.json": {
+  "numbers": 8160,
+  "max_abs_diff": 0,
+  "other_diff": 0,
+  "keys_only_old": 0,
+  "keys_only_new": 0
+ },
+ "topology_screen.json": {
+  "numbers": 7620,
+  "max_abs_diff": 0,
+  "other_diff": 0,
+  "keys_only_old": 0,
+  "keys_only_new": 0
+ },
+ "topology_parity.json": {
+  "numbers": 5988,
+  "max_abs_diff": 0,
+  "other_diff": 0,
+  "keys_only_old": 0,
+  "keys_only_new": 0
+ },
+ "topology_refined.json": {
+  "numbers": 544,
+  "max_abs_diff": 0,
+  "other_diff": 0,
+  "keys_only_old": 0,
+  "keys_only_new": 0
+ }
+}

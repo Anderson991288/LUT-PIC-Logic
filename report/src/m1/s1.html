@@ -1,0 +1,96 @@
+<section class="step" id="m1-s1" data-milestone="M1" data-step="s1" data-title="光訊號與邏輯">
+<div class="bridge">
+<p><b>承接</b>：M0 s2 備妥報告工具，與光學內容無關。本步接續 M0 s1：M0 s1 確認了 PDK 的 MMI 電路模型（1.55 µm）就是理想的 50:50 耦合器 H，以及「光場會相加或抵消、偵測器只看得到功率」這兩個事實。</p>
+<p><b>本步要回答</b>：光要如何表示 0／1？兩路光混合之後，又如何被讀成一個邏輯值？</p>
+<p><b>交給下一步</b>：輸入 → 混合 → 讀取 三步模型；判讀規則「ΔP＞0 判 1、ΔP＜0 判 0、ΔP＝0 是邊界」；以及一個發現：只有資料光時做不到可靠判讀，必須加入參考光 R。</p>
+<p class="terms"><b>名詞對照</b>：光場（optical field，光的振幅與相位）、功率（optical power）、開關鍵控（on–off keying，OOK，亮＝1、暗＝0）、干涉（interference）、相位器（phase shifter）、光偵測器（photodetector，PD）、平衡偵測（balanced detection，兩個 PD 相減）、轉阻放大器（transimpedance amplifier，TIA，把電流轉成電壓）、比較器（comparator）、真值表（truth table）、ΔP（兩個讀取功率的差）、門檻（threshold）、參考光（reference light，R）</p>
+</div>
+
+<figure class="concept"><img src="figures/m1/s1_concept.png" alt="本步概念圖：光的 0／1、混合與判讀"><figcaption><b>本步概念</b>　兩路資料光經 MMI 混合，光場同相時相加、反相時抵消；兩個偵測器的功率差 ΔP 決定判 1 或 0。本步最後會發現必須加入參考光 R。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能說出「輸入、混合、讀取」三步各在做什麼；分清光場與功率；能解釋為什麼本課程用「比大小」判讀，以及為什麼需要參考光。</p>
+<div class="example">
+<p>類比：兩條水管的水波在匯流處相遇。波峰對波峰，水浪變大（相加）；波峰對波谷，水面變平（抵消）。光也是波，兩路光相遇時是<b>光場</b>先相加，再看合起來有多亮。</p>
+<ul>
+<li><b>輸入</b>：每一路資料是一道光，亮＝1、暗＝0（開關鍵控）。亮暗變化由晶片外的調變產生。資料直接放在光上，每個位元只需約 1 ns；若改用電壓驅動以加熱改變相位的相位器，熱的反應需要數微秒以上，速度相差上千倍。</li>
+<li><b>混合</b>：讓上方的光經過一個相位器，再和下方的光在 MMI 相遇。相位決定它們在每個輸出是相加還是抵消。</li>
+<li><b>讀取</b>：兩個輸出各接一個光偵測器，量到的是功率。比較兩個功率的大小，就得到 0 或 1。光偵測器與其後的電路都在晶片外，晶片的邊界在 M2 s1 定義。</li>
+</ul>
+</div>
+<figure><img src="figures/m1/s1_circuit.png" alt="x1、x2 經相位器與 MMI 混合，兩個光偵測器的電流相減後經 TIA 與比較器輸出 y"><figcaption>圖 M1-1　本步的光路與讀取鏈。紫色框是「混合」：上方的光先經過相位器 φ，再和下方的光在 MMI 相遇。兩個輸出各接一個光偵測器（PD），兩個電流相減後由 TIA 轉成電壓，比較器只看電壓的正負：這就是「比大小」。</figcaption></figure>
+
+<h3>② 原理與推導</h3>
+<h4>1. 光場與功率</h4>
+<p>資料 x1、x2 ∈ {0, 1} 直接當作光場振幅（單位 √P<sub>u</sub>，P<sub>u</sub> 是一路資料「1」的功率）。上方的光先經過相位 φ，再進入 M0 s1 的理想 MMI：</p>
+<math display="block"><mrow><mrow><mo>[</mo><mtable><mtr><mtd><msub><mi>y</mi><mtext>上</mtext></msub></mtd></mtr><mtr><mtd><msub><mi>y</mi><mtext>下</mtext></msub></mtd></mtr></mtable><mo>]</mo></mrow><mo>=</mo><mi>H</mi><mrow><mo>[</mo><mtable><mtr><mtd><msup><mi>e</mi><mrow><mi>i</mi><mi>φ</mi></mrow></msup><msub><mi>x</mi><mn>1</mn></msub></mtd></mtr><mtr><mtd><msub><mi>x</mi><mn>2</mn></msub></mtd></mtr></mtable><mo>]</mo></mrow><mo>=</mo><mfrac><mn>1</mn><msqrt><mn>2</mn></msqrt></mfrac><mrow><mo>[</mo><mtable><mtr><mtd><msup><mi>e</mi><mrow><mi>i</mi><mi>φ</mi></mrow></msup><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><mi>i</mi><msub><mi>x</mi><mn>2</mn></msub></mtd></mtr><mtr><mtd><mi>i</mi><msup><mi>e</mi><mrow><mi>i</mi><mi>φ</mi></mrow></msup><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>x</mi><mn>2</mn></msub></mtd></mtr></mtable><mo>]</mo></mrow></mrow></math>
+<p>y<sub>上</sub>、y<sub>下</sub> 是兩個輸出的光場（√P<sub>u</sub>）；e<sup>iφ</sup> 表示相位延遲 φ（rad），只改變相位、不改變亮度。偵測器量到的是功率，也就是光場絕對值的平方：P<sub>上</sub>＝|y<sub>上</sub>|²、P<sub>下</sub>＝|y<sub>下</sub>|²（單位 P<sub>u</sub>）。<b>注意順序</b>：先把光場相加，再取平方；不能先把各路功率相加，否則就看不到抵消。</p>
+
+<h4>2. 比大小：判讀量 ΔP</h4>
+<p>展開絕對值平方時使用 |a＋b|²＝|a|²＋|b|²＋2·Re(a·b*)（Re 取實部，b* 是 b 的共軛複數），得到 P<sub>上</sub>＝(x1²＋x2²)/2＋x1·x2·sin φ、P<sub>下</sub>＝(x1²＋x2²)/2 − x1·x2·sin φ。兩式相減，平方項在兩個輸出各占一半而互相消去，只剩兩路光的交叉項：</p>
+<math display="block"><mrow><mi>Δ</mi><mi>P</mi><mo>=</mo><msub><mi>P</mi><mtext>上</mtext></msub><mo>−</mo><msub><mi>P</mi><mtext>下</mtext></msub><mo>=</mo><mn>2</mn><mspace width="0.1em"/><msub><mi>x</mi><mn>1</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mspace width="0.1em"/><mi>sin</mi><mi>φ</mi></mrow></math>
+<p>ΔP 的單位是 P<sub>u</sub>。判讀規則：ΔP＞0 判 1，ΔP＜0 判 0；ΔP＝0 落在邊界上，任何一點雜訊都會使結果不穩定，<b>不算成功判讀</b>。取 φ＝π/2（sin φ＝1）時 ΔP＝2·x1·x2，只有 11 是正的，這正是 AND2 的形狀。</p>
+
+<h4>3. 兩種判讀規則</h4>
+<table>
+<tr><th>規則</th><th>做法</th><th>優點</th><th>問題</th></tr>
+<tr><td>固定門檻</td><td>ΔP＞T 判 1（例如 T＝1）</td><td>只有資料光也能用</td><td>T 是絕對功率；雷射功率或耦合損耗一變，ΔP 等比例縮小，就會越過門檻判錯；每換一個函數，T 也可能要重調</td></tr>
+<tr><td>比大小（本課程採用）</td><td>看 ΔP 的正負</td><td>功率整體放大或縮小時，ΔP 的正負號不變；所有函數共用同一個零點，不必調門檻</td><td>上式中 00、01、10 的 ΔP 恰好等於 0，全部落在邊界</td></tr>
+</table>
+<p>比大小的問題不是相位選得不好：輸入 00 時沒有任何光進入電路，兩個輸出都是暗的，ΔP 必然等於 0，不論電路如何設計。</p>
+<p><b>解法是加入一路固定的參考光 R</b>（與資料光來自同一顆雷射，振幅固定）。ΔP 是輸入光場的二次式；加入 R 之後，除了資料之間的乘積項，還會多出 R² 的常數項與 R·x 的一次項：常數項讓 00 的 ΔP 可以是負的（判 0），一次項讓每一路資料對 ΔP 的貢獻可以自由調整。R 和資料光一起隨雷射功率縮放，所以比大小的優點仍然保留。</p>
+<p>01、10 落在邊界，是本步這個 50:50 混合單元的特性；換成可調分光比的元件，只有資料光也能讓 01、10 離開邊界。但 00 一定在邊界，只有 R 能解決。</p>
+<p>要讓 R 和資料以不同比例混合，需要可調分光比的混合單元，這是下一步的內容。本課程取 R＝3，意思是 R 的光場振幅為一路資料「1」的 3 倍。</p>
+<figure><img src="figures/m1/s1_reference.png" alt="左：只有資料光時 00、01、10 落在邊界；右：加入常數項後四組都離開邊界，功率下降時正負號不變"><figcaption>圖 M1-2　參考光 R 的作用（示意）。左：只有資料光，ΔP＝2·x1·x2，三組落在邊界。右：假設 R 貢獻 −1 P<sub>u</sub> 的常數項，00、01、10 變成負的（判 0）、11 仍是正的（判 1），AND2 四組都能判讀。淺色是雷射功率降到 40% 的情況：所有長條等比例縮短，正負號不變。這裡的 −1 只是示意，R 的實際接法與大小在後面的步驟設計。</figcaption></figure>
+
+<h3>③ 動手做</h3>
+<p>在專案根目錄執行：</p>
+<pre><code>.\lab design\m1_logic\s1_signal\and2_readout.py</code></pre>
+<p>程式依序做三件事：(1) 算 φ＝π/2 時四組輸入的真值表；(2) 把 φ 從 −π 掃到 π，驗證 ΔP＝2·x1·x2·sin φ；(3) 送入一段 8 個位元的波形，後 4 個位元的雷射功率降到 40%，比較兩種判讀規則。預期印出：</p>
+<pre><code>x1 x2 |  P上   P下    ΔP  | 比大小 門檻T=1 | AND2
+ 0  0 | 0.00  0.00   0.00 |  邊界     0     |  0
+ 0  1 | 0.50  0.50   0.00 |  邊界     0     |  0
+ 1  0 | 0.50  0.50   0.00 |  邊界     0     |  0
+ 1  1 | 2.00  0.00   2.00 |  1      1     |  1</code></pre>
+<p>圖 M1-1～M1-3 由 <code>concept_figs.py</code> 產生（<code>.\lab design\m1_logic\s1_signal\concept_figs.py</code>），數值用同一個模型計算。</p>
+<p>練習：把程式中的 <code>PHI</code> 改成 <code>-np.pi / 2</code> 再執行，11 的 ΔP 會變成 −2，判讀變成 0；也就是同一個電路只換相位，就從「11 才亮」變成「11 才暗」。</p>
+
+<h3>④ 結果與驗收</h3>
+<table>
+<tr><th>x1 x2</th><th>P上（P<sub>u</sub>）</th><th>P下（P<sub>u</sub>）</th><th>ΔP（P<sub>u</sub>）</th><th>比大小</th><th>門檻 T＝1</th><th>AND2</th></tr>
+<tr><td>00</td><td><span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['table'][0]['P_up']" data-fmt="{:.2f}">0.00</span></td><td><span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['table'][0]['P_dn']" data-fmt="{:.2f}">0.00</span></td><td><span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['table'][0]['dP']" data-fmt="{:.2f}">0.00</span></td><td>邊界</td><td>0</td><td>0</td></tr>
+<tr><td>01</td><td><span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['table'][1]['P_up']" data-fmt="{:.2f}">0.50</span></td><td><span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['table'][1]['P_dn']" data-fmt="{:.2f}">0.50</span></td><td><span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['table'][1]['dP']" data-fmt="{:.2f}">0.00</span></td><td>邊界</td><td>0</td><td>0</td></tr>
+<tr><td>10</td><td><span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['table'][2]['P_up']" data-fmt="{:.2f}">0.50</span></td><td><span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['table'][2]['P_dn']" data-fmt="{:.2f}">0.50</span></td><td><span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['table'][2]['dP']" data-fmt="{:.2f}">0.00</span></td><td>邊界</td><td>0</td><td>0</td></tr>
+<tr><td>11</td><td><span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['table'][3]['P_up']" data-fmt="{:.2f}">2.00</span></td><td><span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['table'][3]['P_dn']" data-fmt="{:.2f}">0.00</span></td><td><span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['table'][3]['dP']" data-fmt="{:.2f}">2.00</span></td><td>1</td><td>1</td><td>1</td></tr>
+</table>
+<p>01 與 10 的總功率都是 1 P<sub>u</sub>，平均分到兩個輸出；11 的兩道光在上方相加、在下方完全抵消，上方得到 2 P<sub>u</sub>，是兩路各自在上方的功率直接相加（0.5＋0.5）的兩倍。這多出來的部分就是干涉。</p>
+<figure><img src="figures/m1/s1_phasor.png" alt="六個小圖：01、10、11 三組輸入在上方與下方輸出的光場箭頭"><figcaption>圖 M1-3　把光場畫成箭頭：長度是大小，方向是相位。每路輸入在某個輸出貢獻一支箭頭，頭尾相接就是合成光場（綠色），功率是合成箭頭長度的平方。01、10 只有一支箭頭，長度 0.71，功率 0.5。11 時上方兩支同向，長度變 1.41、功率 2；下方兩支反向，正好抵消為 0。</figcaption></figure>
+<figure><img src="figures/m1/s1_deltaP_phase.png" alt="四組輸入的 ΔP 隨相位變化：只有 11 是正弦曲線，其餘恆為 0"><figcaption>圖 M1-4　ΔP 隨上臂相位 φ 的變化。只有 11 隨相位改變（ΔP＝2 sin φ），00、01、10 三條線在任何相位都重疊在 0 上：只靠兩路資料光，再如何調相位都無法讓它們離開邊界。</figcaption></figure>
+<p>公式驗證：程式掃描的 ΔP 與 2·x1·x2·sin φ 的最大差為 <span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['formula_max_err']" data-fmt="{:.0e}">1e-15</span>（浮點捨入等級）。</p>
+<figure><img src="figures/m1/s1_waveform.png" alt="8 個位元的波形與兩種判讀結果"><figcaption>圖 M1-5　每格 1 ns 一個位元。後 4 個位元雷射功率降到 40%，11 的 ΔP 從 2 降到 0.8：固定門檻 T＝1 把這 <span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['wave_T_errors_low_power']">2</span> 個位元判錯；比大小沒有判錯（<span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['wave_sign_wrong']">0</span> 個），但所有輸出應為 0 的 <span class="num" data-json="design/m1_logic/s1_signal/out/and2.json" data-expr="d['wave_sign_boundary']">5</span> 個位元都落在邊界。這是理想穩態示意，沒有加入延遲、濾波或雜訊。</figcaption></figure>
+<p><b>實際遇到的情況</b>：一開始以為「調好相位就能讓 00、01、10 變成負的」，掃描整個 φ 之後（圖 M1-4）才確認不可能：只有兩路資料時 ΔP 只有乘積項。這個結果是加入參考光 R 的直接理由。</p>
+<p><b>本步結論</b>：比大小對雷射功率變化不敏感，是比較好的判讀規則，但需要參考光 R 提供常數項與一次項；下一步用可調的混合單元把 R 和資料混在一起。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>把功率直接相加</b>：11 的上方輸出若用功率相加，只會得到 0.5＋0.5＝1，看不到 2 與 0 的差別。光場要先相加再取平方。</li>
+<li><b>以為 ΔP＝0 也算判成 0</b>：ΔP＝0 時比較器的輸出由雜訊決定，可能 0 也可能 1，不能當作正確結果。</li>
+<li><b>以為門檻法比較簡單所以比較好</b>：門檻是絕對功率，雷射或耦合一變就失效（圖 M1-5）；比大小的零點不隨功率改變。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：φ＝π/2 時輸入 11，下方輸出為什麼完全沒有光？</summary>
+<p>y<sub>下</sub>＝(i·e<sup>iπ/2</sup>·1＋1)/√2＝(i·i＋1)/√2＝(−1＋1)/√2＝0。上方那道光經過相位器與 MMI 交叉路徑，共多了 180°，和下方那道光正好反相，互相抵消。</p></details>
+<details class="quiz"><summary>自我檢查 2：如果把 φ 設成 0，四組輸入的判讀結果是什麼？</summary>
+<p>sin 0＝0，四組的 ΔP 都是 0，全部落在邊界。兩道光在兩個輸出各分一半，沒有偏向任何一邊。</p></details>
+<details class="quiz"><summary>自我檢查 3：雷射功率突然變成原來的一半，比大小的判讀會改變嗎？</summary>
+<p>不會。所有光場都乘上 √0.5，所有功率與 ΔP 都乘上 0.5，正負號不變。這個性質在加入同一顆雷射來的參考光 R 之後仍然成立。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>模型</td><td>理想 50:50 MMI（M0 s1 已驗證等於 PDK 模型）、理想相位器；無損耗、無雜訊、穩態</td></tr>
+<tr><td>參數</td><td>φ＝π/2；掃描 φ∈[−π, π]，721 點；固定門檻 T＝1；波形 8 位元，後 4 位元功率倍數 0.4</td></tr>
+<tr><td>環境</td><td>同 M0 s1；只用 numpy 與 matplotlib</td></tr>
+</table>
+<div class="auto-code" data-files="design/m1_logic/s1_signal/and2_readout.py design/m1_logic/s1_signal/concept_figs.py design/common/optics.py"></div>
+<div class="auto-history" data-file="design/m1_logic/s1_signal/HISTORY.md"></div>
+</section>

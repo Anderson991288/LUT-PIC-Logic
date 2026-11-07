@@ -1,0 +1,637 @@
+{
+  "fixed_params": {
+    "delay_ps_per_mzi": 1.0,
+    "db_route": 0.0,
+    "db_calc": 1.0,
+    "db_comb": 3.0
+  },
+  "route_tol_rad": 0.05,
+  "drift_rad": 0.3,
+  "er_fixed_db": 20.0,
+  "skew_cases": [
+    0,
+    15,
+    20
+  ],
+  "ui_ps": 100.0,
+  "functions": {
+    "AND2": {
+      "fixed": {
+        "path_loss_db": 6.0,
+        "path_mzi": 4,
+        "delay_ps": 4.0,
+        "roles": {
+          "1": "comb",
+          "2": "route",
+          "3": "route",
+          "4": "calc",
+          "5": "comb",
+          "6": "route",
+          "7": "route"
+        },
+        "skew_allow_ps": 18.69,
+        "skew_penalty_db": {
+          "0": 0.0,
+          "15": 0.0,
+          "20": null
+        },
+        "drift_ratio": 1.0,
+        "er20_ratio": 1.0
+      },
+      "flow": {
+        "chip_spread_ps": 0.3346,
+        "skew_allow_1db_ps": 27.6,
+        "skew_penalty_db": {
+          "0": 0.548,
+          "15": 0.819,
+          "20": 1.058
+        },
+        "skew_extra_db": {
+          "0": 0.0,
+          "15": 0.271,
+          "20": 0.51
+        },
+        "pu_static_dbm": -12.99,
+        "m0": 1.2436,
+        "drift_ratio": 0.811,
+        "er20_ratio": 0.812,
+        "er_need_fixed_db": 25.5
+      }
+    },
+    "OR2": {
+      "fixed": {
+        "path_loss_db": 6.0,
+        "path_mzi": 4,
+        "delay_ps": 4.0,
+        "roles": {
+          "1": "comb",
+          "2": "route",
+          "3": "route",
+          "4": "calc",
+          "5": "comb",
+          "6": "route",
+          "7": "route"
+        },
+        "skew_allow_ps": 18.69,
+        "skew_penalty_db": {
+          "0": 0.0,
+          "15": 0.0,
+          "20": null
+        },
+        "drift_ratio": 1.0,
+        "er20_ratio": 1.0
+      },
+      "flow": {
+        "chip_spread_ps": 0.3346,
+        "skew_allow_1db_ps": 26.8,
+        "skew_penalty_db": {
+          "0": 0.587,
+          "15": 0.87,
+          "20": 1.158
+        },
+        "skew_extra_db": {
+          "0": 0.0,
+          "15": 0.283,
+          "20": 0.571
+        },
+        "pu_static_dbm": -13.01,
+        "m0": 1.2459,
+        "drift_ratio": 0.913,
+        "er20_ratio": 0.608,
+        "er_need_fixed_db": 32.0
+      }
+    },
+    "XOR2": {
+      "fixed": {
+        "path_loss_db": 6.0,
+        "path_mzi": 4,
+        "delay_ps": 4.0,
+        "roles": {
+          "1": "comb",
+          "2": "route",
+          "3": "route",
+          "4": "route",
+          "5": "route",
+          "6": "route",
+          "7": "comb"
+        },
+        "skew_allow_ps": 18.69,
+        "skew_penalty_db": {
+          "0": 0.0,
+          "15": 0.0,
+          "20": null
+        },
+        "drift_ratio": 1.0,
+        "er20_ratio": 1.0
+      },
+      "flow": {
+        "chip_spread_ps": 0.3346,
+        "skew_allow_1db_ps": 25.5,
+        "skew_penalty_db": {
+          "0": 0.609,
+          "15": 0.946,
+          "20": 1.214
+        },
+        "skew_extra_db": {
+          "0": 0.0,
+          "15": 0.337,
+          "20": 0.605
+        },
+        "pu_static_dbm": -6.74,
+        "m0": 0.2887,
+        "drift_ratio": 0.463,
+        "er20_ratio": 0.675,
+        "er_need_fixed_db": 31.0
+      }
+    },
+    "AND4": {
+      "fixed": {
+        "path_loss_db": 12.0,
+        "path_mzi": 4,
+        "delay_ps": 4.0,
+        "roles": {
+          "1": "comb",
+          "2": "comb",
+          "3": "comb",
+          "4": "comb",
+          "5": "comb",
+          "6": "comb",
+          "7": "comb"
+        },
+        "skew_allow_ps": 18.69,
+        "skew_penalty_db": {
+          "0": 0.0,
+          "15": 0.0,
+          "20": null
+        },
+        "drift_ratio": 1.0,
+        "er20_ratio": 1.0
+      },
+      "flow": {
+        "chip_spread_ps": 0.3346,
+        "skew_allow_1db_ps": 18.7,
+        "skew_penalty_db": {
+          "0": 1.109,
+          "15": 1.781,
+          "20": 2.228
+        },
+        "skew_extra_db": {
+          "0": 0.0,
+          "15": 0.672,
+          "20": 1.119
+        },
+        "pu_static_dbm": -11.85,
+        "m0": 0.9703,
+        "drift_ratio": 0.489,
+        "er20_ratio": 0.811,
+        "er_need_fixed_db": 26.0
+      }
+    },
+    "OR4": {
+      "fixed": {
+        "path_loss_db": 12.0,
+        "path_mzi": 4,
+        "delay_ps": 4.0,
+        "roles": {
+          "1": "comb",
+          "2": "comb",
+          "3": "comb",
+          "4": "comb",
+          "5": "comb",
+          "6": "route",
+          "7": "comb"
+        },
+        "skew_allow_ps": 18.69,
+        "skew_penalty_db": {
+          "0": 0.0,
+          "15": 0.0,
+          "20": null
+        },
+        "drift_ratio": 1.0,
+        "er20_ratio": 1.0
+      },
+      "flow": {
+        "chip_spread_ps": 0.3346,
+        "skew_allow_1db_ps": 18.0,
+        "skew_penalty_db": {
+          "0": 1.375,
+          "15": 2.092,
+          "20": 2.558
+        },
+        "skew_extra_db": {
+          "0": 0.0,
+          "15": 0.717,
+          "20": 1.183
+        },
+        "pu_static_dbm": -11.77,
+        "m0": 0.9418,
+        "drift_ratio": 0.911,
+        "er20_ratio": 0.204,
+        "er_need_fixed_db": 38.0
+      }
+    }
+  },
+  "rank_fixed": [
+    "AND4",
+    "OR4",
+    "AND2",
+    "OR2",
+    "XOR2"
+  ],
+  "rank_flow": [
+    "XOR2",
+    "OR4",
+    "AND4",
+    "AND2",
+    "OR2"
+  ],
+  "joint": {
+    "AND4": {
+      "drift_m_win": 0.08472,
+      "drift_penalty_db": 10.589,
+      "nominal_m_win": 0.75155
+    },
+    "XOR2": {
+      "drift_m_win": 0.06453,
+      "drift_penalty_db": 6.506,
+      "nominal_m_win": 0.25092
+    }
+  },
+  "disagree": [
+    {
+      "function": "OR2",
+      "case": "消光比 20 dB、不重解",
+      "fixed": "通過（0 dB）",
+      "flow": "2.16 dB",
+      "reason": "固定模型 0 dB、時域流程 2.16 dB ≥ 1 dB"
+    },
+    {
+      "function": "XOR2",
+      "case": "未追蹤漂移 0.3 rad",
+      "fixed": "通過（0 dB）",
+      "flow": "3.34 dB",
+      "reason": "固定模型 0 dB、時域流程 3.34 dB ≥ 1 dB"
+    },
+    {
+      "function": "XOR2",
+      "case": "消光比 20 dB、不重解",
+      "fixed": "通過（0 dB）",
+      "flow": "1.71 dB",
+      "reason": "固定模型 0 dB、時域流程 1.71 dB ≥ 1 dB"
+    },
+    {
+      "function": "AND4",
+      "case": "skew 0 ps",
+      "fixed": "通過（0 dB）",
+      "flow": "1.11 dB",
+      "reason": "固定模型 0 dB、時域流程 1.11 dB ≥ 1 dB"
+    },
+    {
+      "function": "AND4",
+      "case": "skew 15 ps",
+      "fixed": "通過（0 dB）",
+      "flow": "1.78 dB",
+      "reason": "固定模型 0 dB、時域流程 1.78 dB ≥ 1 dB"
+    },
+    {
+      "function": "AND4",
+      "case": "未追蹤漂移 0.3 rad",
+      "fixed": "通過（0 dB）",
+      "flow": "3.11 dB",
+      "reason": "固定模型 0 dB、時域流程 3.11 dB ≥ 1 dB"
+    },
+    {
+      "function": "OR4",
+      "case": "skew 0 ps",
+      "fixed": "通過（0 dB）",
+      "flow": "1.38 dB",
+      "reason": "固定模型 0 dB、時域流程 1.38 dB ≥ 1 dB"
+    },
+    {
+      "function": "OR4",
+      "case": "skew 15 ps",
+      "fixed": "通過（0 dB）",
+      "flow": "2.09 dB",
+      "reason": "固定模型 0 dB、時域流程 2.09 dB ≥ 1 dB"
+    },
+    {
+      "function": "OR4",
+      "case": "消光比 20 dB、不重解",
+      "fixed": "通過（0 dB）",
+      "flow": "6.90 dB",
+      "reason": "固定模型 0 dB、時域流程 6.90 dB ≥ 1 dB"
+    }
+  ],
+  "n_disagree": 9,
+  "n_cases": 25,
+  "cases": [
+    {
+      "function": "AND2",
+      "case": "skew 0 ps",
+      "fixed_ok": true,
+      "flow_db": 0.548,
+      "flow_extra_db": 0.0,
+      "disagree": false,
+      "reason": "固定模型 0 dB、時域流程 0.55 dB < 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "AND2",
+      "case": "skew 15 ps",
+      "fixed_ok": true,
+      "flow_db": 0.819,
+      "flow_extra_db": 0.271,
+      "disagree": false,
+      "reason": "固定模型 0 dB、時域流程 0.82 dB < 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "AND2",
+      "case": "skew 20 ps",
+      "fixed_ok": false,
+      "flow_db": 1.058,
+      "flow_extra_db": 0.51,
+      "disagree": false,
+      "reason": "固定模型不通過、時域流程 1.06 dB ≥ 1 dB",
+      "disagree_safety": true
+    },
+    {
+      "function": "AND2",
+      "case": "未追蹤漂移 0.3 rad",
+      "fixed_ok": true,
+      "flow_db": 0.91,
+      "flow_ratio": 0.811,
+      "disagree": false,
+      "reason": "固定模型 0 dB、時域流程 0.91 dB < 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "AND2",
+      "case": "消光比 20 dB、不重解",
+      "fixed_ok": true,
+      "flow_db": 0.904,
+      "flow_ratio": 0.812,
+      "disagree": false,
+      "reason": "固定模型 0 dB、時域流程 0.90 dB < 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "OR2",
+      "case": "skew 0 ps",
+      "fixed_ok": true,
+      "flow_db": 0.587,
+      "flow_extra_db": 0.0,
+      "disagree": false,
+      "reason": "固定模型 0 dB、時域流程 0.59 dB < 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "OR2",
+      "case": "skew 15 ps",
+      "fixed_ok": true,
+      "flow_db": 0.87,
+      "flow_extra_db": 0.283,
+      "disagree": false,
+      "reason": "固定模型 0 dB、時域流程 0.87 dB < 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "OR2",
+      "case": "skew 20 ps",
+      "fixed_ok": false,
+      "flow_db": 1.158,
+      "flow_extra_db": 0.571,
+      "disagree": false,
+      "reason": "固定模型不通過、時域流程 1.16 dB ≥ 1 dB",
+      "disagree_safety": true
+    },
+    {
+      "function": "OR2",
+      "case": "未追蹤漂移 0.3 rad",
+      "fixed_ok": true,
+      "flow_db": 0.395,
+      "flow_ratio": 0.913,
+      "disagree": false,
+      "reason": "固定模型 0 dB、時域流程 0.40 dB < 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "OR2",
+      "case": "消光比 20 dB、不重解",
+      "fixed_ok": true,
+      "flow_db": 2.161,
+      "flow_ratio": 0.608,
+      "disagree": true,
+      "reason": "固定模型 0 dB、時域流程 2.16 dB ≥ 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "XOR2",
+      "case": "skew 0 ps",
+      "fixed_ok": true,
+      "flow_db": 0.609,
+      "flow_extra_db": 0.0,
+      "disagree": false,
+      "reason": "固定模型 0 dB、時域流程 0.61 dB < 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "XOR2",
+      "case": "skew 15 ps",
+      "fixed_ok": true,
+      "flow_db": 0.946,
+      "flow_extra_db": 0.337,
+      "disagree": false,
+      "reason": "固定模型 0 dB、時域流程 0.95 dB < 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "XOR2",
+      "case": "skew 20 ps",
+      "fixed_ok": false,
+      "flow_db": 1.214,
+      "flow_extra_db": 0.605,
+      "disagree": false,
+      "reason": "固定模型不通過、時域流程 1.21 dB ≥ 1 dB",
+      "disagree_safety": true
+    },
+    {
+      "function": "XOR2",
+      "case": "未追蹤漂移 0.3 rad",
+      "fixed_ok": true,
+      "flow_db": 3.344,
+      "flow_ratio": 0.463,
+      "disagree": true,
+      "reason": "固定模型 0 dB、時域流程 3.34 dB ≥ 1 dB",
+      "disagree_safety": true
+    },
+    {
+      "function": "XOR2",
+      "case": "消光比 20 dB、不重解",
+      "fixed_ok": true,
+      "flow_db": 1.707,
+      "flow_ratio": 0.675,
+      "disagree": true,
+      "reason": "固定模型 0 dB、時域流程 1.71 dB ≥ 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "AND4",
+      "case": "skew 0 ps",
+      "fixed_ok": true,
+      "flow_db": 1.109,
+      "flow_extra_db": 0.0,
+      "disagree": true,
+      "reason": "固定模型 0 dB、時域流程 1.11 dB ≥ 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "AND4",
+      "case": "skew 15 ps",
+      "fixed_ok": true,
+      "flow_db": 1.781,
+      "flow_extra_db": 0.672,
+      "disagree": true,
+      "reason": "固定模型 0 dB、時域流程 1.78 dB ≥ 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "AND4",
+      "case": "skew 20 ps",
+      "fixed_ok": false,
+      "flow_db": 2.228,
+      "flow_extra_db": 1.119,
+      "disagree": false,
+      "reason": "固定模型不通過、時域流程 2.23 dB ≥ 1 dB",
+      "disagree_safety": true
+    },
+    {
+      "function": "AND4",
+      "case": "未追蹤漂移 0.3 rad",
+      "fixed_ok": true,
+      "flow_db": 3.107,
+      "flow_ratio": 0.489,
+      "disagree": true,
+      "reason": "固定模型 0 dB、時域流程 3.11 dB ≥ 1 dB",
+      "disagree_safety": true
+    },
+    {
+      "function": "AND4",
+      "case": "消光比 20 dB、不重解",
+      "fixed_ok": true,
+      "flow_db": 0.91,
+      "flow_ratio": 0.811,
+      "disagree": false,
+      "reason": "固定模型 0 dB、時域流程 0.91 dB < 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "OR4",
+      "case": "skew 0 ps",
+      "fixed_ok": true,
+      "flow_db": 1.375,
+      "flow_extra_db": 0.0,
+      "disagree": true,
+      "reason": "固定模型 0 dB、時域流程 1.38 dB ≥ 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "OR4",
+      "case": "skew 15 ps",
+      "fixed_ok": true,
+      "flow_db": 2.092,
+      "flow_extra_db": 0.717,
+      "disagree": true,
+      "reason": "固定模型 0 dB、時域流程 2.09 dB ≥ 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "OR4",
+      "case": "skew 20 ps",
+      "fixed_ok": false,
+      "flow_db": 2.558,
+      "flow_extra_db": 1.183,
+      "disagree": false,
+      "reason": "固定模型不通過、時域流程 2.56 dB ≥ 1 dB",
+      "disagree_safety": true
+    },
+    {
+      "function": "OR4",
+      "case": "未追蹤漂移 0.3 rad",
+      "fixed_ok": true,
+      "flow_db": 0.405,
+      "flow_ratio": 0.911,
+      "disagree": false,
+      "reason": "固定模型 0 dB、時域流程 0.41 dB < 1 dB",
+      "disagree_safety": false
+    },
+    {
+      "function": "OR4",
+      "case": "消光比 20 dB、不重解",
+      "fixed_ok": true,
+      "flow_db": 6.904,
+      "flow_ratio": 0.204,
+      "disagree": true,
+      "reason": "固定模型 0 dB、時域流程 6.90 dB ≥ 1 dB",
+      "disagree_safety": true
+    }
+  ],
+  "thr_db": 1.0,
+  "safety_db": 3.0,
+  "n_disagree_safety": 8,
+  "route_tol_sensitivity": {
+    "0.02": {
+      "path_loss_db": {
+        "AND2": 6.0,
+        "OR2": 6.0,
+        "XOR2": 6.0,
+        "AND4": 12.0,
+        "OR4": 12.0
+      },
+      "rank": [
+        "AND4",
+        "OR4",
+        "AND2",
+        "OR2",
+        "XOR2"
+      ]
+    },
+    "0.05": {
+      "path_loss_db": {
+        "AND2": 6.0,
+        "OR2": 6.0,
+        "XOR2": 6.0,
+        "AND4": 12.0,
+        "OR4": 12.0
+      },
+      "rank": [
+        "AND4",
+        "OR4",
+        "AND2",
+        "OR2",
+        "XOR2"
+      ]
+    },
+    "0.1": {
+      "path_loss_db": {
+        "AND2": 6.0,
+        "OR2": 6.0,
+        "XOR2": 6.0,
+        "AND4": 12.0,
+        "OR4": 12.0
+      },
+      "rank": [
+        "AND4",
+        "OR4",
+        "AND2",
+        "OR2",
+        "XOR2"
+      ]
+    }
+  },
+  "checks": {
+    "delay_negligible_both": true,
+    "ranking_same": false,
+    "ranking_reversed_all_tols": true
+  }
+}

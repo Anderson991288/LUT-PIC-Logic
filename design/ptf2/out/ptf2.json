@@ -1,0 +1,256 @@
+{
+ "seed": 2026,
+ "n_random": 200,
+ "multilinear_max_coeff": {
+  "3142132+R, 0.9 dB/MZI: Da=P2-P4": {
+   "deg1": 1.8666326399921183,
+   "deg2": 1.7243863991028838,
+   "deg3": 3.3799664225022863e-15,
+   "deg4": 2.6805216123841867e-15,
+   "cubic_or_higher_is_zero": true
+  },
+  "3142132+R, 0.9 dB/MZI: Db=P4-P3": {
+   "deg1": 1.138805103961687,
+   "deg2": 1.1773245443779712,
+   "deg3": 2.5854734632998264e-15,
+   "deg4": 2.9979535282339817e-15,
+   "cubic_or_higher_is_zero": true
+  },
+  "B7+R single stage: P2-P4": {
+   "deg1": 1.1355491288175568,
+   "deg2": 1.0168021991952092,
+   "deg3": 2.174971092258057e-15,
+   "deg4": 1.9772464475073244e-15,
+   "cubic_or_higher_is_zero": true
+  },
+  "two B7 cascaded: P2-P4": {
+   "deg1": 1.2632410866874286,
+   "deg2": 1.16234370173538,
+   "deg3": 2.4912565846143125e-15,
+   "deg4": 3.677569243954461e-15,
+   "cubic_or_higher_is_zero": true
+  },
+  "random modulators + 12-port lossy network + 8 weighted detectors": {
+   "deg1": 1.5642884170471694,
+   "deg2": 1.3626058889111101,
+   "deg3": 3.731081609727354e-15,
+   "deg4": 4.683698190934338e-15,
+   "cubic_or_higher_is_zero": true
+  },
+  "fan-out: each input drives 3 modulators (13 ports)": {
+   "deg1": 1.495716112095054,
+   "deg2": 1.4500856245307239,
+   "deg3": 2.023589644795887e-15,
+   "deg4": 3.259367998689532e-15,
+   "cubic_or_higher_is_zero": true
+  },
+  "serial: x1 and x2 modulators on the same path": {
+   "deg1": 1.78783613592823,
+   "deg2": 2.1865467838468136,
+   "deg3": 2.041780918416598,
+   "deg4": 2.508636091647379e-15,
+   "cubic_or_higher_is_zero": false
+  }
+ },
+ "quad_fit_max_residual_rel": 3.699238223509079e-15,
+ "npn": {
+  "n_classes": 222,
+  "reference_n_classes": 222,
+  "sizes_sum": 65536
+ },
+ "threshold_degree": {
+  "0": {
+   "classes": 1,
+   "tables": 2
+  },
+  "1": {
+   "classes": 14,
+   "tables": 1880
+  },
+  "2": {
+   "classes": 166,
+   "tables": 55692
+  },
+  "3": {
+   "classes": 40,
+   "tables": 7960
+  },
+  "4": {
+   "classes": 1,
+   "tables": 2
+  },
+  "reference": {
+   "0": [
+    1,
+    2
+   ],
+   "1": [
+    14,
+    1880
+   ],
+   "2": [
+    166,
+    55692
+   ],
+   "3": [
+    40,
+    7960
+   ],
+   "4": [
+    1,
+    2
+   ]
+  }
+ },
+ "ptf2_by_class": {
+  "classes": 181,
+  "tables": 57574,
+  "reference": {
+   "classes": 181,
+   "tables": 57574
+  },
+  "fraction_pct": 87.9
+ },
+ "examples_degree": {
+  "XOR2 0x6666": 2,
+  "MUX 0xCACA": 2,
+  "AND4 0x8000": 1,
+  "XOR3 class 0x0069": 3,
+  "XOR4 0x6996": 4,
+  "XNOR4 0x9669": 4
+ },
+ "ptf2_direct": {
+  "n_ptf2": 57574,
+  "n_non_ptf2": 7962,
+  "elapsed_s": 77.9,
+  "matches_class_count": true,
+  "per_table_agreement_with_class": true
+ },
+ "cover_bound": {
+  "2": {
+   "N": 4,
+   "bound": 16,
+   "total": 16,
+   "log2_bound": 4.0
+  },
+  "3": {
+   "N": 7,
+   "bound": 254,
+   "total": 256,
+   "log2_bound": 8.0
+  },
+  "4": {
+   "N": 11,
+   "bound": 61654,
+   "total": 65536,
+   "log2_bound": 15.9
+  },
+  "5": {
+   "N": 16,
+   "bound": 2147483648,
+   "total": 4294967296,
+   "log2_bound": 31.0
+  },
+  "6": {
+   "N": 22,
+   "bound": 102761345605531264,
+   "total": 18446744073709551616,
+   "log2_bound": 56.5
+  },
+  "7": {
+   "N": 29,
+   "bound": 29220741470782188172536896498,
+   "total": 340282366920938463463374607431768211456,
+   "log2_bound": 94.6
+  },
+  "8": {
+   "N": 37,
+   "bound": 207244024379868022759343754507861274410652754,
+   "total": 115792089237316195423570985008687907853269984665640564039457584007913129639936,
+   "log2_bound": 147.2
+  },
+  "9": {
+   "N": 46,
+   "bound": 190153802258994612349440272619772447394377407034341002542325564416,
+   "total": 13407807929942597099574024998205846127479365820592393377723561443721764030073546976801874298166903427690031858186486050853753882811946569946433649006084096,
+   "log2_bound": 216.9
+  },
+  "10": {
+   "N": 56,
+   "bound": 133022711521677628255338322219397541648222772304375507738656337233757331705993311191954456576,
+   "total": 179769313486231590772930519078902473361797697894230657273430081157732675805500963132708477322407536021120113879871393357658789768814416622492847430639474124377767893424865485276302219601246094119453082952085005768838150682342462881473913110540827237163350510684586298239947245938479716304835356329624224137216,
+   "log2_bound": 306.0
+  }
+ },
+ "cover_bound_n4_reference": 61654,
+ "xor4": {
+  "max_abs_sum_sD_random_B7": 9.769962616701378e-15,
+  "best_agreement_of_16": 14,
+  "reference_best_agreement": 14
+ },
+ "serial_pi_xnor4": {
+  "D_values": [
+   -2.0,
+   2.0
+  ],
+  "truth_hex": "0x9669",
+  "is_xnor4": true,
+  "coeff_by_degree": [
+   2.0,
+   -4.0,
+   8.0,
+   -16.0,
+   32.0
+  ],
+  "reference": [
+   2,
+   -4,
+   8,
+   -16,
+   32
+  ]
+ },
+ "html_check": {
+  "available": true,
+  "file": "report/PTF2.html",
+  "numbers_found": {
+   "classes": true,
+   "ptf2_classes": true,
+   "ptf2_tables": true,
+   "all_tables": true,
+   "non_ptf2": true,
+   "deg1": true,
+   "deg2": true,
+   "deg3": true,
+   "cover4": true,
+   "pct": true
+  },
+  "all_found": true,
+  "forbidden_strings": [],
+  "clean": true,
+  "embedded_degree_table": {
+   "n_page": 222,
+   "n_ours": 222,
+   "same_reps": true,
+   "n_mismatch": 0,
+   "mismatches": [],
+   "match": true
+  }
+ },
+ "elapsed_s": 80.7,
+ "checks": {
+  "cubic_zero": true,
+  "serial_cubic_nonzero": true,
+  "npn_222": true,
+  "ptf2_181": true,
+  "ptf2_57574": true,
+  "direct_57574": true,
+  "cover_61654": true,
+  "xor4_14": true,
+  "xnor4_serial": true,
+  "html_numbers": true,
+  "html_clean": true,
+  "html_degree_table": true
+ },
+ "all_ok": true
+}

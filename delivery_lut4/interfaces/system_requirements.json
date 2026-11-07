@@ -1,0 +1,108 @@
+{
+ "tia_sigma_ok": 0.03,
+ "dlambda_tol_nm": {
+  "AND2": 2.0,
+  "OR2": 2.0,
+  "XOR2": 2.0,
+  "NAND2": 2.0,
+  "AND4": 2.0,
+  "XOR4": 0.9,
+  "MUX": 2.0
+ },
+ "dT_tol_K": {
+  "AND2": 40.0,
+  "OR2": 40.0,
+  "XOR2": 40.0,
+  "NAND2": 40.0,
+  "AND4": 40.0,
+  "XOR4": 13.5,
+  "MUX": 40.0
+ },
+ "er_min_db": 25,
+ "tia_sigma_ok_scope": "七個範例函數、各 σ 2,000 次全對的最大 σ；統計觀察，不是通用規格；確定性 ε 見 verification/gain_box.json",
+ "budget": {
+  "assumptions": {
+   "PD_A_per_W": 1.0,
+   "TIA_pA_rtHz": 20.0,
+   "EC_dB_each": 2.0,
+   "k_snr": 7.0,
+   "in_loss_db": 2.49,
+   "out_loss_db": 2.25,
+   "noise": "只計 TIA；shot、RIN、比較器偏移未計"
+  },
+  "cases": {
+   "1 MHz": {
+    "XOR4": {
+     "margin": 0.0693,
+     "Pu_uW": 4.796,
+     "per_data_fiber_dBm": -20.7,
+     "R_fiber_dBm": -11.16,
+     "total_mW": 0.1105
+    },
+    "AND2": {
+     "margin": 1.1484,
+     "Pu_uW": 0.289,
+     "per_data_fiber_dBm": -32.9,
+     "R_fiber_dBm": -23.36,
+     "total_mW": 0.0067
+    }
+   },
+   "10 GHz": {
+    "XOR4": {
+     "margin": 0.0693,
+     "Pu_uW": 479.593,
+     "per_data_fiber_dBm": -0.7,
+     "R_fiber_dBm": 8.84,
+     "total_mW": 11.0527
+    },
+    "AND2": {
+     "margin": 1.1484,
+     "Pu_uW": 28.92,
+     "per_data_fiber_dBm": -12.9,
+     "R_fiber_dBm": -3.36,
+     "total_mW": 0.6665
+    }
+   }
+  }
+ },
+ "route": {
+  "3 dB/cm": {
+   "rel_loss_db": {
+    "o1": 0.0649,
+    "o2": 0.02,
+    "o3": 0.0,
+    "o4": 0.02,
+    "o5": 0.0649
+   },
+   "all_pass": true,
+   "margin": {
+    "AND2": 1.1405,
+    "OR2": 1.1183,
+    "XOR2": 0.7457,
+    "NAND2": 1.0574,
+    "AND4": 0.8742,
+    "XOR4": 0.0696,
+    "MUX": 0.778
+   }
+  },
+  "4 dB/cm": {
+   "rel_loss_db": {
+    "o1": 0.0865,
+    "o2": 0.0267,
+    "o3": 0.0,
+    "o4": 0.0267,
+    "o5": 0.0865
+   },
+   "all_pass": true,
+   "margin": {
+    "AND2": 1.1374,
+    "OR2": 1.1166,
+    "XOR2": 0.7428,
+    "NAND2": 1.0558,
+    "AND4": 0.8729,
+    "XOR4": 0.0696,
+    "MUX": 0.7757
+   }
+  }
+ }
+}

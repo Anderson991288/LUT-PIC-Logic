@@ -1,0 +1,579 @@
+{
+  "checks": {
+    "K1 檔案完整": {
+      "ok": true,
+      "detail": "缺 []、雜湊不符 []、多出 []"
+    },
+    "K2 讀者文件禁字": {
+      "ok": true,
+      "detail": "[]"
+    },
+    "K3 README 章節": {
+      "ok": true,
+      "detail": "8 節"
+    },
+    "K4 PAD 對照": {
+      "ok": true,
+      "detail": "訊號 14、地 7"
+    },
+    "K5 光學埠對照": {
+      "ok": true,
+      "detail": "10 個 EC"
+    },
+    "K6 佈局版本": {
+      "ok": true,
+      "detail": "a3f27b4d47f1"
+    },
+    "K7 接線版本": {
+      "ok": true,
+      "detail": "c6603813c4bf"
+    },
+    "K8 重算真值表": {
+      "ok": true,
+      "detail": "80/80，ΔP 最大差 4.9e-07"
+    },
+    "K9 驗證結果": {
+      "ok": true,
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8"
+    },
+    "K10 重跑 DRC": {
+      "ok": true,
+      "detail": "違規 0，30 條規則都有跑"
+    }
+  },
+  "self_test": {
+    "改內容未更新 MANIFEST": {
+      "check": "K1 檔案完整",
+      "caught": true,
+      "group": "基本",
+      "detail": "缺 []、雜湊不符 ['interfaces/pads.csv']、多出 []"
+    },
+    "刪掉一個檔案": {
+      "check": "K1 檔案完整",
+      "caught": true,
+      "group": "基本",
+      "detail": "缺 ['figures/chip.png']、雜湊不符 []、多出 []"
+    },
+    "README 寫入本機路徑": {
+      "check": "K2 讀者文件禁字",
+      "caught": true,
+      "group": "基本",
+      "detail": "['README.md：C:\\\\work\\\\chip.gds（本機絕對路徑）']"
+    },
+    "PAD 對照對調": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "基本",
+      "detail": "訊號 14、地 7；與規格不符 ['H02', 'H01']；座標或側邊與 chip_info 不符 ['P01', 'P02']"
+    },
+    "相位被改": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "基本",
+      "detail": "80/80，ΔP 最大差 1.7e+00；ΔP 差超過 1e-4 或不是數字"
+    },
+    "GDS 被改": {
+      "check": "K6 佈局版本",
+      "caught": true,
+      "group": "基本",
+      "detail": "7fa3f3af17ee；DRC 結果 記錄的雜湊不同；連接檢查 記錄的雜湊不同；README 記錄的雜湊不同"
+    },
+    "README 少一節": {
+      "check": "K3 README 章節",
+      "caught": true,
+      "group": "基本",
+      "detail": "8 節；章節缺 ['## 5\\u3000操作與校正（需求 K1）']（共 1）；章節多出 ['## 五\\u3000操作與校正（需求 K1）']"
+    },
+    "EC 對照對調": {
+      "check": "K5 光學埠對照",
+      "caught": true,
+      "group": "基本",
+      "detail": "10 個 EC；與規格不符 ['x1_in0', 'x2_in1']；座標或側邊與 chip_info 不符 ['x1_in0', 'x2_in1']"
+    },
+    "接線表被改": {
+      "check": "K7 接線版本",
+      "caught": true,
+      "group": "基本",
+      "detail": "7fb7f6c2783b；相位設定檔 記錄的雜湊不同；規格 記錄的雜湊不同；README 記錄的雜湊不同"
+    },
+    "驗證結果有違規": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "基本",
+      "detail": "DRC 1、LVS 錯誤 0、光學 10/10、故障注入 8/8；DRC 有違規（1、{}、區外 0）"
+    },
+    "刪檔並同時刪清單項": {
+      "check": "K1 檔案完整",
+      "caught": true,
+      "group": "反向",
+      "detail": "缺 []、雜湊不符 []、多出 []；清單缺 ['figures/chip.png']（共 1）"
+    },
+    "多一個檔並列入清單": {
+      "check": "K1 檔案完整",
+      "caught": true,
+      "group": "反向",
+      "detail": "缺 []、雜湊不符 []、多出 []；清單多出 ['figures/extra.png']"
+    },
+    "清單複製一項": {
+      "check": "K1 檔案完整",
+      "caught": true,
+      "group": "反向",
+      "detail": "缺 []、雜湊不符 []、多出 []；清單重複 ['check_delivery.py']"
+    },
+    "清單清空": {
+      "check": "K1 檔案完整",
+      "caught": true,
+      "group": "反向",
+      "detail": "缺 []、雜湊不符 []、多出 ['README.md', 'check_delivery.py', 'figures/chip.png', 'figures/core.png', 'figures/nets.png', 'interfaces/b7_netlist.json', 'interfaces/chip_info.json', 'interfaces/optical_ports.csv', 'interfaces/pads.csv', 'interfaces/phases.json', 'interfaces/spec.json', 'interfaces/tolerance.json', 'interfaces/truth_tables.csv', 'layout/chip.gds', 'verification/connectivity.json', 'verification/drc_result.json', 'verification/review_checks.json', 'verification/sim_results.json']；清單缺 ['README.md', 'check_delivery.py', 'figures/chip.png']（共 18）"
+    },
+    "清單的鍵打錯": {
+      "check": "K1 檔案完整",
+      "caught": true,
+      "group": "反向",
+      "detail": "資料不完整（KeyError：'sha256'）"
+    },
+    "清單的大小不符": {
+      "check": "K1 檔案完整",
+      "caught": true,
+      "group": "反向",
+      "detail": "缺 []、雜湊不符 ['check_delivery.py']、多出 []"
+    },
+    "程式說明寫入本機路徑": {
+      "check": "K2 讀者文件禁字",
+      "caught": true,
+      "group": "反向",
+      "detail": "['check_delivery.py：C:\\\\work（本機絕對路徑）']"
+    },
+    "README 章節重複": {
+      "check": "K3 README 章節",
+      "caught": true,
+      "group": "反向",
+      "detail": "9 節；章節重複 ['## 8\\u3000版本']"
+    },
+    "README 多一節": {
+      "check": "K3 README 章節",
+      "caught": true,
+      "group": "反向",
+      "detail": "9 節；章節多出 ['## 9\\u3000附錄']"
+    },
+    "README 章節沒有內容": {
+      "check": "K3 README 章節",
+      "caught": true,
+      "group": "反向",
+      "detail": "8 節；## 7　已知限制與風險 沒有內容"
+    },
+    "PAD 刪一列": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "訊號 13、地 7；PAD 名稱缺 ['P02']（共 1）；訊號 PAD 的 heater缺 ['H02']（共 1）"
+    },
+    "PAD 複製一列": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "訊號 13、地 8；PAD 名稱重複 ['GN1']；PAD 名稱缺 ['P02']（共 1）；訊號 PAD 的 heater缺 ['H02']（共 1）；GND PAD重複 ['GN1']"
+    },
+    "PAD 多一列重複": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "訊號 15、地 7；PAD 名稱重複 ['P02']；訊號 PAD 的 heater重複 ['H02']"
+    },
+    "PAD 清空": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "訊號 0、地 0；PAD 名稱缺 ['GN1', 'GN2', 'GN3']（共 21）；訊號 PAD 的 heater缺 ['H01', 'H02', 'H03']（共 14）；GND PAD缺 ['GN1', 'GN2', 'GN3']（共 7）；GND PAD 的 heater缺 ['H01', 'H02', 'H03']（共 14）"
+    },
+    "GND PAD 全部刪除": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "訊號 14、地 0；PAD 名稱缺 ['GN1', 'GN2', 'GN3']（共 7）；GND PAD缺 ['GN1', 'GN2', 'GN3']（共 7）；GND PAD 的 heater缺 ['H01', 'H02', 'H03']（共 14）；GND 配對與連接檢查不符"
+    },
+    "同一 heater 多一個 PAD": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "訊號 15、地 7；PAD 名稱多出 ['P99']；訊號 PAD 的 heater重複 ['H01']；與規格不符 ['H01']；座標或側邊與 chip_info 不符 ['P99']"
+    },
+    "多一列不明角色的 PAD": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "訊號 14、地 7；X99 的角色是 備用；PAD 名稱多出 ['X99']；座標或側邊與 chip_info 不符 ['X99']"
+    },
+    "PAD 的 heater 打錯": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "訊號 14、地 7；訊號 PAD 的 heater缺 ['H01']（共 1）；訊號 PAD 的 heater多出 ['H1']；與規格不符 ['H1']"
+    },
+    "PAD 的角色打錯": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "訊號 13、地 7；P02 的角色是 訊號線；訊號 PAD 的 heater缺 ['H02']（共 1）"
+    },
+    "PAD 欄名打錯": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "資料不完整（ValueError：interfaces/pads.csv 欄名不符：['pad', 'side', 'x_um', 'y_um', 'x_die_um', 'y_die_um', 'role', 'heatr', 'mzi', 'phase']）"
+    },
+    "GND 的 heater 重複": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "訊號 14、地 7；GND PAD 的 heater重複 ['H01']；GND PAD 的 heater缺 ['H02']（共 1）；GND 配對與連接檢查不符"
+    },
+    "PAD 座標被改": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "訊號 14、地 7；座標或側邊與 chip_info 不符 ['P02']"
+    },
+    "規格與 PAD 同時少 H14": {
+      "check": "K4 PAD 對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "訊號 13、地 7；規格的 heater缺 ['H14']（共 1）；PAD 名稱缺 ['P14']（共 1）；訊號 PAD 的 heater缺 ['H14']（共 1）；GND PAD 的 heater缺 ['H14']（共 1）"
+    },
+    "EC 第二筆複製成第一筆": {
+      "check": "K5 光學埠對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "10 個 EC；EC 的埠重複 ['in1']；EC 的埠缺 ['in0']（共 1）"
+    },
+    "EC 刪一列": {
+      "check": "K5 光學埠對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "9 個 EC；EC 的埠缺 ['out4']（共 1）"
+    },
+    "EC 多一列重複": {
+      "check": "K5 光學埠對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "11 個 EC；EC 的埠重複 ['in0']"
+    },
+    "EC 清空": {
+      "check": "K5 光學埠對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "0 個 EC；EC 的埠缺 ['in0', 'in1', 'in2']（共 10）"
+    },
+    "EC 埠名打錯": {
+      "check": "K5 光學埠對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "10 個 EC；EC 的埠缺 ['in0']（共 1）；EC 的埠多出 ['inO']；與規格不符 ['x1_in0']；座標或側邊與 chip_info 不符 ['x1_in0']"
+    },
+    "EC 欄名打錯": {
+      "check": "K5 光學埠對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "資料不完整（ValueError：interfaces/optical_ports.csv 欄名不符：['ec', 'signal', 'core_prot', 'side', 'facet_x_um', 'facet_y_um', 'x_die_um', 'y_die_um', 'use']）"
+    },
+    "EC 側邊打錯": {
+      "check": "K5 光學埠對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "10 個 EC；與規格不符 ['o5_out4']；座標或側邊與 chip_info 不符 ['o5_out4']"
+    },
+    "EC 座標被改": {
+      "check": "K5 光學埠對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "10 個 EC；座標或側邊與 chip_info 不符 ['x1_in0']"
+    },
+    "規格與 EC 同時少 out4": {
+      "check": "K5 光學埠對照",
+      "caught": true,
+      "group": "反向",
+      "detail": "9 個 EC；規格的埠缺 ['out4']（共 1）；EC 的埠缺 ['out4']（共 1）"
+    },
+    "連接檢查的 GDS 雜湊鍵打錯": {
+      "check": "K6 佈局版本",
+      "caught": true,
+      "group": "反向",
+      "detail": "資料不完整（KeyError：'gds_sha256'）"
+    },
+    "相位設定檔的雜湊鍵打錯": {
+      "check": "K7 接線版本",
+      "caught": true,
+      "group": "反向",
+      "detail": "資料不完整（KeyError：'netlist_sha256'）"
+    },
+    "判讀埠被改且雜湊同步": {
+      "check": "K7 接線版本",
+      "caught": true,
+      "group": "反向",
+      "detail": "b781b6abe769；判讀埠 ['o2', 'o3', 'o4']"
+    },
+    "MZI 少一顆且雜湊同步": {
+      "check": "K7 接線版本",
+      "caught": true,
+      "group": "反向",
+      "detail": "4f8939f3a8ea；MZI缺 ['MZI-7']（共 1）"
+    },
+    "真值表同一列重複 80 次": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "反向",
+      "detail": "1/80，ΔP 最大差 2.0e-07；（函數, 輸入）重複 [\"('OR4', '1111')\"]；（函數, 輸入）缺 [\"('AND2', '0000')\", \"('AND2', '0001')\", \"('AND2', '0010')\"]（共 79）；有判讀與函數定義不符的列"
+    },
+    "真值表刪一列": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "反向",
+      "detail": "79/80，ΔP 最大差 4.9e-07；（函數, 輸入）缺 [\"('OR4', '1111')\"]（共 1）；有判讀與函數定義不符的列"
+    },
+    "真值表複製一列": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "反向",
+      "detail": "79/80，ΔP 最大差 4.9e-07；（函數, 輸入）重複 [\"('AND2', '0001')\"]；（函數, 輸入）缺 [\"('AND2', '0000')\"]（共 1）；有判讀與函數定義不符的列"
+    },
+    "真值表多一列重複": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "反向",
+      "detail": "80/80，ΔP 最大差 4.9e-07；（函數, 輸入）重複 [\"('AND2', '0000')\"]"
+    },
+    "真值表清空": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "反向",
+      "detail": "0/80，ΔP 最大差 inf；（函數, 輸入）缺 [\"('AND2', '0000')\", \"('AND2', '0001')\", \"('AND2', '0010')\"]（共 80）；有判讀與函數定義不符的列；ΔP 差超過 1e-4 或不是數字"
+    },
+    "真值表函數名打錯": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "反向",
+      "detail": "79/80，ΔP 最大差 4.9e-07；（函數, 輸入）缺 [\"('AND2', '0000')\"]（共 1）；（函數, 輸入）多出 [\"('AND3', '0000')\"]；有判讀與函數定義不符的列"
+    },
+    "真值表欄名打錯": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "反向",
+      "detail": "資料不完整（ValueError：interfaces/truth_tables.csv 欄名不符：['function', 'x1', 'x2', 'x3', 'x4', 'targat', 'P2', 'P4', 'dP', 'bit']）"
+    },
+    "真值表位元放錯欄": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "反向",
+      "detail": "79/80，ΔP 最大差 4.9e-07；位元欄有 1 列不是 0／1；有判讀與函數定義不符的列"
+    },
+    "真值表的 ΔP 不是數字": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "反向",
+      "detail": "80/80，ΔP 最大差 4.9e-07；ΔP 差超過 1e-4 或不是數字；P2−P4 與 dP 不符"
+    },
+    "真值表的 bit 與 target 不同": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "反向",
+      "detail": "79/80，ΔP 最大差 4.9e-07；有判讀與函數定義不符的列"
+    },
+    "AND4 與 OR4 對調（相位與真值表同時）": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "反向",
+      "detail": "52/80，ΔP 最大差 4.9e-07；有判讀與函數定義不符的列"
+    },
+    "少一個函數（相位與真值表同時）": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "反向",
+      "detail": "0/80；相位設定檔的函數缺 ['XOR2']（共 1）"
+    },
+    "相位的 θ 少一個": {
+      "check": "K8 重算真值表",
+      "caught": true,
+      "group": "反向",
+      "detail": "0/80；AND2 的 theta 不是 7 個有限值"
+    },
+    "光學驗證列清空": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 0/10、故障注入 8/8；光學 EC缺 ['R_in4', 'o1_out0', 'o2_out1']（共 10）"
+    },
+    "故障注入結果清空": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 0/8；故障案例缺 ['DRC：Ti/AL 太窄', 'DRC：TiN 太近', 'EC 標記對調']（共 8）"
+    },
+    "光學與故障注入同時清空": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 0/10、故障注入 0/8；光學 EC缺 ['R_in4', 'o1_out0', 'o2_out1']（共 10）；故障案例缺 ['DRC：Ti/AL 太窄', 'DRC：TiN 太近', 'EC 標記對調']（共 8）"
+    },
+    "光學驗證刪一列": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 9/10、故障注入 8/8；光學 EC缺 ['o5_out4']（共 1）"
+    },
+    "光學驗證複製一列": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 9/10、故障注入 8/8；光學 EC重複 ['o1_out0']；光學 EC缺 ['x1_in0']（共 1）"
+    },
+    "光學驗證的 EC 打錯": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 9/10、故障注入 8/8；光學 EC缺 ['x1_in0']（共 1）；光學 EC多出 ['x1_inO']；光學不符 ['x1_inO']"
+    },
+    "光學驗證的 ok 不是真值": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 9/10、故障注入 8/8；光學不符 ['x1_in0']"
+    },
+    "光學錯誤清單不是空的": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；光學錯誤 1"
+    },
+    "缺一個故障案例": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 7/8；故障案例缺 ['TiN 斷路']（共 1）"
+    },
+    "故障案例的鍵打錯": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 7/8；故障案例缺 ['TiN 斷路']（共 1）；故障案例多出 ['TiN 短路']"
+    },
+    "多一個未知的故障案例": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；故障案例多出 ['未知案例']"
+    },
+    "一個故障案例沒抓到": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 7/8；故障沒抓到 ['TiN 斷路']"
+    },
+    "故障結果有重複鍵": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "資料不完整（ValueError：verification/connectivity.json 有重複鍵 ['TiN 斷路']）"
+    },
+    "頂層的 faults 鍵打錯": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "資料不完整（KeyError：'faults'）"
+    },
+    "heater 通道清空": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；LVS 的 heater缺 ['H01', 'H02', 'H03']（共 14）"
+    },
+    "heater 通道刪一列": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；LVS 的 heater缺 ['H11']（共 1）"
+    },
+    "heater 通道複製一列": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；LVS 的 heater重複 ['H03']；LVS 的 heater缺 ['H04']（共 1）"
+    },
+    "heater 通道的鍵打錯": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；LVS 的 heater缺 ['H04']（共 1）；LVS 的 heater多出 ['H1']；LVS 不符 ['H1']"
+    },
+    "連接檢查項目清空": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；連接檢查項目缺 ['core_unchanged', 'drc_clean', 'every_heater_two_contacts']（共 10）"
+    },
+    "連接檢查少一項": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；連接檢查項目缺 ['lvs_clean']（共 1）"
+    },
+    "DRC 違規表與總數不一致": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；DRC 有違規（0、{'某規則': 1}、區外 0）"
+    },
+    "DRC 規則清單清空": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；DRC 規則不是 30 條"
+    },
+    "佈局審查少一組": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；審查真值表 79/80"
+    },
+    "佈局審查項目清空": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；審查項目缺 ['P1', 'P2', 'P3']（共 15）"
+    },
+    "佈局審查少一個函數": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；審查的函數缺 ['OR4']（共 1）"
+    },
+    "電路模擬少一組": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；模擬 79/80"
+    },
+    "電路模擬函數清空": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；模擬的函數缺 ['AND2', 'AND4', 'OR2']（共 5）"
+    },
+    "電路模擬檢查少一項": {
+      "check": "K9 驗證結果",
+      "caught": true,
+      "group": "反向",
+      "detail": "DRC 0、LVS 錯誤 0、光學 10/10、故障注入 8/8；模擬檢查項目缺 ['all_80']（共 1）"
+    },
+    "指定的 KLayout 不存在": {
+      "check": "K10 重跑 DRC",
+      "caught": true,
+      "group": "反向",
+      "detail": "指定了重跑 DRC，但找不到 KLayout 或平台 deck"
+    }
+  },
+  "baseline": {
+    "ok": true,
+    "failed": []
+  },
+  "all_ok": true
+}

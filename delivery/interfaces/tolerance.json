@@ -1,0 +1,95 @@
+{
+  "R_nominal": 3.0,
+  "R_scan": [
+    2.0,
+    4.0,
+    0.005
+  ],
+  "R_range_all": [
+    2.56,
+    3.41
+  ],
+  "R_range_per_function": {
+    "AND2": [
+      2.0,
+      3.95
+    ],
+    "OR2": [
+      2.0,
+      4.0
+    ],
+    "XOR2": [
+      2.0,
+      4.0
+    ],
+    "AND4": [
+      2.56,
+      3.41
+    ],
+    "OR4": [
+      2.0,
+      4.0
+    ]
+  },
+  "R_power_range_pct": [
+    -27.2,
+    29.2
+  ],
+  "input_phase_pass": {
+    "0.02": {
+      "AND2": 1.0,
+      "OR2": 1.0,
+      "XOR2": 1.0,
+      "AND4": 1.0,
+      "OR4": 1.0
+    },
+    "0.05": {
+      "AND2": 1.0,
+      "OR2": 1.0,
+      "XOR2": 1.0,
+      "AND4": 1.0,
+      "OR4": 1.0
+    },
+    "0.1": {
+      "AND2": 1.0,
+      "OR2": 1.0,
+      "XOR2": 1.0,
+      "AND4": 1.0,
+      "OR4": 1.0
+    },
+    "0.2": {
+      "AND2": 0.998,
+      "OR2": 0.998,
+      "XOR2": 0.996,
+      "AND4": 0.998,
+      "OR4": 0.998
+    }
+  },
+  "input_phase_sigma_ok": 0.1,
+  "trials": 500,
+  "P_pi_mW": 13.0,
+  "heater_power": {
+    "AND2": {
+      "total_mW": 133.9,
+      "max_single_mW": 20.8
+    },
+    "OR2": {
+      "total_mW": 158.5,
+      "max_single_mW": 25.0
+    },
+    "XOR2": {
+      "total_mW": 181.0,
+      "max_single_mW": 25.6
+    },
+    "AND4": {
+      "total_mW": 158.2,
+      "max_single_mW": 23.6
+    },
+    "OR4": {
+      "total_mW": 146.7,
+      "max_single_mW": 25.7
+    }
+  },
+  "worst_case_total_mW": 364.0,
+  "phase_step_mW_per_0p05rad": 0.207
+}

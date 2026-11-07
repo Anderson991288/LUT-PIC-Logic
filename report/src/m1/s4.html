@@ -1,0 +1,83 @@
+<section class="step" id="m1-s4" data-milestone="M1" data-step="s4" data-title="AND／OR／XOR 實例">
+<div class="bridge">
+<p><b>承接</b>：M1 s3 把計算鏈 v → y＝U v → ΔP 寫清楚，並看到 ΔP 是二次式；M1 s2 說明 B7 用一組固定的讀取埠就能做到所有二輸入函數。</p>
+<p><b>本步要回答</b>：同一顆 B7、同一組接線，確實只換相位就能換函數嗎？本課程要用的五個函數（AND2、OR2、XOR2、AND4、OR4），各需要哪 14 個相位？相位不準時還對嗎？</p>
+<p><b>交給下一步</b>：五組 14 個相位與各自的真值表（每組 16 列、共 80 列）；下一步把它們整理成和接線分開保存的交接檔。</p>
+<p class="terms"><b>名詞對照</b>：可程式化（programmable，接線固定、只換相位就換功能）、任意值（don't care，該輸入是 0 或 1 都不影響結果）、相位誤差（phase error，實際相位與設定值的差）</p>
+</div>
+
+<figure class="concept"><img src="figures/m1/s4_concept.png" alt="本步概念圖：同一顆 B7，換相位就換函數"><figcaption><b>本步概念</b>　接線固定不變，五組不同的相位設定分別讓 B7 成為 AND2、OR2、XOR2、AND4、OR4，各自驗證 16 組輸入。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能讀懂五個函數的真值表（目標、P2、P4、ΔP、判讀）；能說出「可程式化」的意思；知道 margin 與相位誤差的關係。</p>
+<div class="example">
+<p>類比：同一台混音台，旋鈕轉到第一組位置是一首歌的混音，轉到第二組位置又是另一首；喇叭和麥克風的接線完全沒動。B7 的 14 個相位就是旋鈕，五個函數就是五組旋鈕位置。</p>
+<p>還有一個實際的問題：如果只用 x1、x2 做 AND2，x3、x4 那兩路要不要保證是暗的？在晶片上，「沒用到的輸入一定沒有光」不一定成立（例如共用光源的漏光）。本步要求二輸入函數在 x3、x4 為任意值時也要判對。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 求相位：讓最差的那一組也離邊界最遠</h4>
+<p>沿用 M1 s2 的 margin：對一個函數，把 16 組四位元輸入都列出來，第 i 組的目標符號 s<sub>i</sub>（＋1 應判 1、−1 應判 0），求 14 個相位使 m 最大：</p>
+<math display="block"><mrow><munder><mo>max</mo><mrow><msub><mi>θ</mi><mn>1..7</mn></msub><mo>,</mo><msub><mi>φ</mi><mn>1..7</mn></msub></mrow></munder><mspace width="0.3em"/><mi>m</mi><mspace width="1em"/><mtext>使得</mtext><mspace width="0.5em"/><msub><mi>s</mi><mi>i</mi></msub><mspace width="0.1em"/><mi>Δ</mi><msub><mi>P</mi><mi>i</mi></msub><mo>(</mo><mi>θ</mi><mo>,</mo><mi>φ</mi><mo>)</mo><mo>≥</mo><mi>m</mi><mo>,</mo><mspace width="0.5em"/><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mo>…</mo><mo>,</mo><mn>16</mn></mrow></math>
+<p>ΔP<sub>i</sub> 由 M1 s3 的 y＝U v 算出（P<sub>u</sub>）。二輸入函數的目標只看 x1、x2，所以 x3、x4 不同但 x1、x2 相同的四組，目標相同，ΔP 都要在同一邊。這是「任意值」的要求。因為相位有很多組都可能是好答案，程式從 24 個不同起點各求一次，取 m 最大的那組。</p>
+<h4>2. margin 是緩衝，不是誤差容許量</h4>
+<p>margin 是功率上的緩衝：雜訊或偵測器偏差要大到 m 才會讓最差的那組判錯。相位誤差則是另一回事：每個相位偏一點，U 就變一點，ΔP 跟著變。ΔP 變多少，取決於該組相位附近 ΔP 對相位有多敏感，不只看 m。所以要另外用模擬檢查：14 個相位同時加上常態分佈的誤差（標準差 σ，rad），重複 500 次，看真值表仍然全對的比例。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\m1_logic\s4_gates\gates.py
+.\lab design\m1_logic\s4_gates\figs.py</code></pre>
+<p><code>gates.py</code> 對五個函數各做 24 起點最佳化，印出每個函數的通過數、margin 與相位誤差通過率，最後再做一次對照（二輸入函數只要求 x3＝x4＝0），約 30 秒。預期最後一行：</p>
+<pre><code>共 80/80 組判讀正確</code></pre>
+<p>練習：先<b>預測</b>：把 AND2 的 θ4 換成 OR2 的 θ4（0.31π 換成 1.77π，其他 13 個相位不變），16 組判讀還會全對嗎？換 θ5 呢？再用下面幾行程式驗證（在 design 資料夾的上一層執行）：</p>
+<pre><code>import json, sys; sys.path.insert(0, "design")
+from common.mzi import b7_matrix
+g = json.load(open("design/m1_logic/s4_gates/out/gates.json", encoding="utf-8"))["funcs"]
+k = 3                                   # θ4；改成 4 就是 θ5
+th = list(g["AND2"]["theta"]); th[k] = g["OR2"]["theta"][k]
+U = b7_matrix(th, g["AND2"]["phi"])
+for w in ("0000", "1000", "0100", "1100"):
+    y = U @ ([int(c) for c in w] + [3])
+    print(w, round(abs(y[1])**2 - abs(y[3])**2, 3))</code></pre>
+<details class="quiz"><summary>預測的答案</summary><p>換 θ4 判讀完全不變，換 θ5 會有 4 組判錯。對 AND2 來說，14 個相位中只有 θ5、φ3、φ5 三個換成 OR2 的值會出錯，其他相位換了也不影響（有些 MZI 在這個函數裡只是把光導走）。哪些相位重要無法一眼看出，所以一組相位要當成整體保存、整體驗證，不能從不同函數各拿一部分拼起來。</p></details>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/m1/s4_program.png" alt="同一串 10 個四位元輸入，在五組相位下的 ΔP 波形與判讀"><figcaption>圖 M1-13　可程式化：上面四列是同一串輸入（灰色的 x3、x4 對二輸入函數而言是任意值），下面五列是同一顆 B7 換上五組相位後的 ΔP（紫線）與判讀（數字）。全部綠色代表每一組都和目標函數相同。例如輸入 1011：AND2 判 0（x1x2＝10），OR2 判 1，XOR2 判 1，AND4 判 0，OR4 判 1。</figcaption></figure>
+<table>
+<tr><th>函數</th><th>判對（16 組）</th><th>margin（P<sub>u</sub>）</th><th>σ＝0.05 rad 全對比例</th><th>σ＝0.1 rad 全對比例</th></tr>
+<tr><td>AND2</td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['AND2']['passed']">16</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['AND2']['margin']" data-fmt="{:.2f}">2.12</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['AND2']['phase_error_pass']['0.05']" data-fmt="{:.1%}">100.0%</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['AND2']['phase_error_pass']['0.1']" data-fmt="{:.1%}">93.8%</span></td></tr>
+<tr><td>OR2</td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['OR2']['passed']">16</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['OR2']['margin']" data-fmt="{:.2f}">2.12</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['OR2']['phase_error_pass']['0.05']" data-fmt="{:.1%}">100.0%</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['OR2']['phase_error_pass']['0.1']" data-fmt="{:.1%}">94.8%</span></td></tr>
+<tr><td>XOR2</td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['XOR2']['passed']">16</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['XOR2']['margin']" data-fmt="{:.2f}">0.49</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['XOR2']['phase_error_pass']['0.05']" data-fmt="{:.1%}">100.0%</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['XOR2']['phase_error_pass']['0.1']" data-fmt="{:.1%}">99.6%</span></td></tr>
+<tr><td>AND4</td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['AND4']['passed']">16</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['AND4']['margin']" data-fmt="{:.2f}">1.50</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['AND4']['phase_error_pass']['0.05']" data-fmt="{:.1%}">100.0%</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['AND4']['phase_error_pass']['0.1']" data-fmt="{:.1%}">90.2%</span></td></tr>
+<tr><td>OR4</td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['OR4']['passed']">16</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['OR4']['margin']" data-fmt="{:.2f}">1.50</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['OR4']['phase_error_pass']['0.05']" data-fmt="{:.1%}">100.0%</span></td><td><span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['OR4']['phase_error_pass']['0.1']" data-fmt="{:.1%}">88.4%</span></td></tr>
+</table>
+<p>合計 <span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="f&quot;{d['passed']}／{d['total']}&quot;">80／80</span> 組判讀正確，沒有任何一組落在邊界（每個函數最小的 |ΔP| 都等於它的 margin）。</p>
+<figure><img src="figures/m1/s4_truth.png" alt="五個函數 16 組輸入的 ΔP 長條圖"><figcaption>圖 M1-14　五個函數的真值表畫成 ΔP：綠色長條應為正（判 1），藍色應為負（判 0），橘色虛線是 ±margin。二輸入函數的長條每四根一組完全相同：x3、x4 改變時 ΔP 不變。原因是 x3、x4 到 o2、o4 的權重恰好為 0，光全部導到終端，所以理想模型下漏光的振幅與相位都不影響結果；相位不準時這些權重就不再是 0，漏光才會開始有影響。AND4 的 15 組 0 深淺不一，最接近邊界的是三個 1 的情形（0111、1011、1101、1110）。</figcaption></figure>
+<figure><img src="figures/m1/s4_phases.png" alt="五個函數的 14 個相位熱圖，單位 π"><figcaption>圖 M1-15　五組相位（單位 π）。接線完全相同，函數之間只差這張表。許多 θ 落在 0、0.5、1、1.5、2 附近（全交叉、對半、全直通），代表該顆 MZI 被當成「導線」或「對半分光器」使用。</figcaption></figure>
+<figure><img src="figures/m1/s4_robust.png" alt="相位誤差標準差與真值表全對比例的關係"><figcaption>圖 M1-16　14 個相位同時有誤差時，真值表全對的比例。σ ≤ 0.05 rad 時五個函數都 100%；σ＝0.1 rad 時 AND4、OR4 降到約九成。XOR2 的 margin 最小，對相位誤差卻最不敏感：margin 是功率緩衝，相位敏感度是另一個量。每點是 500 次模擬，「100%」代表 500 次全對，在 95% 信心下失敗率低於約 0.6%（3／500）；94% 與 95% 這種差距在 500 次下分不出來。</figcaption></figure>
+<p><b>兩種要求的對照</b>：若二輸入函數只要求 x3＝x4＝0 的 4 組判對，最佳 margin 為 AND2 <span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['margin_only_x34_zero']['AND2']" data-fmt="{:.3f}">2.115</span>、OR2 <span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['margin_only_x34_zero']['OR2']" data-fmt="{:.3f}">2.121</span>、XOR2 <span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['margin_only_x34_zero']['XOR2']" data-fmt="{:.3f}">0.486</span>，和「x3、x4 任意」完全相同。也就是說，要求未使用的輸入可以有光，不必付出任何 margin 代價。</p>
+<p><b>實際遇到的情況</b>：第一版只要求二輸入函數在 x3＝x4＝0 時判對（每個函數 4 組，合計 44 組）。寫到「晶片上沒用到的輸入不一定是暗的」時，回頭改成 16 組都要判對，結果 margin 完全沒變，於是改用較嚴格的要求作為交接版本（合計 80 組）。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>只檢查 x3＝x4＝0</b>：二輸入函數在晶片上仍有四路輸入；若沒驗證 x3、x4 任意，漏光就可能讓判讀出錯。</li>
+<li><b>把不同函數的相位混用</b>：一組 14 個相位是一起最佳化出來的整體，換掉其中一個就不保證正確。</li>
+<li><b>以為 margin 大就一定較能承受相位誤差</b>：圖 M1-16 的 XOR2 是反例。ΔP 對相位有多敏感，主要看 R 的光走到讀取埠的多寡：R＝3、功率 9，是最強的一路光，相位一偏，R² 等級的項就跟著變。XOR2 的相位讓 R 到 o2 的權重 |u25|＝<span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['XOR2']['abs_u25']" data-fmt="{:.2f}">0.00</span>、到 o4 的 |u45|＝<span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['XOR2']['abs_u45']" data-fmt="{:.2f}">0.23</span>，R 對判讀的影響小；AND4 的 |u45|＝<span class="num" data-json="design/m1_logic/s4_gates/out/gates.json" data-expr="d['funcs']['AND4']['abs_u45']" data-fmt="{:.2f}">0.97</span>，R 幾乎全部進入讀取埠，所以對相位誤差較敏感。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：AND2 的 16 組輸入中，有幾組應判 1？在圖 M1-14 中它們在哪裡？</summary>
+<p>4 組：x1＝x2＝1，x3、x4 任意，也就是 1100、1101、1110、1111，圖中最右邊的四根綠色長條。</p></details>
+<details class="quiz"><summary>自我檢查 2：OR4 只有一組輸入應判 0，是哪一組？為什麼這一組最依賴參考光 R？</summary>
+<p>0000。此時所有資料光都是暗的，只有 R 的光，ΔP 完全由常數項 a<sub>0</sub>（來自 R²）決定；它必須是負的。</p></details>
+<details class="quiz"><summary>自我檢查 3：要讓五個函數在 σ＝0.1 rad 的相位誤差下都至少 95% 全對，可以如何做？</summary>
+<p>可以在最佳化時改用「考慮相位誤差後仍保有 margin」的目標，或在硬體上把相位控制做得更準（例如 σ 控制在 0.05 rad 以內）。本課程採用後者的要求，交給 M2 的相位控制規格。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>模型</td><td>理想 B7（無損耗）、R＝3、讀 o2 − o4；每個函數 16 組四位元輸入</td></tr>
+<tr><td>最佳化</td><td>SLSQP，max m；24 起點，種子 700＋k，最多 600 次迭代</td></tr>
+<tr><td>相位誤差</td><td>14 個相位同時加 N(0, σ²)，σ＝0.01、0.02、0.05、0.1 rad，各 500 次，種子 700＋k</td></tr>
+<tr><td>執行時間</td><td>約 30 秒（單執行緒）</td></tr>
+</table>
+<div class="auto-code" data-files="design/m1_logic/s4_gates/gates.py design/m1_logic/s4_gates/figs.py design/common/synth.py"></div>
+<div class="auto-history" data-file="design/m1_logic/s4_gates/HISTORY.md"></div>
+</section>

@@ -1,0 +1,103 @@
+<section class="step" id="m3-s6" data-milestone="M3" data-step="s6" data-title="商用工具對照：Virtuoso／Calibre">
+<div class="bridge">
+<p><b>承接</b>：M3 s5 交出交付包；其中的 <code>chip.gds</code> 已用 KLayout 與平台 deck 驗證 DRC 0。業界的晶片設計多半在 Virtuoso 中管理佈局、用 Calibre 做 DRC，接手的人很可能用這兩套工具打開這份 GDS。</p>
+<p><b>本步要回答</b>：把同一份 GDS 交給 Virtuoso 與 Calibre，結果和 KLayout 一樣嗎？從 Virtuoso 再匯出一次，幾何會不會變？KLayout 的規則能不能直接搬到 Calibre？</p>
+<p><b>交給下一步</b>：<code>commercial.json</code>（Calibre 草案在四份 GDS 上的結果、兩次匯出後 KLayout 的結果、逐層幾何比對）與兩個給接手者的提醒。第一，從 Virtuoso 匯出 GDS 時用 maxVertices＝8191。第二，兩套工具結果不同時要先追出原因，Calibre 草案不能取代平台 deck。本步是課程的最後一步，這兩點寫在本步的結論。</p>
+<p class="terms"><b>名詞對照</b>：Virtuoso（業界常用的佈局與電路設計環境）、OA（OpenAccess，Virtuoso 存放設計資料的資料庫格式）、strmin／strmout（Virtuoso 把 GDS 匯入成 OA、再由 OA 匯出成 GDS 的批次指令，屬於 XStream 工具）、maxVertices（匯出時每個多邊形允許的最多頂點數；超過就切成多塊）、Calibre（業界常用的 DRC／LVS 工具）、SVRF（Calibre 的規則檔語言）、Calibre 草案（本步由 KLayout deck 自動轉出的 SVRF 規則檔，未經晶圓廠驗證）、對稱差（兩份幾何互不重疊部分的面積）、合併（merge，檢查前把相接或重疊的多邊形聯集成一塊；不合併就是一塊一塊分開檢查）</p>
+</div>
+
+<figure class="concept"><img src="figures/m3/s6_concept.png" alt="本步概念圖：KLayout deck 移植成 Calibre 草案、Virtuoso 匯入匯出、四份 GDS 交叉比對"><figcaption><b>本步概念</b>　把 KLayout 平台 deck 自動移植成 Calibre 規則草案，再讓 Virtuoso 匯入、匯出同一份 GDS；四份 GDS（交付檔、故意違規、兩種匯出參數）各用兩套規則檢查，並逐層比對幾何。結果不一致時要追出原因。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能用批次指令完成 Virtuoso 的 GDS 匯入與匯出、Calibre 的 DRC；能說明匯出參數 maxVertices 如何改變幾何；能說明「把規則從一套工具移植到另一套」為什麼需要驗證；兩套結果不同時，能用小實驗追出原因。</p>
+<div class="example">
+<p>類比：一份文件用 A 文書軟體寫好、檢查過拼字，再用 B 軟體開啟另存一次。另存時 B 可能把長段落切成好幾段，看起來一樣，排版細節卻變了。這時 A 的檢查若是「一段一段分開看」，會在每個切口報錯；B 若是「整篇接起來看」，就不會報錯。兩邊結果不同，不代表哪一邊比較嚴格，要先弄清楚各自看的是什麼。所以換工具時，要用同一批文件交叉比對兩邊的結果，並追出不同的原因。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 規則移植</h4>
+<p>平台 deck 有 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['deck_outputs']" data-fmt="{:d}">24</span> 個輸出敘述（<code>.output</code>），執行後產生 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['deck_categories']" data-fmt="{:d}">30</span> 個檢查類別（M3 s3、s4 寫的「30 條規則」）：其中格點檢查是一個迴圈，對 7 個層各產生一個類別。24 個敘述中，8 個層的最小線寬與最小間距共 16 個，其餘 8 個是格點、設計區、重疊與小特徵（逐條列在 ⑥）。本步只把這 16 個自動移植成 SVRF：線寬用 <code>INTERNAL</code>、間距用 <code>EXTERNAL</code>，門檻沿用 deck 的值加上 deck 本身的 −0.001 µm 容差。這份草案沒有經過晶圓廠驗證，兩套工具在角度、面積為 0 的結果與多邊形合併上的寫法也不同（⑥ 的對照表），所以它只能當交叉檢查，不能取代平台 deck。</p>
+<h4>2. 匯出時的多邊形切割</h4>
+<p>GDS 規定一個多邊形最多 8191 個頂點，但 Virtuoso 的 strmout 預設只用 200。本晶片的彎道（S 彎、補長段的凸起）用數百個頂點描述，超過 200 時會被垂直切成好幾塊。斜的波導被垂直切開，每一塊在切口處都有一個銳角；拼回去（合併）之後，切口不會留下縫，形狀與原檔只有極小的差異（④ 的對稱差）。所以檢查是看一塊一塊的多邊形，還是看合併後的形狀，結果就會不同：逐塊看時，切口的銳角像一條極窄的線，會被判為線寬不足。</p>
+<h4>3. KLayout 的合併與 <code>.raw</code></h4>
+<p>KLayout 的 DRC 預設先合併再檢查，Calibre 也是。但 KLayout 有一個容易忽略的寫法：<code>層.raw</code> 會把「這個層物件本身」改成不合併模式，而不是只影響這一行。平台 deck 檢查 GDS 6／60（本晶片沒有使用的兩層）與 GDS 3 的重疊時寫了 <code>soi_etch2_light_layer.raw.sized(0.2.um)</code>（<code>soi_etch2_light_layer</code> 就是 GDS 3，<code>.clean</code> 是改回合併模式的寫法），此後同一個 GDS 3 物件的線寬、間距檢查，也就都變成逐塊檢查。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\m3_layout\s6_commercial\commercial.py
+.\lab design\m3_layout\s6_commercial\figs.py</code></pre>
+<p><code>commercial.py</code> 依序：從 KLayout deck 產生四份 SVRF 草案（每份指向一個 GDS）與執行腳本 <code>run.sh</code> → 在 EDA 伺服器以批次指令執行（strmin 匯入、兩次 strmout 匯出、四次 Calibre DRC，最多 4 執行緒）→ 回到本機，用 KLayout 平台 deck 檢查兩份匯出檔、逐層比對幾何、cell 名稱與文字標記 → 跑一個 <code>.raw</code> 小實驗（<code>raw_vs_clean.lydrc</code>）：同一份 GDS 的 GDS 3 線寬與間距，分別在「合併」「呼叫 <code>.raw</code> 之後」「<code>.clean</code>」三種狀態下各檢查一次。執行腳本的主要內容：</p>
+<pre><code>strmin  -library B7_OA -strmFile chip.gds -topCell B7_CHIP -view layout -dbuPerUU 1000
+strmout -library B7_OA -strmFile strmout_200.gds  -topCell B7_CHIP -view layout -maxVertices 200
+strmout -library B7_OA -strmFile strmout_8191.gds -topCell B7_CHIP -view layout -maxVertices 8191
+calibre -drc -hier -turbo 4 cornerstone_basic_draft_chip.svrf</code></pre>
+<p>預期輸出（節錄）：</p>
+<pre><code>SVRF 草案：移植 16/24 個 output 敘述（deck 共 30 個檢查類別）；未移植：[…6 個…]
+Calibre chip：0 個結果 {}
+Calibre fault：2 個結果 {'L39_S': 1, 'L41_W': 1}
+Calibre strmout_200：0 個結果 {}
+KLayout strmout_200：違規 33 {'Minimum feature size violation (GDS3&lt; 350nm)': 32, 'Minimum gap violation (GDS3&lt;200nm)': 1}
+KLayout strmout_8191：違規 0 {}
+來回 strmout_200：GDS 3 148→207 塊、差 0.020091 µm²、…；cell [44, 44] 相同 True、文字 [62, 62] 相同 True
+來回 strmout_8191：GDS 3 148→148 塊、差 0 µm²、…；cell [44, 44] 相同 True、文字 [62, 62] 相同 True
+.raw 小實驗（GDS 3 線寬／間距）：{…'strmout_200': {'merged_width': 0, 'merged_space': 0, 'after_raw_width': 32, 'after_raw_space': 1, 'clean_width': 0, 'clean_space': 0}}</code></pre>
+<p>輸出中的 <code>L39_S</code>、<code>L41_W</code> 是草案的規則名，分別指 GDS 39 間距與 GDS 41 線寬。未移植清單只列出 GDS 6、GDS 60 的 6 個敘述；格點與設計區 2 個敘述不在清單內，合計 8 個（見 ⑥）。</p>
+<p>練習：打開 <code>cornerstone_basic_draft_chip.svrf</code>，對照 KLayout deck，找出 GDS 39 間距那一條的門檻；再看 <code>strmout_200.log</code> 裡有幾則 XSTRM-275 訊息，對照 GDS 3 多出來的塊數（一則訊息對應一個被切開的多邊形，一個多邊形可能被切成好幾塊，所以兩個數字不會相等）。最後把 <code>raw_vs_clean.lydrc</code> 中 <code>b.raw.sized(0.2.um)</code> 這一行刪掉再跑，看 after_raw 兩項變成多少。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/m3/s6_compare.png" alt="四份 GDS 在 KLayout 平台 deck 與 Calibre 草案下的違規數"><figcaption>圖 M3-16　四份 GDS、兩套規則。交付檔兩邊都是 0；故意加的兩種違規（1 µm 寬的 Ti/AL、相距 5 µm 的 TiN）兩邊都檢出；maxVertices＝200 的匯出檔，平台 deck 報 33 處、Calibre 草案報 0 處，原因是平台 deck 對 GDS 3 逐塊檢查（見結論）；maxVertices＝8191 的匯出檔兩邊都是 0。</figcaption></figure>
+<figure><img src="figures/m3/s6_seam.png" alt="接縫放大：原檔曲線是一整塊，maxVertices 200 匯出後被垂直切開，平台 deck 在切口處標記"><figcaption>圖 M3-17　接縫放大（輸入扇出 S 彎）。左：原 GDS 中曲線是一整塊。右：maxVertices＝200 匯出後被垂直切成兩塊（不同顏色）。兩塊在切口完全接上，合併後不留縫；但每一塊單獨看時，切口處是一個銳角，平台 deck 逐塊檢查 GDS 3，於是在這裡標出線寬不足。</figcaption></figure>
+<table>
+<tr><th>項目</th><th>結果</th></tr>
+<tr><td>規則移植</td><td><span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['coverage']" data-fmt="{}">16/24</span> 個 output 敘述（各層線寬、間距）；deck 共 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['deck_categories']" data-fmt="{:d}">30</span> 個檢查類別</td></tr>
+<tr><td>Calibre：交付檔</td><td><span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['calibre']['chip']['total']" data-fmt="{:d}">0</span> 個結果，與 KLayout 一致</td></tr>
+<tr><td>Calibre：故意違規</td><td><span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['calibre']['fault']['total']" data-fmt="{:d}">2</span> 個結果（GDS 39 間距、GDS 41 線寬），與 KLayout 一致</td></tr>
+<tr><td>Virtuoso 匯入</td><td>錯誤 0、警告 0</td></tr>
+<tr><td>匯出 maxVertices＝200</td><td>XSTRM-275（多邊形被切割）<span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['logs']['strmout_200.log']['xstrm275']" data-fmt="{:d}">11</span> 則；GDS 3 由 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['roundtrip']['strmout_200']['layers']['3']['n_orig']" data-fmt="{:d}">148</span> 塊變 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['roundtrip']['strmout_200']['layers']['3']['n_out']" data-fmt="{:d}">207</span> 塊，對稱差 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['roundtrip']['strmout_200']['layers']['3']['sym_diff_um2']" data-fmt="{:g}">0.020091</span> µm²；平台 deck 違規 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['klayout']['strmout_200']['total']" data-fmt="{:d}">33</span>，Calibre 草案 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['calibre']['strmout_200']['total']" data-fmt="{:d}">0</span></td></tr>
+<tr><td>匯出 maxVertices＝8191</td><td>每層塊數與幾何都和原檔相同（對稱差 0）；cell 名稱 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['roundtrip']['strmout_8191']['n_cells'][1]" data-fmt="{:d}">44</span> 個、文字標記 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['roundtrip']['strmout_8191']['n_texts'][1]" data-fmt="{:d}">62</span> 個也都相同；平台 deck 與 Calibre 草案都是 0</td></tr>
+<tr><td><code>.raw</code> 小實驗（200 匯出檔的 GDS 3）</td><td>合併：線寬 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['raw_vs_clean']['strmout_200']['merged_width']" data-fmt="{:d}">0</span>、間距 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['raw_vs_clean']['strmout_200']['merged_space']" data-fmt="{:d}">0</span>；呼叫 <code>.raw</code> 之後：線寬 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['raw_vs_clean']['strmout_200']['after_raw_width']" data-fmt="{:d}">32</span>、間距 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['raw_vs_clean']['strmout_200']['after_raw_space']" data-fmt="{:d}">1</span>（＝平台 deck 的 33 處）；<code>.clean</code>：<span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['raw_vs_clean']['strmout_200']['clean_width']" data-fmt="{:d}">0</span>、<span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['raw_vs_clean']['strmout_200']['clean_space']" data-fmt="{:d}">0</span>。交付檔三種狀態都是 0。合併後的 GDS 3，原檔與 200 匯出檔都只有 <span class="num" data-json="design/m3_layout/s6_commercial/out/commercial.json" data-expr="d['merged_gds3_200']['pieces_merged'][1]" data-fmt="{:d}">1</span> 塊</td></tr>
+</table>
+<p><b>結論</b>：交付的 GDS 在 Calibre 草案下同樣是 0 違規，故意的違規兩邊都能檢出。maxVertices＝200 的匯出檔兩邊結果不同，原因已用小實驗確認。有兩件事要提醒接手的人：</p>
+<ol>
+<li><b>從 Virtuoso 匯出時用 maxVertices＝8191。</b>預設的 200 會把彎道切成多塊。合併後切口不留縫，形狀與原檔只有極小的差異（④ 的對稱差），不是製造上的錯；但平台 deck 對 GDS 3 逐塊檢查，會在每個切口報錯（33 處），投片前若用同一份 deck 檢查就會被擋下，而且多出的分塊只會增加檔案的複雜度。8191 則與原檔完全相同。</li>
+<li><b>33 對 0 的原因是「平台 deck 不合併 GDS 3」，不是 Calibre 漏抓。</b>小實驗中，同一份檔案在合併狀態下 0 處，呼叫 <code>.raw</code> 之後變成 32＋1＝33 處，和平台 deck 完全相同；Calibre 預設合併，所以 0 處反映的是合併後、也就是實際製造的形狀。即使如此，草案仍不等於平台 deck：只移植了 16/24 個敘述，角度、面積為 0 的結果與合併的寫法也不同（⑥ 的對照表）。所以 Calibre 草案只能當交叉檢查；投片前仍以平台 deck 與晶圓廠的正式檢查為準。</li>
+</ol>
+<p><b>實際遇到的情況</b>：本步的批次流程第一次執行就完成。第一版的結論是「平台 deck 能檢出、Calibre 草案檢查不出，只用 Calibre 會誤以為沒問題」，並推測切口有 nm 級的取整差。重新檢查 deck 後確認 <code>.raw</code> 會改變 GDS 3 本身的合併狀態；加上小實驗後確認：切口兩側完全接上，33 處全部來自逐塊檢查。教訓是：兩套工具結果不同時，不要預設比較嚴格的那一邊就是對的，要先用最小的實驗找出差在哪裡；一個檢查報「0」或報「33」，都要知道它看的是什麼形狀。</p>
+<p><b>執行環境</b>：EDA 伺服器（一台裝有 Virtuoso 與 Calibre 的 Linux 環境）上的 Virtuoso IC23.1（strmin、strmout）與 Calibre 2026.1；批次執行、不開 GUI，Calibre 最多 4 執行緒。<code>.raw</code> 小實驗在本機 KLayout 執行。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>用預設參數匯出</b>：maxVertices＝200 會切割彎道；光子晶片的曲線多，要改成 8191。</li>
+<li><b>以為規則換個語法就一樣</b>：不同工具對角度、面積為 0 的結果、合併的處理不同，移植後要用同一批檔案（含故意的錯）比對兩邊結果。</li>
+<li><b>以為 <code>.raw</code> 只影響這一行</b>：KLayout 的 <code>.raw</code>／<code>.clean</code> 會改變層物件本身，後面所有用到這個物件的檢查都受影響。</li>
+<li><b>只看數字、不問原因</b>：一個檢查報 0，可能是確實沒錯，也可能是規則漏了；報 33，也可能是看的形狀和實際製造的不同。兩套結果不同時，要用小實驗找出原因。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：為什麼 maxVertices＝8191 的匯出檔和原檔完全相同？</summary>
+<p>本晶片最多頂點的多邊形也不超過 8191，所以匯出時不需要切割，每個多邊形原樣寫出；逐層比對塊數相同、對稱差面積為 0，cell 名稱與文字標記也相同。注意這個比對只看幾何、cell 名稱與文字標記，不含 GDS 的其他屬性。</p></details>
+<details class="quiz"><summary>自我檢查 2：Calibre 草案在「故意違規」的檔案上報 2 處，這能證明它和平台 deck 等價嗎？</summary>
+<p>不能。它只證明這兩種違規（Ti/AL 太窄、TiN 太近）能檢出。草案只移植了 16/24 個敘述，角度與面積為 0 的寫法和平台 deck 不同；maxVertices＝200 的匯出檔上兩邊結果也不同（原因是平台 deck 逐塊檢查 GDS 3，草案合併後檢查）。等價要逐條比對語意，並用更多已知有錯的檔案測試。</p></details>
+<details class="quiz"><summary>自我檢查 3：如果接手的人只用 Virtuoso 與 Calibre，應建議他如何做？</summary>
+<p>直接用交付的 chip.gds（不要經 Virtuoso 匯出後再交出去），或匯出時設 maxVertices＝8191 並與原檔比對幾何；DRC 以平台提供的正式 deck 為準，Calibre 草案只當輔助。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>輸入</td><td>交付包的 chip.gds；M3 s4 的 chip_fault_drc.gds；KLayout 平台 deck</td></tr>
+<tr><td>執行</td><td>EDA 伺服器，批次指令（不開 GUI）；Calibre -hier -turbo 4；結果只寫在本步 out/</td></tr>
+<tr><td>規則</td><td>16 個線寬（INTERNAL）與間距（EXTERNAL）敘述，ABUT &lt; 90、SINGULAR、REGION；門檻＝deck 值－0.001 µm</td></tr>
+<tr><td>.raw 小實驗</td><td>KLayout 本機執行，deep、tiles 與平台 deck 相同；GDS 3 線寬 0.349 µm、間距 0.199 µm，angle_limit(45)，間距加 without_area(0)</td></tr>
+<tr><td>比對</td><td>shapely 逐層聯集後的對稱差面積；KLayout 平台 deck（設計區＝晶片尺寸）</td></tr>
+</table>
+<p><b>KLayout deck 與 SVRF 草案的寫法對照</b>（移植的 16 個敘述）：</p>
+<table>
+<tr><th>項目</th><th>KLayout 平台 deck</th><th>SVRF 草案</th><th>影響</th></tr>
+<tr><td>運算</td><td><code>width</code>／<code>space</code></td><td><code>INTERNAL</code>／<code>EXTERNAL</code></td><td>相同：量同一個多邊形內、不同多邊形間的距離</td></tr>
+<tr><td>角度</td><td><code>angle_limit(45)</code>：兩邊夾角 ≥ 45° 的邊對不查</td><td><code>ABUT &lt; 90</code>：相接的兩邊只在夾角 &lt; 90° 時查，不相接的邊對都查</td><td>不同：斜接、銳角附近的結果可能不同</td></tr>
+<tr><td>面積為 0 的結果</td><td>部分規則加 <code>without_area(0)</code>（例如 GDS 3 間距），部分沒有（GDS 3 線寬）</td><td>沒有對應</td><td>只在一點相接的情況可能多報</td></tr>
+<tr><td>單點相接</td><td>沒有對應</td><td><code>SINGULAR</code>：另外標出只在一點相接的地方</td><td>草案多查一項</td></tr>
+<tr><td>合併</td><td>GDS 3 被 <code>.raw</code> 改成逐塊檢查，其他層合併</td><td>全部合併</td><td>200 匯出檔 33 對 0 的原因</td></tr>
+<tr><td>GDS 100</td><td>只有文字標記，線寬、間距規則實際上不會觸發</td><td>同左</td><td>16 個敘述中有 2 個形同虛設</td></tr>
+</table>
+<p><b>沒有移植的 8 個敘述</b>：格點（1 個迴圈敘述，對 7 個層各產生一個類別；交付 GDS 由程式產生、座標已取整到 1 nm，Calibre 可另用 <code>OFFGRID</code> 補上）；設計區（需要配給的區塊尺寸當參數）；GDS 6、GDS 60 的小特徵長度 2 個（用 deck 自訂的函式算周長與面積，沒有直接對應的 SVRF 寫法）；GDS 6、GDS 60 與 GDS 3 的重疊 2 個；GDS 6 不可與 GDS 39、GDS 41 重疊 2 個。本晶片沒有 GDS 6、GDS 60，後 6 個在本晶片上不會觸發。</p>
+<div class="auto-code" data-files="design/m3_layout/s6_commercial/commercial.py design/m3_layout/s6_commercial/figs.py"></div>
+<div class="auto-history" data-file="design/m3_layout/s6_commercial/HISTORY.md"></div>
+</section>

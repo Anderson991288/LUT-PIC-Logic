@@ -1,0 +1,116 @@
+{
+  "budget": {
+    "limiting_function": "XOR2",
+    "pu_static_dbm": -6.74,
+    "dynamic_db": 2.25,
+    "pu_total_dbm": -4.49,
+    "fiber_data_dbm": -2.49,
+    "fiber_ref_dbm": 7.05,
+    "total_dbm": 8.65,
+    "items": [
+      {
+        "item": "消光比（靜態）",
+        "db": 0.465,
+        "source": "M1 s2、s4：殘留光讓靜態 margin 下降（重新求相位後）"
+      },
+      {
+        "item": "轉態與接收端頻寬",
+        "db": 0.61,
+        "source": "M1 s4：skew 0 時的代價（含殘留光與晶片內路徑差）"
+      },
+      {
+        "item": "skew ≤ 15 ps",
+        "db": 0.605,
+        "source": "M1 s4：以 skew 20 ps 相對 skew 0 的額外代價計（偏保守）"
+      },
+      {
+        "item": "heater 擺動",
+        "db": 0.11,
+        "source": "M1 s3：7 個 heater 同時擺動時的 margin 損失"
+      },
+      {
+        "item": "相位誤差（≤ δ_det）",
+        "db": 0.457,
+        "source": "M1 s1、s3：估計誤差（3σ）、追蹤落後、快速擾動幅度相加用滿 δ_det"
+      }
+    ],
+    "per_function": {
+      "AND2": {
+        "static_dbm": -12.99,
+        "dynamic_db": 1.382,
+        "total_dbm": -11.61
+      },
+      "OR2": {
+        "static_dbm": -13.01,
+        "dynamic_db": 1.444,
+        "total_dbm": -11.57
+      },
+      "XOR2": {
+        "static_dbm": -6.74,
+        "dynamic_db": 2.248,
+        "total_dbm": -4.49
+      },
+      "AND4": {
+        "static_dbm": -11.85,
+        "dynamic_db": 2.976,
+        "total_dbm": -8.87
+      },
+      "OR4": {
+        "static_dbm": -11.77,
+        "dynamic_db": 2.857,
+        "total_dbm": -8.91
+      }
+    }
+  },
+  "joint": {
+    "AND4": {
+      "joint_db": 3.178,
+      "sum_db": 2.976,
+      "sum_minus_joint_db": -0.202
+    },
+    "XOR2": {
+      "joint_db": 2.229,
+      "sum_db": 2.248,
+      "sum_minus_joint_db": 0.019
+    }
+  },
+  "claims": [
+    {
+      "id": "K1",
+      "point": "時序分析",
+      "claim": "判讀量是輸入光場的二次式，時序要看取樣窗內的判讀量；以功率代價把 skew 寫成發射端規格",
+      "evidence": "skew 0 已有 ≤ 1.4 dB；skew 額外 0.5／1／2 dB 在 12.1／18／25.7 ps；晶片內路徑差 ≤ 0.01 dB",
+      "full_version": "保留（時序模型與 UI 預算）；延遲盒認證與補長壓縮成一段"
+    },
+    {
+      "id": "K2",
+      "point": "靜態校正",
+      "claim": "固定的誤差（消光比的殘留）只調 heater 重新求相位即可吸收，需求可用解析近似估計（數值支持的縮放關係）",
+      "evidence": "消光比需求 38 → 25.8 dB（XOR2）；margin ≈ (1−a0)^n m0，n＝{'AND2': 1, 'OR2': 1, 'XOR2': 2, 'AND4': 1, 'OR4': 1}",
+      "full_version": "保留（設計與校正分工）"
+    },
+    {
+      "id": "K3",
+      "point": "動態校正與校正後驗收",
+      "claim": "輸入相位漂移只調 φ 可補回；最佳點上平均功率一階不敏感，以 heater 擺動加同步偵測在資料傳送中追蹤；校正後時域驗收",
+      "evidence": "擺動 0.0062 rad（7 個同時擺動損失 ≤ 3%）、回授 0.44 Hz、可追 0.096 rad/s（光纖熱漂移約 0.073）；聯合驗收校正後 23 ps 窗仍在，聯合代價 AND4 3.18 dB（分項相加 2.98）、XOR2 2.23 dB（分項相加 2.25）",
+      "full_version": "保留（校正後重新驗收）；動態校正在資料傳送中進行"
+    }
+  ],
+  "compressed": [
+    "分欄同步佈局：判讀路徑相差 0.3346 ps，不需補長",
+    "總功率預算：決定需求的是 XOR2，每根資料光纖 -2.5 dBm、5 根合計 8.6 dBm"
+  ],
+  "limits": [
+    "全部是模擬，沒有量測晶片",
+    "M1 s1–s5 統一用含 MMI 損耗（0.33 dB）的 B7；MMI 的相位與分光誤差、波長相依未納入",
+    "heater 熱時間常數、接收端參數、EC 損耗是假設值；監測需要 5 個輸出都有偵測器（只用 o2、o4 時回授頻寬較低）",
+    "skew 只取延遲角落；回授只做一階估計；heater 熱串擾與相位重設未建模",
+    "只有單一 B7（7 顆 MZI）；串接與更多輸入未評估"
+  ],
+  "checks": {
+    "budget_positive": true,
+    "joint_window_exists": true,
+    "all_claims_have_evidence": true
+  }
+}

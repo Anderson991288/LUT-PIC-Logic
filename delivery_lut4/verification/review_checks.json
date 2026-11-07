@@ -1,0 +1,191 @@
+{
+  "gds_sha256": "8c0dab016b6f297073c718a5bcd441523b01ff79c25a930a166fc55f486a3fb4",
+  "scope": "LUT4 核心（核心佈局 的 GDS）；只用 GDS 中的多邊形與文字標記",
+  "n_components": 33,
+  "n_nodes": 66,
+  "per_function": {
+    "AND2": {
+      "U_err": 2.4748248725324424e-16,
+      "passed": 16
+    },
+    "OR2": {
+      "U_err": 1.7554167342883506e-16,
+      "passed": 16
+    },
+    "XOR2": {
+      "U_err": 2.2887833992611187e-16,
+      "passed": 16
+    },
+    "NAND2": {
+      "U_err": 3.469446951953614e-16,
+      "passed": 16
+    },
+    "AND4": {
+      "U_err": 2.297444613877834e-16,
+      "passed": 16
+    },
+    "XOR4": {
+      "U_err": 2.220446049250313e-16,
+      "passed": 16
+    },
+    "MUX": {
+      "U_err": 2.0014830212433607e-16,
+      "passed": 16
+    }
+  },
+  "U_err_max": 3.469446951953614e-16,
+  "passed": 112,
+  "al_over_wg_um2": 0.0,
+  "tin_over_wg_um": [
+    103.0,
+    103.0,
+    103.0,
+    103.0,
+    103.0,
+    103.0,
+    103.0,
+    103.0,
+    103.0,
+    103.0,
+    103.0,
+    103.0,
+    103.0,
+    103.0
+  ],
+  "min_heater_body_to_other_wg_um": 29.249999999999996,
+  "sbend_rmin_gds_um": 22.73,
+  "mzi_extra_gds_um": 11.716,
+  "dphi_dlam_rad_nm": 0.129,
+  "dphi_dT_rad_K": 0.0085,
+  "min_tin_to_other_wg_um": 8.774999999999997,
+  "min_al_to_wg_um": 7.774999999999998,
+  "min_heater_to_heater_um": 38.55,
+  "port_pitch_um": [
+    30.0
+  ],
+  "mzi_per_rail": [
+    2,
+    4,
+    4,
+    3,
+    1
+  ],
+  "faults": {
+    "open": true,
+    "short": true,
+    "heater_swap": true
+  },
+  "checks": [
+    {
+      "id": "V1",
+      "item": "光路連通",
+      "method": "GDS 3 聯集成連通塊，每塊接到的 MMI 埠／晶片埠數",
+      "result": "33 塊，每塊恰接 2 個節點",
+      "ok": true
+    },
+    {
+      "id": "V2",
+      "item": "MMI 與 heater 個數",
+      "method": "GDS 中的 MMI 參照、TiN 連通塊",
+      "result": "MMI 14、heater 14",
+      "ok": true
+    },
+    {
+      "id": "V3",
+      "item": "由佈局重算 U",
+      "method": "抽出的連接＋理想 MMI＋heater 相位，與接線表＋相位算出的 U 比較",
+      "result": "最大差 3.5e-16",
+      "ok": true
+    },
+    {
+      "id": "V4",
+      "item": "由佈局重算真值表",
+      "method": "7 個函數各 16 組（雙差值＋AND）",
+      "result": "112/112",
+      "ok": true
+    },
+    {
+      "id": "V5",
+      "item": "光學埠",
+      "method": "波導最左、最右端點與文字標記",
+      "result": "輸入 5、輸出 5；間距 30 µm",
+      "ok": true
+    },
+    {
+      "id": "V6",
+      "item": "Ti/AL 不蓋波導",
+      "method": "GDS 41 與 GDS 3（含 MMI）交集面積",
+      "result": "0 µm²",
+      "ok": true
+    },
+    {
+      "id": "V7",
+      "item": "TiN 只在相位區蓋波導",
+      "method": "每塊 TiN 蓋住波導的長度",
+      "result": "103.0–103.0 µm，每塊只蓋 1 段",
+      "ok": true
+    },
+    {
+      "id": "V8",
+      "item": "加熱條本體到其他波導",
+      "method": "蓋在波導上的 TiN 本體到其他波導段的最小距離（熱串擾；以 TiN 間距 10 µm 為下限）",
+      "result": "29.25 µm",
+      "ok": true
+    },
+    {
+      "id": "V8b",
+      "item": "金屬到其他波導",
+      "method": "整塊 TiN（含落墊）與 Ti/AL 到不在它下方的波導的最小距離（光吸收；下限 3 µm）",
+      "result": "TiN 8.77 µm、Ti/AL 7.77 µm",
+      "ok": true
+    },
+    {
+      "id": "V9",
+      "item": "heater 之間",
+      "method": "TiN 塊之間的最小距離（DRC 只要求 ≥ 10 µm）",
+      "result": "38.5 µm",
+      "ok": true
+    },
+    {
+      "id": "V10",
+      "item": "故障注入",
+      "method": "斷路、短路、heater 標記對調",
+      "result": "斷路 抓到、短路 抓到、對調 抓到",
+      "ok": true
+    },
+    {
+      "id": "V11",
+      "item": "S 彎曲率",
+      "method": "由 GDS 的中心線三點擬圓（下限 10 µm）",
+      "result": "最小 22.7 µm",
+      "ok": true
+    },
+    {
+      "id": "P1",
+      "item": "各軌固定相位差",
+      "method": "由 GDS 量 MZI 臂的中心線長度，推每經過一顆 MZI 比直通軌多走的長度",
+      "result": "每顆 MZI 多 11.72 µm（核心佈局參數算 11.72）；各軌經過的 MZI 數 [2, 4, 4, 3, 1]；約 0.13 rad/nm、0.0085 rad/K（每顆）",
+      "ok": null,
+      "disposition": "不修改佈局：由晶片完成後的相位校正吸收（需求 K1）"
+    },
+    {
+      "id": "P2",
+      "item": "光學埠間距",
+      "method": "輸入埠相鄰距離",
+      "result": "30 µm",
+      "ok": null,
+      "disposition": "光纖陣列的間距較大；晶片整合用扇出波導把埠距拉開到 EC 的間距"
+    },
+    {
+      "id": "P3",
+      "item": "熱串擾",
+      "method": "加熱條本體到最近的其他波導（上一軌或同一顆 MZI 的下臂，兩者幾乎等距）",
+      "result": "29.2 µm（未模擬溫度分布）",
+      "ok": null,
+      "disposition": "DRC 不管熱串擾；量測校正時一併處理（K1）"
+    }
+  ],
+  "all_ok": true,
+  "n_pass": 12,
+  "n_disposition": 3
+}

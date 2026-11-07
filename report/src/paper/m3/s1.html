@@ -1,0 +1,89 @@
+<section class="step" id="p-m3-s1" data-milestone="M3" data-step="s1" data-title="參數對齊與護欄差異">
+<div class="bridge">
+<p><b>承接</b>：M1、M2 從課程的 B7 出發，用自己的設定做出時序分析、校正與核心證據。論文另有一份草稿，寫的是同一顆 macro 的完整版方法；接下來要逐表重現草稿的數字，確認論文可以實作。本頁做到 M5；M6–M8 尚未開始。</p>
+<p><b>本步要回答</b>：草稿的設定和我們目前的設定差在哪？草稿的 XOR2 雜訊護欄是 0.14 P<sub>u</sub>，我們的 XOR2 卻要約 −6.74 dBm 才夠，看起來差約 2 倍，是模型不同還是比較方式不同？</p>
+<p><b>交給下一步</b>：<code>align.json</code>（參數對照與處理步驟、同一參考面的護欄）與 <code>draft.py</code>（草稿設定的唯一來源）。M3 s2 以草稿的 0.9 dB／MZI 重新合成，對照表 I 的 margin。</p>
+<p class="terms"><b>名詞對照</b>：論文草稿（paper draft）＝本研究已寫成的完整版論文稿，以下簡稱草稿；macro＝草稿對 B7 這種單元的稱呼（兩者拓樸一致）；「我們」＝本研究 M1、M2 的設定；M7 的草稿修改清單＝M7（尚未開始）要把本頁發現的差異整理成草稿的修改項目；雜訊護欄（decision guard）Γ＝比較器偏移加 Q 倍雜訊，判讀量要大於它才可靠；Euler 序列＝讓 16 種輸入字之間的 256 種「前一個 → 下一個」轉移各出現一次的符號序列（de Bruijn 序列 B(16,2) 再補回第 1 個符號）；參考面（reference plane）＝功率是在哪個位置量的（例如 macro 輸入端或偵測器端）。</p>
+</div>
+
+<figure class="concept"><img src="figures/paper/m3/s1_concept.png" alt="本步概念圖：草稿與我們的設定逐項對照，先確認 P_u 的參考面"><figcaption><b>本步概念</b>　比較護欄或功率之前，先確認兩邊的 P<sub>u</sub> 量在同一個參考面。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p>兩個人比體重，一個在早上空腹量，一個穿著外套在晚上量，差了 2 公斤不代表誰胖了。比較兩份研究的數字也一樣：要先確認量的是同一個東西、在同一個位置。草稿說 XOR2 的護欄是 0.14 P<sub>u</sub>（P<sub>u</sub>＝−7 dBm）；我們在 M1 s1 算出 XOR2 要 −6.74 dBm 才夠，換算後的護欄約是草稿的 2 倍。本步先把兩邊的設定逐項攤開，再在同一個參考面重算護欄。</p>
+<p>學習目標：(1) 列出草稿與我們在元件、輸入、接收端、模擬方法上的每一項差異，並決定由哪一步處理；(2) 理解護欄在 P<sub>u</sub> 單位下會隨功率改變；(3) 找出 XOR2「差 2 倍」的原因。</p>
+
+<h3>② 原理與推導</h3>
+<h4>1. 護欄</h4>
+<p>判讀量 m（P<sub>u</sub> 單位）要大於護欄才算可靠：</p>
+<math display="block"><mi>m</mi><mo>≥</mo><mi>Γ</mi><mo>=</mo><mfrac><mrow><mo>|</mo><msub><mi>V</mi><mi>off</mi></msub><mo>|</mo><mo>/</mo><msub><mi>Z</mi><mi>T</mi></msub><mo>+</mo><mi>Q</mi><msqrt><mrow><msubsup><mi>σ</mi><mi>th</mi><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>σ</mi><mi>comp</mi><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>σ</mi><mi>shot</mi><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>σ</mi><mi>RIN</mi><mn>2</mn></msubsup></mrow></msqrt></mrow><mrow><mi>ℛ</mi><msub><mi>P</mi><mi>u</mi></msub></mrow></mfrac></math>
+<p>V<sub>off</sub> 是比較器殘餘偏移（V），Z<sub>T</sub> 是轉阻（Ω），Q＝7 是判讀要求的雜訊倍數（草稿寫作 q；本文的 q 是電子電荷）；σ<sub>th</sub>、σ<sub>comp</sub> 是 TIA 熱雜訊與比較器雜訊（A，與功率無關），σ<sub>shot</sub> 與 √P<sub>u</sub> 成正比，σ<sub>RIN</sub> 與 P<sub>u</sub> 成正比；ℛ 是響應度（A/W），P<sub>u</sub> 是偵測器端每路的單位功率（W）。分母是 1 P<sub>u</sub> 對應的電流，所以 Γ 以 P<sub>u</sub> 為單位。熱雜訊主導時 Γ 約與 1／P<sub>u</sub> 成正比：功率少 3.6 dB，護欄就大約 2.3 倍。</p>
+<h4>2. 參考面</h4>
+<p>草稿把 P<sub>u</sub> 定在 macro 輸入端，並假設從 macro 輸出到偵測器沒有額外損耗，所以 macro 輸入端就等於偵測器端（只差 margin 裡已含的 MZI 損耗）。M1 s1 的 P<sub>u</sub> 是 B7 輸入端，輸出側還有傳播損耗與輸出 EC 損耗，合計 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['loss_out_db']" data-fmt="{:.2f}">3.64</span> dB。兩邊要比較，就要換到同一個參考面。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\paper\m3_align\s1_params\align.py
+.\lab design\paper\m3_align\s1_params\figs.py
+.\lab design\paper\m3_align\concept.py</code></pre>
+<p><code>align.py</code> 讀 M1 的預算、取樣窗與 B7 模型，以及 <code>draft.py</code> 的草稿設定，約 2 秒。預期輸出（節錄）：</p>
+<pre><code>接收端（…）｜…｜相同｜處理：—
+P_u 的參考面｜草稿：macro 輸入端＝偵測器端（輸出側無損耗），−7 dBm 固定｜我們：B7 輸入端…｜不同｜處理：本步；之後用草稿的定義
+…
+同參考面（偵測器端 -7 dBm）的護欄（P_u）：
+  XOR2：我們 0.134｜草稿式 0.133（最大輸出功率 0.133）｜草稿表 I 0.14
+XOR2：B7 輸入端 -6.74 dBm − 輸出側 3.64 dB ＝ 偵測器端 -10.38 dBm；該處護欄 0.289＝margin 0.289；−7 dBm 時 0.134（2.15 倍）
+檢查： {'receiver_same': True, 'guard_same_plane_close': True, 'self_consistent_xor2': True, 'xor2_guard_smallest': True}</code></pre>
+<p>自己動手：把 <code>draft.py</code> 的 <code>pu_dbm</code> 改成 −10，重跑 <code>align.py</code>，看 XOR2 的護欄是否接近它的 margin。</p>
+
+<h3>④ 結果與驗收</h3>
+<h4>1. 設定對照</h4>
+<p>共 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="len(d['params'])" data-fmt="{:d}">13</span> 項，<span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['n_diff']" data-fmt="{:d}">10</span> 項不同或部分不同。接收端與取樣需求完全相同，差異集中在元件、輸入與模擬方法：</p>
+<table>
+<tr><th>項目</th><th>草稿</th><th>我們（論文 M1）</th><th>處理</th></tr>
+<tr><td>接收端、T<sub>req</sub></td><td colspan="2">相同：0.5 A/W、20 pA/√Hz、1 kΩ、7 GHz 二階 Butterworth、RIN −140 dB/Hz、PD 失配 2%、比較器 0.5 mV／0.3 mV、Q＝7、T<sub>req</sub>＝23 ps</td><td>—</td></tr>
+<tr><td>P<sub>u</sub> 的參考面</td><td>macro 輸入端＝偵測器端，固定 −7 dBm</td><td>B7 輸入端，由預算反推；輸出側另有 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['loss_out_db']" data-fmt="{:.2f}">3.64</span> dB</td><td>本步換算；之後用草稿的定義</td></tr>
+<tr><td>雜訊項</td><td>熱、比較器、RIN</td><td>另含 shot</td><td>本步量化</td></tr>
+<tr><td>元件損耗</td><td>每顆 MZI 0.9 dB</td><td>每顆 MMI 0.33 dB（每顆 MZI 約 0.66 dB）</td><td>M3 s2</td></tr>
+<tr><td>輸入邊緣</td><td>升餘弦全寬 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['edge']['draft_full_ps']" data-fmt="{:g}">31.25</span> ps（10–90% <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['edge']['draft_1090_ps']" data-fmt="{:g}">18.4</span> ps）</td><td>10–90% <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['edge']['ours_1090_ps']" data-fmt="{:g}">30</span> ps（全寬 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['edge']['ours_full_ps']" data-fmt="{:g}">50.8</span> ps）</td><td>M3 s3</td></tr>
+<tr><td>佈局</td><td>每欄 489 µm（7.0 ps）；macro 內 skew 0.60 ps</td><td>課程的緊湊佈局；路徑差 0.335 ps</td><td>M3 s3</td></tr>
+<tr><td>情境集、延遲掃描、格點</td><td>Euler 序列＋768 個隨機符號；12 方向 × 11 段跨距；1 與 0.5 ps</td><td>B(16,3) 序列；skew 角落；0.5 ps</td><td>M3 s3</td></tr>
+<tr><td>合成</td><td>可微分的平滑最小值加擬牛頓法，16 個起點（M3 s2 說明）</td><td>SLSQP（逐次二次規劃，可處理限制條件的梯度法），24 個起點</td><td>M3 s2</td></tr>
+</table>
+<p>輸入邊緣的差異最大：我們的邊緣全寬約是草稿的 1.6 倍，轉態占去的時間較多，M1、M2 的取樣窗因此偏保守。</p>
+<h4>2. 同一參考面的護欄</h4>
+<figure><img src="figures/paper/m3/s1_align.png" alt="(a) 偵測器端 −7 dBm 時各函數的護欄組成與草稿表 I；(b) 護欄隨偵測器端功率的變化，標出 XOR2 的需求點與草稿的 −7 dBm"><figcaption>圖 M3-1　(a) 偵測器端每路 −7 dBm 時，各函數在 margin 最差那組輸入的護欄（相位用論文 M1 的 0.33 dB／MMI 模型；0.9 dB／MZI 相位下的護欄見 M3 s2）（長條為我們的模型及各項雜訊的份量；◇ 為草稿式：不含 shot、RIN 線性計入；紅線為草稿表 I）。(b) XOR2 與 AND4 的護欄隨偵測器端功率的變化；紅點是 M1 s1 的 XOR2 需求換到偵測器端的位置。</figcaption></figure>
+<table>
+<tr><th>函數</th><th>我們（含 shot）</th><th>草稿式（不含 shot）</th><th>草稿表 I</th></tr>
+<tr><td>AND2</td><td><span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['guard_compare']['AND2']['ours']" data-fmt="{:.3f}">0.178</span></td><td><span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['guard_compare']['AND2']['draft_style']" data-fmt="{:.3f}">0.157</span></td><td>0.17</td></tr>
+<tr><td>XOR2</td><td><span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['guard_compare']['XOR2']['ours']" data-fmt="{:.3f}">0.134</span></td><td><span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['guard_compare']['XOR2']['draft_style']" data-fmt="{:.3f}">0.133</span></td><td>0.14</td></tr>
+<tr><td>AND4</td><td><span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['guard_compare']['AND4']['ours']" data-fmt="{:.3f}">0.178</span></td><td><span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['guard_compare']['AND4']['draft_style']" data-fmt="{:.3f}">0.150</span></td><td>0.17</td></tr>
+<tr><td>OR4</td><td><span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['guard_compare']['OR4']['ours']" data-fmt="{:.3f}">0.168</span></td><td><span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['guard_compare']['OR4']['draft_style']" data-fmt="{:.3f}">0.147</span></td><td>0.17</td></tr>
+</table>
+<p>這裡的相位仍是論文 M1 的 0.33 dB／MMI 模型，只比較 4 個函數；換成草稿的 0.9 dB／MZI 相位後，9 個函數的比較在 M3 s2。在同一個參考面，這四個函數的護欄和草稿表 I 的差都在 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['tol_guard']" data-fmt="{:g}">0.02</span> P<sub>u</sub> 以內；XOR2 是 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['guard_compare']['XOR2']['ours']" data-fmt="{:.3f}">0.134</span> 對 0.14。XOR2 的護欄最小，因為最差那組輸入的兩個判讀埠功率和只有 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['guards']['XOR2']['S_worst']" data-fmt="{:.2f}">0.29</span> P<sub>u</sub>：參考光大多被導到不讀的輸出，shot 與 RIN 都很小，這和草稿的說明一致。其他函數的差主要來自 shot：我們有算、草稿式沒算；AND2、AND4、OR4 的草稿表 I 值落在兩者之間，XOR2 則兩者都略小於 0.14（XOR2 的 shot 很小，0.006 P<sub>u</sub> 的差來自相位模型與草稿取兩位小數）。</p>
+<h4>3. 「差 2 倍」的原因</h4>
+<p>M1 s1 的 XOR2 需求 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['plane']['XOR2']['b7_input_dbm']" data-fmt="{:.2f}">−6.74</span> dBm 是 B7 輸入端；扣掉輸出側 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['loss_out_db']" data-fmt="{:.2f}">3.64</span> dB，偵測器端只有 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['plane']['XOR2']['pd_dbm']" data-fmt="{:.2f}">−10.38</span> dBm。在這個功率，護欄 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['plane']['XOR2']['guard_at_pd_need']" data-fmt="{:.3f}">0.289</span> 剛好等於 margin，是 −7 dBm 時的 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['plane']['XOR2']['ratio']" data-fmt="{:.2f}">2.15</span> 倍。這個相等本身是自洽性核對（M1 s1 的需求功率本來就是解「margin＝護欄」得到的），不是獨立證據；真正說明「差 2 倍」的是兩件事：輸出側 3.64 dB 的換算，以及換到偵測器端 −7 dBm 後護欄 0.134 對草稿 0.14。所以差異來自參考面不同，不是雜訊模型不同。</p>
+<p>反過來看，在草稿的 −7 dBm，我們的 XOR2 margin <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['margins']['XOR2']['ours']" data-fmt="{:.3f}">0.289</span> 是護欄 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['guard_compare']['XOR2']['ours']" data-fmt="{:.3f}">0.134</span> 的 2 倍以上。草稿在 0.9 dB／MZI 時 margin 是 0.24、護欄 0.14，還剩 0.10 P<sub>u</sub>；這個損耗差留到 M3 s2 處理。</p>
+<p><b>驗收</b>：設定逐項對照並指定處理步驟（完成）；同參考面的護欄與草稿表 I 相差 ≤ 0.02 P<sub>u</sub>（4 個函數、M1 相位；通過）；XOR2 差異找出原因：參考面（通過）。程式中的 <code>self_consistent_xor2</code> 只是自洽性核對。</p>
+<p><b>本步結論</b>：(1) 接收端與取樣需求和草稿完全相同；(2) XOR2「差 2 倍」是因為 M1 的 P<sub>u</sub> 量在 B7 輸入端、比偵測器端多 3.64 dB 的輸出側損耗，換到同一參考面後護欄相差 ≤ 0.02 P<sub>u</sub>；(3) 之後各步一律用草稿的定義：P<sub>u</sub>＝macro 輸入端（＝偵測器端）每路 −7 dBm；−7 dBm 是評估用的假設值，不是接收端靈敏度；輸出側的耦合損耗屬於系統預算，只計一次，不放進 macro 的比較；(4) 待處理的差異是 MZI 損耗（M3 s2），以及輸入邊緣、佈局、情境集（M3 s3）。草稿的情境集只保證走過 256 種相鄰轉移，接收端的尾端響應會記住更長的歷史，所以 M3 s3 要宣告記憶長度，並和涵蓋所有 3 符號歷史的 B(16,3) 序列比較。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>比較時沒有對齊參考面</b>：同一個功率量在晶片輸入、元件輸入或偵測器端，數字可以差好幾 dB。</li>
+<li><b>以為護欄是固定值</b>：以 P<sub>u</sub> 為單位時，護欄會隨功率改變；熱雜訊主導時約與 1／P<sub>u</sub> 成正比。</li>
+<li><b>邊緣時間不寫定義</b>：「30 ps」可能是 10–90% 時間，也可能是升餘弦全寬，兩者差約 1.7 倍。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：為什麼 XOR2 的 margin 最小，護欄卻也最小？</summary>
+<p>XOR2 靠兩路資料互相干涉判讀，最差那組輸入時兩個判讀埠的總功率只有約 0.29 P<sub>u</sub>，參考光大多被導到不讀的輸出，所以和功率成正比的 shot 與 RIN 很小，護欄幾乎只剩熱雜訊與比較器。AND、OR 類靠參考光加強判讀，判讀埠功率大，RIN 與 shot 也就大。</p></details>
+<details class="quiz"><summary>自我檢查 2：把草稿的 −7 dBm 換到我們晶片的光纖端，要多少？</summary>
+<p>偵測器端 −7 dBm，加上輸出側 3.64 dB 得到 B7 輸入端約 −3.4 dBm，再加輸入 EC 2 dB，每根資料光纖約 −1.4 dBm。這屬於系統預算，不影響 macro 本身的比較。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>草稿設定</td><td><code>draft.py</code>：表 I、表 II、II-A 的數字（唯一來源）</td></tr>
+<tr><td>我們的設定</td><td>論文 M1 s1 預算、M1 s4 取樣窗、含 MMI 損耗的 B7 與相位</td></tr>
+<tr><td>護欄</td><td>偵測器端每路 −7 dBm；等效雜訊頻寬 <span class="num" data-json="design/paper/m3_align/s1_params/out/align.json" data-expr="d['enbw_ghz']" data-fmt="{:.2f}">7.78</span> GHz；取 margin 最差那組輸入（另算輸出功率最大那組）</td></tr>
+<tr><td>範圍</td><td>不重新合成、不做時域模擬（M3 s2、s3）</td></tr>
+</table>
+<div class="auto-code" data-files="design/paper/m3_align/draft.py design/paper/m3_align/s1_params/align.py design/paper/m3_align/s1_params/figs.py design/paper/m3_align/concept.py"></div>
+<div class="auto-history" data-file="design/paper/m3_align/s1_params/HISTORY.md"></div>
+</section>

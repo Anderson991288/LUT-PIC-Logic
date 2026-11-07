@@ -1,0 +1,113 @@
+<section class="step" id="m2-s2" data-milestone="M2" data-step="s2" data-title="設計流程與 PDK">
+<div class="bridge">
+<p><b>承接</b>：M2 s1 交出介面規格 <code>spec.json</code>：10 個 EC、14 個相位控制通道（heater 與 PAD 編號）、共用 GND，以及 12 條需求。</p>
+<p><b>本步要回答</b>：從規格到可交付的 GDS，要經過哪些步驟、每一步用什麼工具、交出什麼檔案？晶片上的每一種元件，是直接用 PDK 的 cell，還是要自己做？</p>
+<p><b>交給下一步</b>：元件清單 <code>components.json</code>（10 項，每項都有 PDK cell 或自建理由，並記下 DRC 規則與尺寸）與流程 <code>flow.json</code>（8 步，每步的輸入都是前面某一步的輸出）。M2 s3 依清單決定模擬用哪些模型，M3 依清單決定佈局用哪些 cell。</p>
+<p class="terms"><b>名詞對照</b>：cell（佈局中的一個元件單元，含幾何形狀與埠；可重複放置）、模板（trace template，規定波導寬度與層別的設定；由工具依路徑自動產生直線與彎道）、繞線（從 heater 接點拉金屬線到 PAD）、加熱條（heater 蓋在波導上的 TiN 細條本體）、DRC 規則（design rule，晶圓廠規定的最小線寬、最小間距等幾何限制）</p>
+</div>
+
+<figure class="concept"><img src="figures/m2/s2_concept.png" alt="本步概念圖：查 PDK：能用就用，沒有才自建"><figcaption><b>本步概念</b>　從規格列出需要的元件，逐項到 PDK 查對應的 cell，並單獨跑 DRC；有且合格的直接用，沒有或不合格的自建，並寫明理由、風險與處理步驟。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能說出從規格到交付的 8 個步驟與每步的輸入、輸出；能從元件清單查到任一元件用哪個 PDK cell、或為什麼要自建；知道哪些 DRC 規則會影響後面的佈局。</p>
+<div class="example">
+<p>類比：蓋房子前，建築師會列一張材料表：門窗、磁磚、衛浴用型錄上的現成品，型錄上沒有的（例如特殊尺寸的樓梯）才請木工訂做。現成品有出廠測試、尺寸固定；訂做品要自己畫圖、自己負責品質。</p>
+<p>PDK 就是晶圓廠的「型錄」：裡面有晶圓廠做過、量過的元件（cell），以及製程的層別與規則。設計晶片時，先查型錄能用的就用，沒有的才自建，並寫清楚理由與風險。這一步只查和列，不畫任何佈局。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. PDK 提供什麼</h4>
+<p>PDK（process design kit）是晶圓廠交給設計者的套件。一個 cell 通常包含三項內容：</p>
+<table>
+<tr><th>內容</th><th>用在哪一步</th><th>例子</th></tr>
+<tr><td>佈局（各 GDS 層的多邊形與埠位置）</td><td>M3 佈局</td><td>2×2 MMI 在 GDS 3 的形狀，埠 in1、in2、out1、out2 的座標</td></tr>
+<tr><td>電路模型</td><td>M2 s3 模擬</td><td>MMI 在 1550 nm 的 4×4 S 矩陣（4 個埠之間的係數；取輸入到輸出的部分就是 2×2 的 H）</td></tr>
+<tr><td>設計規則（整個製程共用）</td><td>M3 s4 DRC</td><td>heater（GDS 39）最小線寬 0.6 µm、最小間距 10 µm</td></tr>
+</table>
+<p>GDS 層號的意義：GDS 3 是矽波導，GDS 4、GDS 5 是 EC 尖端使用的兩層（M3 s3），GDS 39 是 TiN，GDS 41 是 Ti/AL，GDS 99 是晶片外框，GDS 100 是文字標記。平台另有 GDS 6、GDS 60 等層，本晶片沒有使用。</p>
+<p>不是每個 cell 都三項齊全，也不是每個 cell 都能直接用。例如加熱條 cell 有佈局，它的模型只有電氣埠，沒有「通電後波導相位改變多少」，所以模擬時相位要另外處理；而且它的接點過不了平台 DRC（見④）。所以每個要用的 cell 都要單獨跑一次 DRC。查清楚每個 cell 有哪幾項，才知道後面哪一步需要自己補。</p>
+<h4>2. 從規格算出需要的元件數量</h4>
+<p>元件數量不是另外決定的，而是從規格直接推出：</p>
+<ul>
+<li>MMI：每顆 MZI 前後各一個，7 顆 MZI 共 14 個。</li>
+<li>相位區與 heater：每個相位通道一個，共 14 個。</li>
+<li>PAD：14 個訊號 PAD，加上至少 1 個 GND PAD。</li>
+<li>EC：10 個光學埠，各一個。</li>
+<li>波導交叉：B7 的每顆 MZI 都只連相鄰兩條波導，平面上不會交叉，所以是 0 個。程式會逐顆核對，不只目視確認。</li>
+</ul>
+<h4>3. DRC 規則換成佈局要用的數字</h4>
+<p>規則寫的是最小值，佈局時要換算成具體尺寸。以 PAD 為例：PDK 的 PAD 是 80×100 µm，GDS 41 的最小間距是 10 µm，所以相鄰 PAD 的中心距至少</p>
+<math display="block"><mrow><msub><mi>p</mi><mtext>min</mtext></msub><mo>=</mo><msub><mi>w</mi><mtext>PAD</mtext></msub><mo>+</mo><msub><mi>s</mi><mtext>min</mtext></msub><mo>=</mo><mn>80</mn><mo>+</mo><mn>10</mn><mo>=</mo><mn>90</mn><mtext> µm</mtext></mrow></math>
+<p>p<sub>min</sub> 是 PAD 的最小中心距，w<sub>PAD</sub> 是 PAD 沿晶片邊緣方向的寬度，s<sub>min</sub> 是 DRC 的最小間距，單位都是 µm。此處以最少的 15 個 PAD 估算下限：分到上下兩緣，較多的一緣有 8 個，這一列至少長 8×80＋7×10＝710 µm。M3 s3 為了讓單層金屬的走線不交叉，PAD 的數量與間距都會再增加。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\m2_circuit\s2_flow\flow.py
+.\lab design\m2_circuit\s2_flow\figs.py</code></pre>
+<p><code>flow.py</code> 先讀 <code>spec.json</code>，用 SHA-256 核對它所依據的接線表，算出各元件需要幾個；再到 PDK 逐一查對應的 cell，記下 GDS 層、尺寸、埠與有無電路模型；接著從 DRC deck 讀出規則；最後寫出元件清單與流程，並檢查流程中每一步的輸入都由前面某一步產生。預期輸出：</p>
+<pre><code> C1 2×2 分光／合光（50:50） ×14  PDK cell   SOI220nm_1550nm_TE_STRIP_2x2_MMI
+ C2 相位區（光學）          ×14  自建（模型）     —
+ C3 heater（TiN 加熱條）  ×14  自建（幾何）     StraightHeaterFilament
+ …
+C10 波導交叉             ×0   不需要        SOI220nm_1550nm_TE_STRIP_Waveguide_Crossing
+DRC 規則：{'3': {'width_um': 0.35, 'space_um': 0.2}, '39': {'width_um': 0.6, 'space_um': 10.0}, '41': {'width_um': 2.0, 'space_um': 10.0}}
+PDK 中名稱像 EC 的 cell：無
+一致性：{'netlist_sha': True, 'every_component_justified': True, 'pdk_cells_exist': True, 'pdk_cells_drc_clean': True, 'flow_inputs_produced': True, 'no_crossing_needed': True}</code></pre>
+<p>練習：打開 <code>components.json</code>，找出 heater cell 的兩個埠是什麼類型（光學還是電氣）；再找出 GDS 39 的最小間距，思考它對 M3 擺放 heater 有什麼影響。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/m2/s2_flow.png" alt="兩列流程圖：上列 M2 s1 到 M3 s1，下列 M3 s2 到 M3 s5，每步下方是輸出檔與驗收條件"><figcaption>圖 M2-4　從規格到交付的 8 個步驟。藍框是步驟與工具，括號內是用到的元件編號（見下表）；米色框是該步交給下一步的檔案；灰字是驗收條件。程式依序核對這份清單：每一步宣告的輸入，都是更前面的步驟宣告過的輸出（實際檔案在各步完成時才存在）。M3 s6 是交付後的工具對照，不在這 8 步之內。</figcaption></figure>
+<table>
+<tr><th>編號</th><th>功能</th><th>數量</th><th>來源</th><th>PDK cell／理由</th></tr>
+<tr><td>C1</td><td>2×2 MMI</td><td>14</td><td>PDK cell</td><td><code>SOI220nm_1550nm_TE_STRIP_2x2_MMI</code>：有佈局與電路模型；埠 in2、out2 在上方</td></tr>
+<tr><td>C2</td><td>相位區（光學）</td><td>14</td><td>自建（模型）</td><td>PDK 沒有「加熱後波導相位」的模型；模擬用理想相位 e<sup>iφ</sup>，佈局上就是一段直波導</td></tr>
+<tr><td>C3</td><td>heater</td><td>14</td><td>自建（幾何）</td><td>PDK 有 <code>StraightHeaterFilament</code>，但它單獨跑 DRC 就有 <span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['components'][2]['pdk']['drc_total']" data-fmt="{:d}">16208</span> 處違規（兩端 GDS 41 圓形接點小於最小寬度 2 µm）；改依平台設計規範自畫 TiN 條與端點接點，尺寸沿用 PDK 加熱條</td></tr>
+<tr><td>C4</td><td>訊號 PAD</td><td>14</td><td>PDK cell</td><td><code>HeaterPad</code>：GDS 41 方塊，給探針或打線</td></tr>
+<tr><td>C5</td><td>GND PAD</td><td>≥1</td><td>PDK cell</td><td>同 C4</td></tr>
+<tr><td>C6</td><td>繞線</td><td>14 條訊號線＋地線（最後條數見 M3 s3）</td><td>自建（幾何）</td><td>PDK 沒有走線 cell；用 GDS 41（Ti/AL 直接壓在 TiN 上）畫多邊形，線寬與間距依 DRC 規則</td></tr>
+<tr><td>C7</td><td>波導與彎道</td><td>—</td><td>PDK 模板</td><td><code>StripWaveguideTemplate</code>：寬度取 MMI 埠的 <span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['waveguide']['width_um']" data-fmt="{:g}">0.45</span> µm（模板預設 0.4、技術檔 0.5，三者不同），由工具依路徑產生</td></tr>
+<tr><td>C8</td><td>EC</td><td>10</td><td>自建（幾何）</td><td>PDK 沒有 EC cell；自建的尖端波導未經晶圓廠驗證，列為風險，M3 s3 處理</td></tr>
+<tr><td>C9</td><td>GC（備選）</td><td>0</td><td>不使用</td><td>PDK 有 <code>SOI220nm_1550nm_TE_STRIP_GC</code>，本設計沒有使用，不在晶片上；僅為 EC 風險過高時的替代方案</td></tr>
+<tr><td>C10</td><td>波導交叉</td><td>0</td><td>不需要</td><td>每顆 MZI 只連相鄰波導，不會交叉，所以不在晶片上</td></tr>
+</table>
+<p>合計 <span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['summary']['n_components']" data-fmt="{:d}">10</span> 項：<span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['summary']['n_pdk']" data-fmt="{:d}">4</span> 項用 PDK，<span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['summary']['n_custom']" data-fmt="{:d}">4</span> 項自建，<span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['summary']['n_unused']" data-fmt="{:d}">2</span> 項（C9、C10）記錄為不使用或不需要，不在晶片上。驗收「每個元件有對應的 PDK cell 或自建理由」通過；自建的項目也都指定了在哪一步處理。</p>
+<figure><img src="figures/m2/s2_cells.png" alt="PDK cell 的實際外形：2×2 MMI、PAD、加熱條全長與端點放大"><figcaption>圖 M2-5　PDK cell 的實際外形，直接畫 PDK 裡的多邊形，紅點是埠；標題註明單獨跑 DRC 的違規數。2×2 MMI 長 <span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['summary']['mmi_size_um'][0]" data-fmt="{:g}">82.5</span> µm；加熱條長 <span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['summary']['heater_length_um']" data-fmt="{:g}">100</span> µm、線寬 <span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['summary']['heater_width_um']" data-fmt="{:g}">0.9</span> µm，兩端的綠色圓點是 GDS 41 接點，就是過不了 DRC 的部分（因此 C3 改為自建，只沿用尺寸）；PAD 是 80×100 µm 的方塊，比 MMI 還大。</figcaption></figure>
+<figure><img src="figures/m2/s2_components.png" alt="晶片示意圖：兩側 EC、中間 B7 核心的 MMI 與加熱條、上下兩排 PAD 與繞線，顏色區分 PDK 與自建"><figcaption>圖 M2-6　各元件在晶片上的位置（示意，不按比例）。藍色是 PDK 提供，褐色是自建：兩側的 EC、heater 本身，以及 heater 到 PAD 的繞線要自己畫，其餘都用 PDK。PAD 的個數與位置在此僅為示意，實際配置見 M3 s3。</figcaption></figure>
+<table>
+<tr><th>給佈局的數字</th><th>值</th><th>來源</th></tr>
+<tr><td>heater 最小間距</td><td><span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['summary']['heater_gap_min_um']" data-fmt="{:g}">10</span> µm</td><td>DRC：GDS 39 space</td></tr>
+<tr><td>PAD 最小中心距</td><td><span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['summary']['pad_pitch_min_um']" data-fmt="{:g}">90</span> µm</td><td>PAD 寬 80 µm＋GDS 41 space 10 µm</td></tr>
+<tr><td>較長一列 PAD 的最小長度</td><td><span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['summary']['pad_row_min_um']" data-fmt="{:g}">710</span> µm（<span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['summary']['pad_row_top']" data-fmt="{:d}">8</span> 個）</td><td>以最少的 15 個 PAD 分上下兩緣估算</td></tr>
+<tr><td>波導最小線寬</td><td><span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['drc_rules']['3']['width_um']" data-fmt="{:g}">0.35</span> µm</td><td>DRC：GDS 3 width</td></tr>
+</table>
+<p><b>實際遇到的情況</b>：</p>
+<ul>
+<li>用名稱搜尋 PDK 裡的 EC 時，第一版的比對規則把 <code>HeaterWedge</code> 當成 EC，因為 Wedge 裡含有 edge。改成只比對以 Edge 開頭的名稱或 EC、SSC 等縮寫後，結果是「無」，與 PDK 文件一致。</li>
+<li><b>PDK 的加熱條過不了 DRC（M3 s1 才發現）</b>：第一版的清單只查 cell 存不存在，C3 直接用 PDK 加熱條。到 M3 s1 畫完核心跑 DRC，才發現這個 cell 本身就違規。於是回到本步加上「每個 PDK cell 單獨跑 DRC」，C3 改為自建；其餘用到的 cell（MMI、PAD）都是 0 違規。</li>
+<li>從加熱條的多邊形量線寬時，第一次量到 0 µm。原因是加熱條在 PDK 裡是一條 Path（只存中心線，另有線寬屬性），不是封閉多邊形。改成讀 Path 的線寬後得到 0.9 µm。</li>
+</ul>
+<p><b>參考文獻</b>：PDK 與設計規則見 CORNERSTONE MPW 設計規範：https://cornerstone.sotonfab.co.uk/mpw/live-calls/；公開 PDK：https://github.com/cornerstone-uos/cornerstone-pdk</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>以為 PDK 的 heater cell 會改變相位</b>：加熱條 cell 只有電氣埠。相位與功率的關係（P<sub>π</sub>）來自量測或文獻，要自己放進模擬。</li>
+<li><b>只確認 cell 存在</b>：還要確認它有沒有電路模型、埠名與方向，缺模型的元件在模擬時要另外處理。PDK 的 cell 也可能過不了平台 DRC，要單獨跑一次再決定是否採用。</li>
+<li><b>佈局完才看 DRC 規則</b>：heater 間距 10 µm、PAD 尺寸 80×100 µm 會直接決定波導間距與晶片大小，要在佈局前就知道。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：元件清單列了 10 項，為什麼晶片上只有 8 項？</summary>
+<p>C9（GC）是 PDK 有但本設計沒有使用的元件，C10（波導交叉）因為每顆 MZI 只連相鄰波導而不需要。這兩項列在清單上，是為了記錄查過 PDK 與不使用的理由。</p></details>
+<details class="quiz"><summary>自我檢查 2：為什麼 C2（相位區）和 C3（heater）要分成兩項？</summary>
+<p>它們屬於不同的領域：C2 是光學行為（光經過時多了相位 φ），C3 是電氣與幾何（一條 TiN 線與兩個接點）。C2 的模型要自己建；C3 的幾何本來想用 PDK 的，但過不了 DRC，也改為自建。分開列，才不會誤以為畫了 heater 就有相位模型。</p></details>
+<details class="quiz"><summary>自我檢查 3：heater 最小間距是 10 µm，這對 B7 核心的佈局有什麼影響？</summary>
+<p>兩個相鄰的 heater 之間至少要隔 10 µm。如果兩顆 MZI 的加熱臂並排，它們所在的波導間距就要拉開到足以放下兩條 0.9 µm 的加熱條再加 10 µm 的空隙；否則要把 heater 錯開擺放。這在 M3 s1 決定波導間距時要先考慮。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>輸入</td><td>M2 s1 的 <code>spec.json</code>；它所依據的接線表（以 SHA-256 核對）</td></tr>
+<tr><td>PDK</td><td>CORNERSTONE <span class="num" data-json="design/m2_circuit/s2_flow/out/components.json" data-expr="d['pdk']['version']" data-fmt="{}">2.6.luceda1</span>，SOI220 變體；只查 cell，不產生佈局</td></tr>
+<tr><td>DRC 規則</td><td>從 KLayout DRC deck 讀出 GDS 3、39、41 的最小線寬與間距</td></tr>
+<tr><td>判斷規則</td><td>PDK 項需 cell 存在；自建項需寫明理由並指定處理步驟；不使用的項需寫明理由</td></tr>
+</table>
+<div class="auto-code" data-files="design/m2_circuit/s2_flow/flow.py design/m2_circuit/s2_flow/figs.py"></div>
+<div class="auto-history" data-file="design/m2_circuit/s2_flow/HISTORY.md"></div>
+</section>

@@ -1,0 +1,114 @@
+<section class="step" id="m3-s3" data-milestone="M3" data-step="s3" data-title="晶片整合：EC 與 PAD">
+<div class="bridge">
+<p><b>承接</b>：M3 s1 交出 B7 核心（<code>b7_core.gds</code>）與 14 個 heater 的落墊座標；M3 s2 審查通過，並交下兩件事：光學埠間距只有 30 µm，要扇出到光纖陣列的間距；heater 要接到 PAD。</p>
+<p><b>本步要回答</b>：光如何從光纖進出晶片？14 個 heater 如何用唯一的一層金屬（Ti/AL）接到 PAD，而且訊號線與地線不能交叉？金屬線能承受多大的電流？</p>
+<p><b>交給下一步</b>：整顆晶片 <code>chip.gds</code>（10 個 EC、扇出、21 個 PAD 全在上下緣最外圍、28 條走線）與 <code>chip_info.json</code>（PAD 座標與編號、EC 位置、走線、跨越波導的次數、電流密度估算）。M3 s4 用它做正式 DRC 與連接檢查。</p>
+<p class="terms"><b>名詞對照</b>：端面（facet，晶片側面讓光纖對準的切面）、研磨（polishing，把晶片側面磨平到 EC 的尖端）、模場（mode field，光在截面上分布的範圍）、埋氧層（矽層下方的氧化層）、漸寬段（taper，寬度逐漸改變的波導）、扇出（fan-out，用彎道把緊密的埠距拉開）、走線（繞線畫出的一條金屬線）、匯流排（bus，多條地線共用的寬金屬線；本晶片最後沒有使用）、跨越（金屬線從波導上方經過）、保序回歸（在不改變先後順序的前提下，讓一串位置最接近目標的計算方法）、電流密度（電流除以金屬截面積，單位 mA/µm²）、片電阻（sheet resistance，正方形薄膜的電阻；長條的電阻等於片電阻乘以方塊數，方塊數即長度除以寬度）</p>
+</div>
+
+<figure class="concept"><img src="figures/m3/s3_concept.png" alt="本步概念圖：EC 扇出、PAD 與一層金屬的走線"><figcaption><b>本步概念</b>　光從兩側的 EC 進出，扇出把核心 30 µm 的埠距拉開到光纖陣列的 250 µm；電從晶片上下緣最外圍的兩排 PAD 進出。只有一層金屬，所以 PAD 的左右順序要和走線一致，線才不會交叉；相鄰兩個 heater 的地線共用一個 GND PAD。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能說明薄矽尖端 EC 為什麼能和光纖模場匹配；能計算扇出 S 彎的最小曲率半徑；能用「順序」解決單層金屬的走線交叉問題；能估算走線的電流密度，並說明哪些數字還是假設。</p>
+<div class="example">
+<p>類比：一棟只有一層停車場的大樓，每個車位（heater）都要有一條車道接到外面的大門（PAD），而且車道不能交叉。辦法是讓大門的排列順序和車位由左到右的順序一致，所有車道都往同一個方向開出去，就不會交叉；大門一定要開在大樓最外牆（探針、打線只碰得到晶片外緣）。回程車道（地線）沒辦法另外接到後面的大馬路（匯流排），因為那條路會擋住所有去程車道；改成相鄰兩個車位的回程車道並排，共用同一個大門。</p>
+<p>停車場中央的車位，車道必須橫越某些行人通道（波導）。我們只能選跨越次數比較少的方向，並讓車道垂直穿越，影響最小。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 薄矽尖端 EC</h4>
+<p>光纖的模場直徑約 3–4 µm（此處指模場較小的高數值孔徑光纖），而 220 nm 厚的矽波導模場不到 1 µm。把波導越做越細，光會被推出波導、模場變大，就能和光纖匹配。</p>
+<p>但這個平台的 GDS 3 最小線寬是 0.35 µm，220 nm 厚的尖端最細也只有 0.35 µm，模場仍然太小。做法是在 GDS 4（120 nm 淺蝕刻）的開窗（允許蝕刻的區域）內，只用 GDS 5 保護一條 0.25 µm 的細線。保護的地方剩 100 nm 厚的矽，其餘蝕到埋氧層。這是依平台的層別說明；0.25 µm 窄條等於 GDS 5 的最小線寬，能否製作須向平台確認。100 nm × 0.25 µm 的尖端導光很弱，模場可擴大到約 2–3 µm（估計，本課程未模擬）。</p>
+<p>EC 的結構由端面往晶片內分三段：尖端定寬段（研磨窗口）、100 nm 薄矽漸寬段、雙層轉換段（GDS 3 核心從 0.35 µm 漸寬到波導寬，下面墊著 GDS 5 薄矽）。</p>
+<p>這個平台的 MPW 投片不處理晶片端面，所以晶片完成後要把側面研磨到尖端定寬段內；定寬段長 30 µm，研磨停在其中任一處，端面寬度都相同。</p>
+<h4>2. 扇出</h4>
+<p>核心的 5 個埠間距 30 µm，光纖陣列是 250 µm。以第 3 軌為中心上下對稱，最外側的埠要平移 Δy＝2×250 − 2×30＝440 µm。沿用 M3 s1 的餘弦 S 彎，最小曲率半徑</p>
+<math display="block"><mrow><msub><mi>R</mi><mtext>min</mtext></msub><mo>=</mo><mfrac><mrow><mn>2</mn><msup><mi>L</mi><mn>2</mn></msup></mrow><mrow><msup><mi>π</mi><mn>2</mn></msup><mi>Δ</mi><mi>y</mi></mrow></mfrac><mo>=</mo><mfrac><mrow><mn>2</mn><mo>×</mo><msup><mn>399</mn><mn>2</mn></msup></mrow><mrow><msup><mi>π</mi><mn>2</mn></msup><mo>×</mo><mn>440</mn></mrow></mfrac><mo>≈</mo><mn>73</mn><mtext> µm</mtext></mrow></math>
+<p>L 是扇出長度 400 µm 扣掉兩端各 0.5 µm 直段（µm），Δy 是平移量（µm）。73 µm 遠大於 10 µm 的下限，彎道損耗可忽略。</p>
+<p><b>輸入要等長</b>：外側的埠平移 440 µm、中央的不平移，S 彎長度分別約 616 與 400 µm，相差 216 µm。5 路輸入之間的長度差會變成固定的相位差，而且會隨溫度與波長漂移。長度差 ΔL 的漂移可用量級估計：每 1 K 的相位變化約 2π·ΔL·(1.8×10<sup>−4</sup>)/λ（1.8×10<sup>−4</sup>/K 是矽的熱光係數），每 1 nm 的相位變化約 2π·ΔL·4.2·(1 nm)/λ²（4.2 是群折射率）。代入 ΔL＝216 µm、λ＝1.55 µm，得到約 0.16 rad/K、2.4 rad/nm，只要 0.6 K 或 0.04 nm 就用掉需求 O3（輸入相對相位）的 0.1 rad。</p>
+<p>所以在 EC 與扇出之間加一段補長段（長 600 µm）：較短的路徑加上兩個往上的餘弦凸起，凸起高度用二分法求到 5 路總長相等；凸起的最小曲率半徑約 35 µm，凸起之間不會相碰。輸出接偵測器只量功率，不需等長。</p>
+<h4>3. 單層金屬的走線</h4>
+<p>每個 heater 有兩個落墊，一端接訊號、一端接地；heater 是電阻，哪一端接訊號都可以。規則是：</p>
+<ol>
+<li><b>選方向</b>：北指晶片上緣方向，南指下緣方向。heater 在第 r 軌（r＝1–5 由上往下，與接線表相同），往北要跨 r − 1 條波導，往南要跨 6 − r 條（含自己這一軌），取較少的一側。第 1–3 軌往北（10 個 heater），第 4 軌往南（4 個）。</li>
+<li><b>避開 TiN</b>：如果直線前進會蓋到其他 heater 的 TiN（或往南時蓋到自己的加熱條），先在落墊高度橫移：左端往左 22 µm、右端往右 30 µm，移到 MMI 與 S 彎的區域（那裡沒有 TiN）再直線前進。</li>
+<li><b>PAD 在最外圍</b>：PAD 一排放在晶片上下緣，外緣離晶片邊 60 µm（假設值：留給切割道與崩邊，平台未公布，待確認），PAD 外側不能再有任何圖形。單層金屬下，地線若要接到 PAD 外側的匯流排，就得從 PAD 之間穿過；改把匯流排放在 PAD 內側，所有訊號線又都要跨過它。所以不用匯流排，地線也直接接 PAD。</li>
+<li><b>地線共用 PAD</b>：每個 heater 的兩端都試「左訊右地」與「左地右訊」，讓相鄰兩個 heater 的地端在左右順序上排在一起，兩條地線接到同一個 GND PAD（各離 PAD 中心 20 µm）。逐一試完所有組合，取 PAD 最少的一組。</li>
+<li><b>排 PAD</b>：同一側的走線依 x 由左到右排序，PAD 也依同樣順序排列，並在「中心距 ≥ 150 µm」的限制下，讓 PAD 盡量靠近自己的走線：先依走線位置排好，相鄰太近的就一起往兩邊推開，推開時保持先後順序（保序回歸）。因為兩排順序相同，走線之間不會交叉。</li>
+</ol>
+<h4>4. 電流密度</h4>
+<p>金屬線的電流密度 J＝I／(w·t)，I 是電流（mA）、w 是線寬、t 是 Ti/AL 厚度（µm）。heater 的電流由功率與電阻決定：</p>
+<math display="block"><mrow><mi>I</mi><mo>=</mo><msqrt><mfrac><msub><mi>P</mi><mtext>h</mtext></msub><msub><mi>R</mi><mtext>h</mtext></msub></mfrac></msqrt><mo>,</mo><mspace width="1em"/><mi>J</mi><mo>=</mo><mfrac><mi>I</mi><mrow><mi>w</mi><mi>t</mi></mrow></mfrac></mrow></math>
+<p>P<sub>h</sub> 是 heater 功率（每個最多約 2P<sub>π</sub>＝26 mW）、R<sub>h</sub> 是 heater 電阻（kΩ）、w 是線寬、t 是 Ti/AL 厚度（µm）。平台沒有公布 TiN 的片電阻，所以 R<sub>h</sub> 只能假設：本步取 0.5、1、2 kΩ。加熱條約 111 個方塊（長 100 µm／寬 0.9 µm）、TiN 厚 0.15 µm，這三個值對應的電阻率約 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][0]['rho_tin_uohm_cm']" data-fmt="{:.0f}">67</span>–<span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][2]['rho_tin_uohm_cm']" data-fmt="{:.0f}">270</span> µΩ·cm（只作量級參考）。每條地線只帶自己 heater 的電流，線寬與訊號線相同，所以地線的電流密度和訊號線一樣；兩條地線在 GND PAD 上才會合，PAD 寬 80 µm，不是瓶頸。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\m3_layout\s3_chip\chip.py
+.\lab design\m3_layout\s3_chip\figs.py</code></pre>
+<p><code>chip.py</code> 依序：讀核心 GDS 的 TiN 位置 → 決定每個端點的方向與是否橫移 → 選每個 heater 的方向、排 PAD → 畫走線 → 畫 EC 與扇出 → 匯入核心 GDS、寫出整顆晶片 → DRC 與各項檢查 → 電流密度。預期輸出（節錄）：</p>
+<pre><code>晶片 4280×1200 µm；EC 10 個（間距 250 µm）；扇出 400 µm＋輸入補長 600 µm、最小曲率半徑 35.3 µm
+輸入扇出長度 {'in0': 1216.269, …, 'in4': 1216.269}（差 0.0000 µm）；補長凸起 {'in0': 0.0, 'in1': 103.57, 'in2': 128.57, …}；輸出扇出差 216.3 µm
+PAD 21 個（北 15、南 6；GND 7），外緣離晶片邊 60 µm；改成右端接訊號的 heater 5 個
+北側 PAD：P02@10、GN1@200、P01@350、P06@500、GN2@650、P05@800、P10@950、P08@1100、GN3@1250、P09@1400、P07@1550、GN4@1700、P12@1850、GN5@2000、P11@2150
+南側 PAD：P04@-12、GS1@205、P03@422、P14@1683、GS2@1900、P13@2118
+走線 28 條（橫移 12）；跨越波導 32 次；Ti/AL 不同網最小距離 11.50 µm；到其他 TiN 12.00 µm；Ti/AL 連通塊 21
+DRC：30 條規則，違規 0 {}；設計區 (4280.0, 1200.0)（declared）；外框外 0</code></pre>
+<p>輸出中 <code>P02@10</code> 表示 PAD P02 的中心 x 座標是 10 µm。</p>
+<p>練習：在 <code>chip_info.json</code> 的 <code>routes</code> 找出 H10 的訊號線，數它跨過幾條波導；再把 <code>PAD_PITCH</code> 改成 100 重跑，看 PAD 位置如何變、走線是否變得更直。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/m3/s3_chip.png" alt="整顆晶片：兩側 EC 與扇出、中央核心、上下緣最外圍的 PAD 與走線"><figcaption>圖 M3-7　整顆晶片（從 GDS 讀回，等比例）。西緣 5 個輸入 EC（x1–x4、R）、東緣 5 個輸出 EC（o1–o5），間距 250 µm；中央是 B7 核心；輸入側 x2–x4 的凸起是補長段，讓 5 個輸入等長。PAD 全在上下緣最外圍：北側 10 個訊號 PAD＋GN1–GN5，南側 4 個訊號 PAD＋GS1–GS2（GN、GS 分別是北側、南側的 GND PAD），每個 GND PAD 接兩個相鄰 heater 的地線。PAD 不依編號排列，而是依走線的左右順序排列。</figcaption></figure>
+<figure><img src="figures/m3/s3_ec.png" alt="EC 放大：尖端、薄矽 taper、雙層轉換"><figcaption>圖 M3-8　EC。(a) 全長 260 µm（縱向放大）：黃色是 GDS 4 開窗，粉紅是 GDS 5 保護的 100 nm 薄矽，藍色是 220 nm 的 GDS 3 波導。(b) 雙層轉換（等比例）：GDS 3 核心從 0.35 µm 漸寬到 0.45 µm，下面墊著 GDS 5。</figcaption></figure>
+<figure><img src="figures/m3/s3_route.png" alt="北側繞線放大：橫移、跨越波導、訊號線與地線接到最外圍的 PAD"><figcaption>圖 M3-9　北側繞線放大（縱向放大）。第 3 層的 MZI-4（上方波導在第 1 軌）與 MZI-5（第 3 軌），兩者的 heater 落墊 x 相同。MZI-5 的四個端點（紅字）先橫移，避開 MZI-4 的 TiN，再往北跨過第 2、1 軌；MZI-4 的端點（紫字）直接往北。H08 與 H10 的右端（地）並排，一起接到 GN3；H07 與 H09 的右端一起接 GN4。這一區的 heater 都是左端接訊號；改成左端接地的是 H01、H03、H05、H11、H13，地端才能和相鄰 heater 的排在一起。</figcaption></figure>
+<table>
+<tr><th>驗收項目</th><th>結果</th></tr>
+<tr><td>EC</td><td>西 5、東 5，間距 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['ec_pitch_um']" data-fmt="{:g}">250</span> µm；扇出最小曲率半徑 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['fan_rmin_um']" data-fmt="{:g}">35.3</span> µm；輸入扇出等長（差 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['fan_in_spread_um']" data-fmt="{:g}">0</span> µm）</td></tr>
+<tr><td>PAD</td><td>北 10＋GN1–GN5、南 4＋GS1–GS2，共 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="len(d['pads'])" data-fmt="{:d}">21</span> 個，全在上下緣最外圍（外緣離晶片邊 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['pad_edge_um']" data-fmt="{:g}">60</span> µm，PAD 外側沒有金屬）；中心距 ≥ 150 µm；H01–H14 各接到規格的 P01–P14；每個 GND PAD 接 2 個 heater</td></tr>
+<tr><td>走線</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="len(d['routes'])" data-fmt="{:d}">28</span> 條，其中 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['n_jog']" data-fmt="{:d}">12</span> 條先橫移；Ti/AL 連通塊 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['al_components']" data-fmt="{:d}">21</span> 個，每塊恰含一個 PAD（14 條訊號網＋7 條地網）</td></tr>
+<tr><td>金屬間距</td><td>不同網之間最小 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['al_min_net_spacing_um']" data-fmt="{:.1f}">11.5</span> µm（從 GDS 讀回，含 PAD 與核心內的落墊）；到其他 heater 的 TiN 最小 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['al_min_to_other_tin_um']" data-fmt="{:.1f}">12.0</span> µm；沒有蓋到任何加熱條本體</td></tr>
+<tr><td>跨越波導</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['n_crossings']" data-fmt="{:d}">32</span> 次（部分在直段垂直穿越，部分斜穿 S 彎；M3 s2 審查項 V8b 的 3 µm 是水平距離判準，跨越的損耗另計）</td></tr>
+<tr><td>DRC</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['drc']['n_rules']" data-fmt="{:d}">30</span> 條規則，違規 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['drc']['total']" data-fmt="{:d}">0</span>；設計區＝晶片 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['die_um'][0]" data-fmt="{:g}">4280</span>×<span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['die_um'][1]" data-fmt="{:g}">1200</span> µm</td></tr>
+</table>
+<p><b>電流密度</b>（Ti/AL 厚 0.22 µm；訊號線、地線寬都是 10 µm；heater 電阻是假設值）：</p>
+<table>
+<tr><th>假設 heater 電阻</th><th>單條最大電流</th><th>走線</th><th>一個 GND PAD（函數設定）</th><th>一個 GND PAD（最壞）</th></tr>
+<tr><td>0.5 kΩ</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][0]['I_heater_max_mA']" data-fmt="{:.1f}">7.2</span> mA（<span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][0]['V_heater_max_V']" data-fmt="{:.1f}">3.6</span> V）</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][0]['J_line_mA_um2']" data-fmt="{:.2f}">3.28</span> mA/µm²</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][0]['I_gnd_pad_mA']" data-fmt="{:.1f}">12.9</span> mA</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][0]['I_gnd_pad_worst_mA']" data-fmt="{:.1f}">14.4</span> mA</td></tr>
+<tr><td>1 kΩ</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][1]['I_heater_max_mA']" data-fmt="{:.1f}">5.1</span> mA（<span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][1]['V_heater_max_V']" data-fmt="{:.1f}">5.1</span> V）</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][1]['J_line_mA_um2']" data-fmt="{:.2f}">2.32</span> mA/µm²</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][1]['I_gnd_pad_mA']" data-fmt="{:.1f}">9.1</span> mA</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][1]['I_gnd_pad_worst_mA']" data-fmt="{:.1f}">10.2</span> mA</td></tr>
+<tr><td>2 kΩ</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][2]['I_heater_max_mA']" data-fmt="{:.1f}">3.6</span> mA（<span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][2]['V_heater_max_V']" data-fmt="{:.1f}">7.2</span> V）</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][2]['J_line_mA_um2']" data-fmt="{:.2f}">1.64</span> mA/µm²</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][2]['I_gnd_pad_mA']" data-fmt="{:.1f}">6.4</span> mA</td><td><span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['current_density'][2]['I_gnd_pad_worst_mA']" data-fmt="{:.1f}">7.2</span> mA</td></tr>
+</table>
+<p>走線最壞約 1.6–3.3 mA/µm²，比保守的鋁導線長期可靠度設計值 1 mA/µm² 高（平台沒有公布 Ti/AL 的電流上限；鋁的設計值依溫度與膜厚約在 1–10 mA/µm² 之間，這裡取保守端）。這是每個 heater 都接近 2π 的最壞情況；實際函數設定下的總功率較低（M2 s1：134–181 mW）。實驗室短時間量測可以接受，但要列為限制：量到 heater 電阻後重算，必要時加寬走線。</p>
+<p><b>損耗估計</b>（不含 EC 與跨越）：每條軌從輸入 EC 到輸出 EC 的波導約 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="min(x['length_um'] for x in d['loss_estimate']) / 1e4" data-fmt="{:.2f}">0.40</span>–<span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="max(x['length_um'] for x in d['loss_estimate']) / 1e4" data-fmt="{:.2f}">0.42</span> cm，經過 4–8 顆 MMI。以平台條形波導 3–4 dB/cm 與每顆 MMI 0.33 dB 估，各軌約 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="min(x['total_db'][0] for x in d['loss_estimate'])" data-fmt="{:.1f}">2.6</span>–<span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="max(x['total_db'][1] for x in d['loss_estimate'])" data-fmt="{:.1f}">4.3</span> dB；第 2 軌經過的 MMI 最多，損耗最大。</p>
+<p><b>交給下一步與風險</b>：(1) 金屬跨越波導 32 次，每次的額外損耗沒有平台數據，是光路損耗的不確定項；(2) EC 是自建元件、端面需研磨，耦合損耗待量測；(3) 電流密度依賴未知的 TiN 片電阻；(4) PAD 到晶片邊的 60 µm 是假設值；最外側的 EC 離上下切割邊只有 <span class="num" data-json="design/m3_layout/s3_chip/out/chip_info.json" data-expr="d['ec_edge_min_um']" data-fmt="{:g}">80</span> µm，切割崩邊與光纖陣列組裝時要留意。</p>
+<p><b>實際遇到的情況</b>：</p>
+<ul>
+<li><b>輸入原本不等長</b>：第一版的輸入扇出外側與中央差 216 µm，會讓輸入之間的相位差隨溫度與波長漂移，不符合需求 O3 的目的；加上補長段後 5 路等長，晶片寬由 3680 增為 4280 µm。</li>
+<li><b>取消 GND 匯流排</b>：早期版本把 GND 匯流排放在 PAD 列外側，PAD 不在晶片最外圍，探針、打線都要越過 100 µm 寬的匯流排。改成 PAD 一排在最外緣、相鄰兩個 heater 共用一個 GND PAD；PAD 由 16 個增為 21 個；晶片上也沒有了共用的地線電阻。共用同一個 GND PAD 的兩個 heater，只經由 PAD、探針或打線的接觸電阻互相影響（以 1–2 Ω、5 mA 估約 5–10 mV，相對約 5 V 不到 0.2%），遠小於熱串擾。</li>
+<li><b>斜接的轉角留下凹口</b>：第一版走線轉角用斜接（mitre），斜線轉垂直的地方出現約 0.2 µm 的小凹口，DRC 報 2 處 GDS 41 間距違規。改成圓角後凹口消失。</li>
+<li><b>同一網的兩條地線太靠近</b>：早期版本 MZI-4 和 MZI-5 的兩條地線進到同一個 PAD 空隙，兩線之間只剩不到 10 µm，DRC 照樣判違規（它不知道兩條是同一網）。把同一網內小於 10 µm 的縫補起來後，DRC 歸零。</li>
+</ul>
+<p><b>參考文獻</b>：Ti/AL 厚度與平台層別：CORNERSTONE 公開 PDK：https://github.com/cornerstone-uos/cornerstone-pdk；MPW 設計規範（端面不處理）：https://cornerstone.sotonfab.co.uk/mpw/live-calls/</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>把 PAD 依編號排</b>：單層金屬下，PAD 必須依走線的左右順序排；依編號排一定會交叉。</li>
+<li><b>以為同一網的線靠近沒關係</b>：DRC 只看幾何，同一網的兩條線太近照樣違規，要合併或拉開。</li>
+<li><b>電流密度用假設值卻不說明</b>：heater 電阻未知時，要列出假設與範圍，並說明量測後如何修正。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：第 3 軌的 MZI-5 為什麼往北、第 4 軌的 MZI-2 為什麼往南？</summary>
+<p>往北要跨 r − 1 條波導，往南要跨 6 − r 條（含自己這一軌）。第 3 軌：北 2、南 3，往北；第 4 軌：北 3、南 2，往南。</p></details>
+<details class="quiz"><summary>自我檢查 2：為什麼 MZI-5 的端點要橫移，而 MZI-3 的不用？</summary>
+<p>MZI-5 在第 3 層、上方波導第 3 軌，同一欄的第 1 軌有 MZI-4，兩者 heater 的 x 相同；直走會蓋到 MZI-4 的 TiN 而短路。MZI-3 在第 2 層、第 2 軌，同一欄的第 1 軌只是直通波導，沒有 TiN，可以直走。</p></details>
+<details class="quiz"><summary>自我檢查 3：如果量到 heater 電阻是 0.3 kΩ，走線的電流密度會怎樣？</summary>
+<p>I＝√(26 mW／0.3 kΩ)≈9.3 mA，J＝9.3／(10×0.22)≈4.2 mA/µm²，更高。可以把走線加寬（例如 20 µm 減半），或限制同時驅動的功率。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>EC</td><td>尖端 0.25 µm（GDS 5）、定寬 30 µm；薄矽 taper 200 µm 到 1.0 µm；雙層轉換 30 µm（GDS 3 0.35 → 0.45 µm）；GDS 4 開窗半寬 10 µm</td></tr>
+<tr><td>扇出</td><td>餘弦 S 彎 400 µm；輸入側補長段 600 µm（兩個往上的餘弦凸起）；光纖陣列間距 250 µm</td></tr>
+<tr><td>金屬</td><td>Ti/AL 訊號線、地線寬 10 µm；共用 GND PAD 的兩條地線各離 PAD 中心 20 µm；最小間距 10 µm；轉角圓角；同網內小於 10 µm 的縫補起</td></tr>
+<tr><td>PAD</td><td>PDK HeaterPad 80×100 µm；中心距 ≥ 150 µm；PAD 外緣離晶片邊 60 µm（北側 PAD 400–500 µm、南側 −480 至 −580 µm）</td></tr>
+<tr><td>電流密度</td><td>Ti/AL 厚 0.22 µm；heater 每個最多 2P<sub>π</sub>＝26 mW；電阻假設 0.5、1、2 kΩ</td></tr>
+</table>
+<div class="auto-code" data-files="design/m3_layout/s3_chip/chip.py design/m3_layout/s3_chip/figs.py"></div>
+<div class="auto-history" data-file="design/m3_layout/s3_chip/HISTORY.md"></div>
+</section>

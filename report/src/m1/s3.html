@@ -1,0 +1,99 @@
+<section class="step" id="m1-s3" data-milestone="M1" data-step="s3" data-title="MZI 矩陣運算">
+<div class="bridge">
+<p><b>承接</b>：M1 s2 定下 B7 的接線（5 條波導、7 顆 MZI、4 層）與 14 個相位，並用最佳化找到能做出 16 種二輸入函數的相位。</p>
+<p><b>本步要回答</b>：給定 14 個相位，o2、o4 的光場如何算？為什麼說「每個輸出是各輸入的加權和」？判讀量 ΔP 又長什麼樣子？</p>
+<p><b>交給下一步</b>：計算鏈 v → y＝U v → P2、P4 → ΔP → 0／1；ΔP 的常數項、一次項、二次項各自的來源。下一步用它來檢查 AND、OR、XOR 的真值表。</p>
+<p class="terms"><b>名詞對照</b>：傳輸矩陣 U（transfer matrix，B7 的 5×5 光場關係）、權重 u<sub>ij</sub>（weight，輸入 j 到輸出 i 的複數係數）、路徑（path）、么正（unitary，無損耗時總功率不變）、二次式（quadratic form）</p>
+</div>
+
+<figure class="concept"><img src="figures/m1/s3_concept.png" alt="本步概念圖：矩陣乘法 y＝U v"><figcaption><b>本步概念</b>　5 個輸入組成向量 v，乘上由 14 個相位決定的 5×5 矩陣 U，得到 5 個輸出；判讀只看 y2、y4 的功率差。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能寫出 o2、o4 是哪五個加權項的和；能沿著接線圖找出一個權重 u<sub>ij</sub> 的所有路徑並算出它；能從 ΔP 的三種項說明 R 在 AND、OR、XOR 中扮演的角色。</p>
+<div class="example">
+<p>類比：把 B7 想成一個五支麥克風（x1～x4、R）、五個喇叭（o1～o5）的混音台。14 個相位就是混音台上的旋鈕。旋鈕一旦轉好，每個喇叭播出的就是「各支麥克風的聲音乘上各自的音量與延遲，再加起來」。音量與延遲合起來就是一個複數權重 u<sub>ij</sub>。我們只聽 o2 與 o4 兩個喇叭，比哪一個比較響。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 從一顆 MZI 到整顆 B7</h4>
+<p>第 k 顆 MZI 的 2×2 矩陣 T<sub>k</sub>＝T(θ<sub>k</sub>, φ<sub>k</sub>)（M1 s2）只作用在相鄰兩條波導上。把它放進 5×5 單位矩陣的對應位置，得到 T̂<sub>k</sub>，例如 MZI-1 作用在波導 1、2：</p>
+<math display="block"><mrow><msub><mover><mi>T</mi><mo>^</mo></mover><mn>1</mn></msub><mo>=</mo><mrow><mo>[</mo><mtable><mtr><mtd><msub><mi>T</mi><mn>1</mn></msub><mo>[</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo>]</mo></mtd><mtd><msub><mi>T</mi><mn>1</mn></msub><mo>[</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>]</mo></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><msub><mi>T</mi><mn>1</mn></msub><mo>[</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo>]</mo></mtd><mtd><msub><mi>T</mi><mn>1</mn></msub><mo>[</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo>]</mo></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd></mtr></mtable><mo>]</mo></mrow><mo>,</mo><mspace width="1em"/><mi>U</mi><mo>=</mo><msub><mover><mi>T</mi><mo>^</mo></mover><mn>7</mn></msub><msub><mover><mi>T</mi><mo>^</mo></mover><mn>6</mn></msub><mo>⋯</mo><msub><mover><mi>T</mi><mo>^</mo></mover><mn>1</mn></msub></mrow></math>
+<p>T<sub>k</sub>[p,q] 是第 k 顆 MZI 從輸入 q 到輸出 p 的係數（1＝上、2＝下）；右下角的 1 代表其他波導直接通過。U 是 B7 的 5×5 傳輸矩陣（無單位），乘法順序和光走的順序相反：最先經過的 T̂<sub>1</sub> 放在最右邊。同一層的兩顆 MZI 作用在不同波導上，相乘的先後不影響結果。</p>
+<h4>2. 每個輸出是各輸入的加權和</h4>
+<p>輸入光場 v＝[x1, x2, x3, x4, R]<sup>T</sup>（√P<sub>u</sub>），輸出光場 y＝U v。只看兩個讀取埠：</p>
+<math display="block"><mtable><mtr><mtd><msub><mi>y</mi><mn>2</mn></msub><mo>=</mo><msub><mi>u</mi><mn>21</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>u</mi><mn>22</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mo>+</mo><msub><mi>u</mi><mn>23</mn></msub><msub><mi>x</mi><mn>3</mn></msub><mo>+</mo><msub><mi>u</mi><mn>24</mn></msub><msub><mi>x</mi><mn>4</mn></msub><mo>+</mo><msub><mi>u</mi><mn>25</mn></msub><mi>R</mi></mtd></mtr><mtr><mtd><msub><mi>y</mi><mn>4</mn></msub><mo>=</mo><msub><mi>u</mi><mn>41</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>u</mi><mn>42</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mo>+</mo><msub><mi>u</mi><mn>43</mn></msub><msub><mi>x</mi><mn>3</mn></msub><mo>+</mo><msub><mi>u</mi><mn>44</mn></msub><msub><mi>x</mi><mn>4</mn></msub><mo>+</mo><msub><mi>u</mi><mn>45</mn></msub><mi>R</mi></mtd></mtr></mtable></math>
+<p>u<sub>ij</sub> 是 U 第 i 列第 j 行：輸入 j 對輸出 i 的複數權重（無單位）。功率 P2＝|y2|²、P4＝|y4|²（P<sub>u</sub>），ΔP＝P2 − P4。注意 R 的振幅是 3，所以 R 那一項乘的是 3，不是它的功率 9。</p>
+<h4>3. 沿路徑求權重</h4>
+<p>把矩陣乘開，u<sub>ij</sub> 有直觀的意義：從輸入 j 沿著接線往右走到輸出 i，每經過一顆 MZI 就選擇「留在原波導」或「換到相鄰波導」，乘上對應的 T<sub>k</sub>[p,q]；沒有 MZI 的地方乘 1。<b>u<sub>ij</sub> 等於所有這種路徑的乘積相加。</b>同一輸入到同一輸出有多條路徑時，要先把各路徑的複數相加，才是 u<sub>ij</sub>；這正是不同路徑的光在輸出端干涉。</p>
+<figure><img src="figures/m1/s3_paths.png" alt="三張 B7 接線圖，紅線分別標出 x4 到 o2 的一條路徑、x4 到 o4 的兩條路徑"><figcaption>圖 M1-10　沿路徑求權重（示範相位：7 顆都設 θ＝π/2、φ＝0）。上：x4 到 o2 只有一條路徑，經過 MZI-2、MZI-5、MZI-6。中、下：x4 到 o4 有兩條路徑，路徑 A 在 MZI-2、MZI-5、MZI-7 都留在原波導；路徑 B 在 MZI-2 換到 R 的波導，再由 MZI-7 換回來。u44 是兩條路徑相加。</figcaption></figure>
+<h4>4. 判讀量是二次式</h4>
+<p>把 y2、y4 代入 ΔP＝|y2|² − |y4|² 展開，每一項都是兩個輸入的乘積（或同一輸入的平方）。資料只有 0、1，x<sub>j</sub>²＝x<sub>j</sub>，可以併入一次項，整理成：</p>
+<math display="block"><mrow><mi>Δ</mi><mi>P</mi><mo>=</mo><msub><mi>a</mi><mn>0</mn></msub><mo>+</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mn>4</mn></munderover><msub><mi>b</mi><mi>j</mi></msub><msub><mi>x</mi><mi>j</mi></msub><mo>+</mo><munder><mo>∑</mo><mrow><mi>j</mi><mo>&lt;</mo><mi>k</mi></mrow></munder><msub><mi>c</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><msub><mi>x</mi><mi>j</mi></msub><msub><mi>x</mi><mi>k</mi></msub><mo>,</mo><mspace width="1em"/><msub><mi>a</mi><mn>0</mn></msub><mo>=</mo><mo>(</mo><msup><mrow><mo>|</mo><msub><mi>u</mi><mn>25</mn></msub><mo>|</mo></mrow><mn>2</mn></msup><mo>−</mo><msup><mrow><mo>|</mo><msub><mi>u</mi><mn>45</mn></msub><mo>|</mo></mrow><mn>2</mn></msup><mo>)</mo><msup><mi>R</mi><mn>2</mn></msup></mrow></math>
+<p>三種係數的單位都是 P<sub>u</sub>，j、k 是 1～4 的資料編號：</p>
+<ul>
+<li><b>常數 a<sub>0</sub></b>：只來自 R 自己（R²），輸入全為 0 時的 ΔP。M1 s1 說的「R 提供常數項」就是它。</li>
+<li><b>一次 b<sub>j</sub></b>：主要來自 R 與 x<sub>j</sub> 的干涉（∝ R），再加上 x<sub>j</sub> 自己的功率項。</li>
+<li><b>二次 c<sub>jk</sub></b>：來自兩路資料 x<sub>j</sub>、x<sub>k</sub> 的干涉，與 R 無關。M1 s1 只有資料光時，就只剩這一種。</li>
+</ul>
+<p>沒有比二次更高的項：這是「先線性混合光場、最後才取平方」的必然結果。所以 B7 能做的函數，都是「某個二次式的正負號」；需要三個以上輸入同時互相作用的函數（例如三輸入 XOR），單一 B7 做不到。AND4、OR4 雖有四個輸入，但只需把各輸入加權相加再與門檻比較，所以做得到（M1 s4）。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\m1_logic\s3_matrix\b7_algebra.py
+.\lab design\m1_logic\s3_matrix\figs.py</code></pre>
+<p><code>b7_algebra.py</code> 做四件事：(1) 用示範相位相乘出 U，並列舉全部路徑相加，比對兩種方法；(2) 算 1000、1100 兩組輸入的加權和、功率與逐層功率；(3) 求 ΔP 的二次式係數，並對全部 16 組四輸入核對；(4) 對 M1 s2 找到的 AND2、OR2、XOR2 相位做同樣的分解。預期輸出包含：</p>
+<pre><code>u24＝[0.25, 0.25]，1 條路徑
+u44＝[-0.25, -0.75]，2 條路徑
+1100：y2＝[1.25, 1.25]、y4＝[-0.75, 0.75]；P2＝3.125、P4＝1.125、ΔP＝2.0；總功率 11.0（輸入 11.0）</code></pre>
+<p>練習：先不要看程式，用圖 M1-10 和下表，手算 1000 的 y2（只剩 x1 和 R 兩項）與 P2，再對照 <code>algebra.json</code> 的 <code>hand[0]</code>。</p>
+
+<h3>④ 結果與驗收</h3>
+<p><b>兩種算法一致</b>：矩陣乘法得到的 U 與「列舉全部 <span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['total_paths']">39</span> 條路徑再相加」的結果，最大差 <span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['path_err']" data-fmt="{:.0e}">6e-17</span>；U 的么正誤差 <span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['unitary_err']" data-fmt="{:.0e}">1e-15</span>。示範相位下 u24＝<span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['demo_paths']['u24']['total'])">0.25+0.25i</span>，u44＝<span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['demo_paths']['u44']['total'])">−0.25−0.75i</span>（兩條路徑 <span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['demo_paths']['u44']['paths'][0]['weight'])">−0.25−0.25i</span> 與 <span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['demo_paths']['u44']['paths'][1]['weight'])">0.00−0.50i</span> 相加）。</p>
+<p><b>手算 1100</b>（示範相位，R＝3）：每一列是該輸入對 y2、y4 的貢獻 u<sub>ij</sub>·v<sub>j</sub>，直行相加就是光場。</p>
+<table>
+<tr><th>輸入</th><th>對 y2 的貢獻 u<sub>2j</sub>v<sub>j</sub></th><th>對 y4 的貢獻 u<sub>4j</sub>v<sub>j</sub></th></tr>
+<tr><td>x1＝1</td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['hand'][1]['terms_y2'][0])">0.25+0.25i</span></td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['hand'][1]['terms_y4'][0])">−0.25+0.00i</span></td></tr>
+<tr><td>x2＝1</td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['hand'][1]['terms_y2'][1])">0.25+0.25i</span></td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['hand'][1]['terms_y4'][1])">0.25+0.00i</span></td></tr>
+<tr><td>x3＝0</td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['hand'][1]['terms_y2'][2])">0.00+0.00i</span></td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['hand'][1]['terms_y4'][2])">0.00+0.00i</span></td></tr>
+<tr><td>x4＝0</td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['hand'][1]['terms_y2'][3])">0.00+0.00i</span></td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['hand'][1]['terms_y4'][3])">0.00+0.00i</span></td></tr>
+<tr><td>R＝3</td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['hand'][1]['terms_y2'][4])">0.75+0.75i</span></td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['hand'][1]['terms_y4'][4])">−0.75+0.75i</span></td></tr>
+<tr><td>光場（相加）</td><td>y2＝<span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['hand'][1]['y2'])">1.25+1.25i</span></td><td>y4＝<span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="'{:.2f}{:+.2f}i'.format(*d['hand'][1]['y4'])">−0.75+0.75i</span></td></tr>
+<tr><td>功率（取平方）</td><td>P2＝1.25²＋1.25²＝<span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['hand'][1]['P2']" data-fmt="{:.3f}">3.125</span></td><td>P4＝0.75²＋0.75²＝<span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['hand'][1]['P4']" data-fmt="{:.3f}">1.125</span></td></tr>
+</table>
+<p>ΔP＝P2 − P4＝<span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['hand'][1]['dP']" data-fmt="{:.3f}">2.000</span>＞0，判 1。這張表的各項和 y2 都來自同一個 U，相加相等只是內部一致性的檢查。真正的獨立核對是：不呼叫 MZI 函式，直接用示範相位下每顆 MZI 的字面係數 T＝(−1＋i)/2·[[1, 1], [1, −1]]（每一項都是 ±0.5±0.5i），沿著接線逐層更新五條波導的光場，算出的 y2、y4 與矩陣乘法的差為 <span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['hand_err']" data-fmt="{:.0e}">0e+00</span>（驗收要求 &lt; 1e-12）。輸入 1000 時 ΔP＝<span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['hand'][0]['dP']" data-fmt="{:.4f}">0.4375</span>。</p>
+<figure><img src="figures/m1/s3_layers.png" alt="1100 輸入時每一層之後五條波導的功率熱圖，每欄總和都是 11"><figcaption>圖 M1-11　輸入 1100 時，每一層之後各波導的功率。光在波導之間重新分配，但每一欄的總和都是 1＋1＋9＝11 P<sub>u</sub>：理想 MZI 沒有損耗，U 是么正矩陣。檢查總功率時要加全部五個輸出，不能只加 P2、P4。</figcaption></figure>
+<p><b>三種函數的 ΔP 分解</b>（M1 s2 找到的相位，x3＝x4＝0）：</p>
+<figure><img src="figures/m1/s3_quadratic.png" alt="AND2、OR2、XOR2 四組輸入的 ΔP 分解成常數、一次、二次三種長條"><figcaption>圖 M1-12　ΔP 的組成：橘色是 R 提供的常數 a<sub>0</sub>，藍色是一次項（含 x<sub>j</sub> 自己的功率），紅色是 x1·x2 的二次項，黑色菱形是合計。AND2 與 OR2 幾乎只靠「常數＋一次」：常數像門檻，一次項像把 x1、x2 加起來，AND2 的門檻較深（要兩個都是 1 才超過），OR2 的門檻較淺。XOR2 必須靠負的二次項把 11 拉回負值。</figcaption></figure>
+<table>
+<tr><th>函數</th><th>常數 a<sub>0</sub></th><th>b<sub>1</sub>、b<sub>2</sub></th><th>c<sub>12</sub></th><th>直觀解讀</th></tr>
+<tr><td>AND2</td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['quad']['AND2']['a0']" data-fmt="{:.2f}">−5.71</span></td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['quad']['AND2']['b'][0]" data-fmt="{:.2f}">3.60</span></td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['quad']['AND2']['c']['12']" data-fmt="{:.2f}">0.63</span></td><td>x1＋x2 要超過約 1.6 才判 1</td></tr>
+<tr><td>OR2</td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['quad']['OR2']['a0']" data-fmt="{:.2f}">−2.12</span></td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['quad']['OR2']['b'][0]" data-fmt="{:.2f}">4.24</span></td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['quad']['OR2']['c']['12']" data-fmt="{:.2f}">0.24</span></td><td>x1＋x2 超過 0.5 就判 1</td></tr>
+<tr><td>XOR2</td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['quad']['XOR2']['a0']" data-fmt="{:.2f}">−0.49</span></td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['quad']['XOR2']['b'][0]" data-fmt="{:.2f}">0.97</span></td><td><span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['quad']['XOR2']['c']['12']" data-fmt="{:.2f}">−1.95</span></td><td>一個 1 為正；兩個 1 時二次項抵消一次項</td></tr>
+</table>
+<p>二次式與直接計算的 ΔP，在全部 16 組四輸入上的最大差：AND2 <span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['quad']['AND2']['poly_err']" data-fmt="{:.0e}">4e-15</span>、XOR2 <span class="num" data-json="design/m1_logic/s3_matrix/out/algebra.json" data-expr="d['quad']['XOR2']['poly_err']" data-fmt="{:.0e}">3e-16</span>。</p>
+<p><b>實際遇到的情況</b>：第一次執行時，路徑 B 的權重印成 [−0.0, −0.5]，放進表格會顯示「−0.00−0.50i」。原因是浮點運算留下 −1e-17 這種極小的負數，四捨五入後保留了負號。修正為存檔時把 −0.0 轉成 0.0，表格才和手算一致。</p>
+<p><b>本步結論</b>：B7 的輸出是各輸入的複數加權和，權重由 14 個相位決定；判讀量 ΔP 是二次式。R 提供常數項（像門檻），R 與資料的干涉提供一次項（像加權相加），資料之間的干涉提供二次項（XOR 需要它）。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>先加功率再平方，或先平方再加</b>：一定要先把各項的複數光場相加，最後才取絕對值平方。</li>
+<li><b>R 那一項乘 9</b>：v 放的是光場振幅，R＝3；9 是 R 的功率。</li>
+<li><b>矩陣相乘順序寫反</b>：U＝T̂<sub>7</sub>⋯T̂<sub>1</sub>，最先經過的放最右邊；寫反會得到另一個電路的 U。</li>
+<li><b>以為路徑上的係數是功率比例</b>：T<sub>k</sub>[p,q] 是光場係數（例如 −0.5＋0.5i），它的絕對值平方才是功率比例。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：y2＝1＋i，P2 是 2 還是 √2？</summary>
+<p>P2＝|1＋i|²＝1²＋1²＝2。√2 是光場的大小（箭頭長度），不是功率。</p></details>
+<details class="quiz"><summary>自我檢查 2：只有 x4＝1、其他都是 0（R 也關掉），用示範相位時 P4 是多少？</summary>
+<p>y4＝u44＝−0.25−0.75i，P4＝0.25²＋0.75²＝0.625。如果只看路徑 A 或只看路徑 B，會得到 0.125 或 0.25，兩者都不對：兩條路徑的光在 o4 干涉，要先相加。</p></details>
+<details class="quiz"><summary>自我檢查 3：為什麼 AND2 的常數 a<sub>0</sub> 是負的，OR2 也是負的，但大小不同？</summary>
+<p>兩者在 00 都要判 0，所以常數項（00 時的 ΔP）都要是負的。OR2 只要一個輸入是 1 就要變正，負值較小即可；AND2 要兩個都是 1 才變正，常數要夠深，讓一個 1 的時候仍是負的。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>模型</td><td>理想 MZI、無損耗、相干輸入、R＝3；示範相位全部 θ＝π/2、φ＝0；函數分解用 M1 s2 最佳化得到的相位</td></tr>
+<tr><td>核對</td><td>路徑相加 vs 矩陣乘法（25 個元素）；二次式 vs 直接計算（16 組四輸入）；逐層總功率守恆</td></tr>
+<tr><td>環境</td><td>同 M0 s1；只用 numpy 與 matplotlib；執行數秒</td></tr>
+</table>
+<div class="auto-code" data-files="design/m1_logic/s3_matrix/b7_algebra.py design/m1_logic/s3_matrix/figs.py design/common/draw.py"></div>
+<div class="auto-history" data-file="design/m1_logic/s3_matrix/HISTORY.md"></div>
+</section>

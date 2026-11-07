@@ -1,0 +1,48 @@
+{
+  "mode": "本次實跑：EDA_Server 批次執行 strmin、strmout（200／8191）、Calibre 四份 GDS",
+  "origin": "2026-11-07 10:58 非預期觸發（子代理修改 commercial.py 失敗時照原流程執行 out/run.sh）；使用者 2026-11-07 同意記錄並採用",
+  "tools": {
+    "virtuoso": "IC231 ISR15（strmin／strmout）",
+    "calibre": "aok_cal_2026.1_17.11",
+    "host": "WSL EDA_Server"
+  },
+  "inputs": {
+    "chip_gds": "delivery/layout/chip.gds",
+    "chip_sha256": "a3f27b4d47f17e2f48406e8d324edfb11cc70914ca98a2c41d494a0ef274fd2c",
+    "fault_gds": "design/m3_layout/s4_verify/out/chip_fault_drc.gds",
+    "fault_sha256": "c20aab740de40241316f256053efcab4eb8a873595242d53e3875600238dc4b1"
+  },
+  "outputs_sha256": {
+    "calibre_chip.log": "eefe953937ad3e205b7f0cbb4ff17483530693d8ba9bec239474a4fffe87b338",
+    "calibre_chip.results": "dc06a32ef63f598f3638503316958c0d9dd3783a2862ebecd40b518fff204594",
+    "calibre_chip.summary": "5ef2ffe6dee5e2cc7dad1999b8cf35e014587c140b7d4947ecf5218dcda8ab4d",
+    "calibre_fault.log": "594f05d984be250d78b9aff37e128569192a7be9cc7fd0861e0a6737cb1a13c4",
+    "calibre_fault.results": "8a4fffc90e9dcebe153693a5a0db2726fefd4aa461c8ce503c037d29363f1de7",
+    "calibre_fault.summary": "3abef3cf2e43b2cdf8dfebf8cfa28028a524ac9c877c05af6f0805c02795563a",
+    "calibre_strmout_200.log": "18569864ffb808c9f312ae6acd4cb5bf2ac1b1d7dcc6aecc683f5ab9c2e7b19b",
+    "calibre_strmout_200.results": "45e5b58485e553d36af34dd381f47f2d7cbe7b8e9a86549d5a37c72fb12f27ad",
+    "calibre_strmout_200.summary": "c328a4065a3e13249b891c60d9f0bf63e1ec0e586965ea81b26e9248dbdff4ed",
+    "calibre_strmout_8191.log": "97d608d18cd1fc6a00bc5c24b635030fa31a24c9af738ed940ecc7fedf56d442",
+    "calibre_strmout_8191.results": "65f35384c8f89dc3d7fb73bfd17635e4af03c2a31a42aca99d38ae9fb53d5b85",
+    "calibre_strmout_8191.summary": "8f82c4210a47cde34d3118aec079e3168d9a0be62e1f7fa93cbde9ce3d1d888d",
+    "cds.lib": "6b0ef300e4b2ebaf98b5a194a677c1d1e12b9b5dd2d2c2db4c17179159bfd1df",
+    "cornerstone_basic_draft_chip.svrf": "8dc18fa66b0f597c4889f1b3a88206952b359c32a9c28fee67c2909ff0eb164d",
+    "cornerstone_basic_draft_fault.svrf": "b6f1a81bd469ca648a71adaceef278f3041a388bc31aef46a098fdf54044bd5f",
+    "cornerstone_basic_draft_strmout_200.svrf": "89e004219c2d7d2fe4ee51691897bbc57e77fc9d7ed11f769640edc9cf28864c",
+    "cornerstone_basic_draft_strmout_8191.svrf": "e0ee2c7db0f02b341457c8d4e8069203108305e3569b5243a8c97bbbeb6003e0",
+    "raw_vs_clean.lydrc": "a4be1a13a5f6ba723eb85e1badb5fe375b370af06cb0e6e6758e813a73e5993c",
+    "raw_vs_clean_chip.lyrdb": "9c77766b9ea397675966427af6993795d0530bd6bf570073a5f8cada081c4ce1",
+    "raw_vs_clean_strmout_200.lyrdb": "314918237e9af52ebdd082e5b0b64450cad3923b6a7369131d83bbc424479393",
+    "run.sh": "2f320ec99ebd62938aff66b1ffe25cfc33801bcffed86676b1cf984f73fb6dc5",
+    "strmin.log": "b31180e46e316cc3531375706d721aa6e722c413a51b1845ea0b9009c86e7e7f",
+    "strmout_200.gds": "69850b7b48a1f53bc0c1134810eaec3983447fd8f585e5b13c7c67782588b940",
+    "strmout_200.log": "449c65dd31b991d5945d06a76682597e4bb08998e75113a39075fa87bf54afb1",
+    "strmout_200_drc.lyrdb": "0a3797569c4849aaa86756bfc69e3c50c986100567bac414246e8b9e21662444",
+    "strmout_8191.gds": "42660cae6dbd814b0f5336c88ae3cf24e4182a1626df2ec4a04809ccb4ed2746",
+    "strmout_8191.log": "4334faca5416c522b1e13f997b88d35ed4233eda57f421f5feea69ad1aa28eea",
+    "strmout_8191_drc.lyrdb": "c9f773786473a3c21581fa5b4a5e570d1d586038402b69f5c3aef2fcd89d41b5",
+    "xStrmOut_layerMap.txt": "35aa6f9d3d5c2afc499f93352835cf6d212b1ac123bb51f4fb346306c87f527b"
+  },
+  "reference_evidence": "out/reference_evidence/ 保留參考專案的 2026-10-31 紀錄（同結果：Calibre 0／2／0／0、KLayout 33／0）",
+  "not_covered": "同時段另一次 virtuoso_view 觸發的 GUI 程序未確認，未採用；圖 M3-15 Virtuoso 截圖仍為既有證據"
+}

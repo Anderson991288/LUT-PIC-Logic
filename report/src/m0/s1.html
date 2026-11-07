@@ -1,0 +1,88 @@
+<section class="step" id="m0-s1" data-milestone="M0" data-step="s1" data-title="環境確認">
+<div class="bridge">
+<p><b>承接</b>：這是第一步，還沒有任何設計資料。</p>
+<p><b>本步要回答</b>：這台電腦能不能跑完整條流程：電路模擬（IPKISS）、製程元件庫（CORNERSTONE PDK）、佈局檢視與設計規則檢查（KLayout DRC）？</p>
+<p><b>交給下一步</b>：一份環境紀錄 <code>env.json</code>（各工具版本與檢查結果），以及「PDK 的 2×2 MMI 電路模型在 1.55 µm 等於理想 50:50 耦合器」這個之後會反覆用到的事實。</p>
+<p class="terms"><b>名詞對照</b>：PIC（photonic integrated circuit，光子積體電路）、波導（waveguide，晶片上導光的細長矽線）、佈局（layout，晶片各層的幾何圖形）、波長（本課程的光波長為 1550 nm，即 1.55 µm）、2×2（兩個輸入、兩個輸出）、PDK（process design kit，製程設計套件）、平台（本課程指 CORNERSTONE 的製程與其規則）、SOI220（220 nm 厚矽層的絕緣層上矽平台；「變體」指同一 PDK 的不同平台設定）、TE（transverse electric，本課程使用的光波偏振模態）、MMI（multimode interference coupler，多模干涉耦合器）、電路模型（compact model，以 S 矩陣描述元件的模型）、S 矩陣（scattering matrix，散射矩陣）、GDS（GDSII 佈局檔格式；「GDS 3」這類編號是圖層，GDS 3 是矽波導）、DRC（design rule check，設計規則檢查）、deck（DRC 規則檔）、BLAS（basic linear algebra subprograms，線性代數函式庫；本機用的是 MKL，另一種常見的是 OpenBLAS）、授權（license，IPKISS 的使用許可，第一次載入時取得）</p>
+</div>
+
+<figure class="concept"><img src="figures/m0/s1_concept.png" alt="本步概念圖：這台電腦的工具與 PDK 是否可用"><figcaption><b>本步概念</b>　先確認基本工具，再用一顆 MMI 把「電路模型 → 佈局 → GDS → DRC」整條流程走一遍；任何一環失敗就停在這一步。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：在動手設計前，先確認每一個會用到的工具都能運作，並且知道它們各自負責流程中的哪一段。</p>
+<div class="example">
+<p>類比：做菜前先檢查瓦斯、鍋子、食材。整條 PIC 設計流程有四件「廚具」：</p>
+<ul>
+<li><b>Python 與數值套件</b>：算矩陣、畫圖。</li>
+<li><b>IPKISS</b>：描述電路、算 S 矩陣、畫佈局。</li>
+<li><b>CORNERSTONE PDK</b>：晶圓廠提供的現成元件（波導、MMI 等）與它們的模型。PDK 就像「標準零件型錄」，型錄中的元件已經過製程驗證，設計時優先使用。</li>
+<li><b>KLayout</b>：開啟佈局檔（GDS）、執行晶圓廠的設計規則檢查（DRC）。DRC 回答「這張佈局能不能被製造」。</li>
+</ul>
+<p>只檢查「能 import」不夠：本步拿 PDK 的 2×2 MMI 完整執行「電路模型 → 佈局 → GDS → DRC」，等於用最小的元件驗證整條流程。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<p>光在波導中用<b>光場</b> E 描述。光場有大小也有相位（phase，光波振盪的先後位置，以角度或弧度表示），所以用複數表示：絕對值是大小，輻角是相位；偵測器量到的<b>功率</b>是光場絕對值的平方，P＝|E|²。</p>
+<p>MMI 是本課程光路中最基本的元件：它有兩個輸入、兩個輸出，把兩路光混合後再分配到兩個輸出（後面的里程碑會用它組出可調的邏輯單元）。理想的 50:50 耦合器把每一路輸入的功率各分一半到兩個輸出，交叉路徑（從一側輸入到另一側輸出）多 90° 相位：</p>
+<math display="block"><mrow><mi>H</mi><mo>=</mo><mfrac><mn>1</mn><msqrt><mn>2</mn></msqrt></mfrac><mrow><mo>[</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mi>i</mi></mtd></mtr><mtr><mtd><mi>i</mi></mtd><mtd><mn>1</mn></mtd></mtr></mtable><mo>]</mo></mrow></mrow></math>
+<p>其中 H 是 2×2 傳輸矩陣，第 1 列、第 1 行對應上方埠（PDK 埠名 in2／out2），第 2 列、第 2 行對應下方埠（in1／out1）；i 是虛數單位，代表 90° 相位；1/√2 讓每個輸出的功率是輸入的一半（|1/√2|²＝0.5）。矩陣元素 H<sub>pq</sub> 是「從輸入 q 到輸出 p」的光場係數，無單位。</p>
+<p>電路模擬工具回傳的是 S 矩陣：S[輸出埠, 輸入埠] 為該路徑的複數光場係數。只要把 S 依上述埠序排成 2×2，就能和 H 逐項比較：</p>
+<math display="block"><mrow><mi>e</mi><mo>=</mo><munder><mo>max</mo><mrow><mi>p</mi><mo>,</mo><mi>q</mi></mrow></munder><mo>|</mo><msub><mi>S</mi><mrow><mi>p</mi><mi>q</mi></mrow></msub><mo>−</mo><msub><mi>H</mi><mrow><mi>p</mi><mi>q</mi></mrow></msub><mo>|</mo></mrow></math>
+<p>e 是最大逐項誤差（無單位）；p、q 走遍兩個輸出與兩個輸入。e 接近浮點捨入（約 10⁻¹⁶）表示在該波長下，PDK 的 MMI 電路模型就是理想的 H。</p>
+<p><b>只比 e 還不夠確認上下埠</b>：H 的兩個對角元素相等、兩個非對角元素也相等，所以輸入和輸出<b>同時</b>上下對調後，矩陣不變，e 仍是 0。所以另外直接比對佈局中各埠的 y 座標，確認 in2、out2 確實在上方。</p>
+
+<h3>③ 動手做</h3>
+<p>本機沒有另外安裝的系統 Python，課程所有程式都用 IPKISS 環境附帶的 Python 執行。專案根目錄的 <code>lab.cmd</code> 會找到這個 Python 並代為執行，所以指令一律寫成 <code>.\lab 程式路徑</code>（在 PowerShell 或命令提示字元中；程式路徑以專案根目錄為準）。若 IPKISS 裝在別的位置，先把環境變數 <code>LAB_PYTHON</code> 設成該環境裡 python.exe 的完整位置。</p>
+<p>在專案根目錄執行：</p>
+<pre><code>.\lab design\m0_env\s1_check\check_env.py</code></pre>
+<p>程式依序做 13 項檢查，每項印一行「[通過]／[失敗] 名稱：實際值（預期值）」。任何一項出錯都會記為失敗並繼續檢查下一項，最後一定寫出 <code>out/env.json</code>。預期輸出的最後一行（秒數每次不同）：</p>
+<pre><code>13/13 項通過，寫出 design/m0_env/s1_check/out/env.json（xx s）</code></pre>
+<p>有任何一項失敗就先停下來修好環境，不要往下做；佈局或 DRC 才發現工具壞掉，代價會大很多。</p>
+
+<h3>④ 結果與驗收</h3>
+<table>
+<tr><th>檢查項</th><th>結果</th></tr>
+<tr><td>通過項數</td><td><span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="f&quot;{d['passed']}／{d['total']}&quot;">13／13</span></td></tr>
+<tr><td>BLAS 單執行緒</td><td>大矩陣相乘時，程序的 CPU 時間／經過時間＝<span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="[c['value'] for c in d['checks'] if c['name'] == 'BLAS 單執行緒'][0].split('＝')[1]">0.91</span>（多執行緒時會是數倍）</td></tr>
+<tr><td>IPKISS</td><td><span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['versions']['ipkiss']">2026.03.3</span></td></tr>
+<tr><td>CORNERSTONE PDK</td><td><span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['versions']['cornerstone']">2.6.luceda1</span>，SOI220 變體；1550 nm TE 元件 <span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['pdk_cells']">12</span> 種</td></tr>
+<tr><td>MMI 對理想 H 的誤差 e</td><td>1.55 µm：<span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['mmi']['err_by_wavelength']['1.55']" data-fmt="{:.1e}">1.1e-16</span>（預期 &lt; 1e-9）；1.50 µm：<span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['mmi']['err_by_wavelength']['1.50']" data-fmt="{:.1e}">1.1e-16</span>；1.60 µm：<span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['mmi']['err_by_wavelength']['1.60']" data-fmt="{:.1e}">1.1e-16</span></td></tr>
+<tr><td>MMI 功率與反射</td><td>四條路徑的功率比例 <span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="'、'.join(f'{v:g}' for row in d['mmi']['power'] for v in row)">0.5、0.5、0.5、0.5</span>；反射 <span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['mmi']['reflection']" data-fmt="{:g}">0</span></td></tr>
+<tr><td>MMI 佈局</td><td>外框 <span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="'×'.join(f'{v:g}' for v in d['mmi']['size_um'])">82.5×6</span> µm；輸入埠在 x＝<span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['mmi']['ports_um']['in1'][0]" data-fmt="{:g}">−20</span> µm、輸出埠在 x＝<span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['mmi']['ports_um']['out1'][0]" data-fmt="{:g}">62.5</span> µm；in2 的 y＝<span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['mmi']['ports_um']['in2'][1]" data-fmt="{:g}">1.015</span> µm 在上、in1 的 y＝<span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['mmi']['ports_um']['in1'][1]" data-fmt="{:g}">−1.015</span> µm 在下</td></tr>
+<tr><td>KLayout DRC</td><td><span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['versions']['klayout']">KLayout 0.30.12</span>；CORNERSTONE deck <span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['drc']['rules']">24</span> 條規則全部跑完（規則數是 DRC 報告列出的檢查類別數，隨佈局含有的圖層改變，所以後面步驟的數字不同），單顆 MMI 違規 <span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['drc']['total']">0</span></td></tr>
+</table>
+<figure><img src="figures/m0/s1_mmi_layout.png" alt="CORNERSTONE SOI220 2×2 MMI 的佈局俯視圖"><figcaption>圖 M0-1　PDK 的 2×2 MMI 佈局（GDS 3：矽波導）。左側兩個錐形是輸入 in1（下）、in2（上），右側是輸出 out1、out2；中間寬 6 µm 的矩形是多模區，光在這裡干涉後平均分到兩個輸出。</figcaption></figure>
+<p><b>實際遇到的情況</b>：</p>
+<ul>
+<li>第一次輸入 <code>python design/m0_env/s1_check/check_env.py</code>，Windows 回應「Python was not found; run without arguments to install from the Microsoft Store」。原因是本機沒有系統 Python，<code>python</code> 這個指令只是 Windows 指向微軟商店的捷徑；不要照提示去商店安裝，那會裝出一個沒有 IPKISS 的 Python。解法是用 <code>.\lab</code>（見 ③）。<code>lab.cmd</code> 只能用英文字元寫：cmd 依主控台字碼頁解讀檔案，中文說明會變亂碼並被當成指令執行。</li>
+<li>載入 PDK 時，即使已先選定 SOI220 變體，主控台仍印出「Please import a specific technology variant」警告。檢查後確認變體已生效（MMI 模型與佈局都正確），所以這行警告可以忽略。之後每支程式都要在 import PDK <b>之前</b>先選定變體。</li>
+<li>單顆 MMI 沒有晶片外框（GDS 99 圖層），DRC 的設計區用的是 deck 內建的預設值，所以這裡的「0 違規」只代表 deck 能執行，不代表晶片能製造。真正的 DRC 驗收在 M3 s4。</li>
+<li>第一版的環境檢查有幾項實際上不會判定失敗（例如結果直接寫成通過，或 import 失敗時整支程式中斷、不寫紀錄）。後來改成每一項都確實判定，出錯時記為失敗並繼續；BLAS 也改成實際量測，而不是只看自己設定的環境變數。</li>
+</ul>
+<p><b>得到的重要事實與適用範圍</b>：PDK 的 MMI <b>電路模型</b>在 1.50、1.55、1.60 µm 都等於理想 H，代表這個模型本身不含波長相依性；它描述的是設計值，不是製作出來的實際元件。因此 M1 用理想 H 推導的結果，到 M2 換成 PDK 的 MMI 模型時，<b>MMI 這一部分</b>應該完全一致；如果不一致，問題出在接線或埠序，不在 MMI。波導段的相位、損耗與實際元件的偏差，不在這次驗證的範圍內。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>直接輸入 <code>python</code></b>：會跑到 Windows 的商店捷徑，或另一個沒有 IPKISS 的 Python（出現「No module named ipkiss3」）。一律用 <code>.\lab</code>。</li>
+<li><b>埠序接反</b>：PDK 的 in2／out2 是上方埠、in1／out1 是下方埠，和直覺的「1 在上」相反。只把輸入或只把輸出接反時，H 的對角與非對角會互換，e 會變成約 1；但輸入與輸出<b>一起</b>接反時，因為 H 對稱，e 仍是 0，比對矩陣檢查不出，要靠埠的座標確認。</li>
+<li><b>先 import 套件才設執行緒</b>：BLAS 執行緒數必須在 import numpy 之前設定，否則設定無效；本機 BLAS 是 MKL，只設 OpenBLAS 的變數沒有用。</li>
+<li><b>把單顆元件的 DRC 0 當成晶片通過</b>：見上方說明。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：一路功率 1 mW 的光從 in2 進入理想 MMI，兩個輸出各得多少功率？相位差多少？</summary>
+<p>輸入光場大小是 √(1 mW)。out2 的光場是 (1/√2)·√(1 mW)，out1 是 (i/√2)·√(1 mW)，功率各 0.5 mW；交叉路徑多 90°（π/2）相位。</p></details>
+<details class="quiz"><summary>自我檢查 2：兩路光同時從 in1、in2 進入，振幅都是 1、相位相同，輸出功率會一樣嗎？</summary>
+<p>一樣。out2＝(1＋i)/√2，out1＝(i＋1)/√2，兩者的絕對值平方都是 1。要讓光集中到某一個輸出，兩路輸入之間需要 ±90° 的相位差；這正是下一個里程碑用相位控制「混合方式」的原理。</p></details>
+<details class="quiz"><summary>自我檢查 3：為什麼先用一顆 MMI 跑完「模型 → 佈局 → GDS → DRC」，而不是直接畫一整個完整的電路？</summary>
+<p>最小的例子失敗時，原因只可能在工具或環境；整顆電路失敗時，原因可能在設計、接線、工具中的任何一處，很難定位。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>環境</td><td>Python <span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['versions']['python']">3.14.3</span>、numpy <span class="num" data-json="design/m0_env/s1_check/out/env.json" data-expr="d['versions']['numpy']">2.3.5</span>；IPKISS 與 PDK 版本見上表；BLAS 單執行緒</td></tr>
+<tr><td>波長</td><td>判定用 1.55 µm；另記錄 1.50、1.60 µm</td></tr>
+<tr><td>PDK 元件</td><td>SOI220nm_1550nm_TE_STRIP_2x2_MMI</td></tr>
+<tr><td>執行時間</td><td>第一次約 73 秒（載入 IPKISS 授權、PDK 與 KLayout），之後約 6 秒；每次執行不同，所以不放進驗收數字</td></tr>
+</table>
+<div class="auto-code" data-files="design/m0_env/s1_check/check_env.py design/paths.py"></div>
+<div class="auto-history" data-file="design/m0_env/s1_check/HISTORY.md"></div>
+</section>

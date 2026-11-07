@@ -1,0 +1,79 @@
+<section class="step" id="p-m4-s1" data-milestone="M4" data-step="s1" data-title="二次式判讀">
+<div class="bridge">
+<p><b>承接</b>：M3 用草稿的設定重現了表 I 的 margin 與表 III 的詳細模擬欄；詳細模擬只能抽樣延遲盒中的有限個點，抽到的點都安全，不代表盒內每一點都安全。</p>
+<p><b>本步要回答</b>：要證明「整個盒都安全」，需要一個能對延遲做精確推導的判讀量公式。偵測功率差 D 是輸入包絡的精確二次式嗎（草稿式 6）？線性項與二次項各扮演什麼角色？</p>
+<p><b>交給下一步</b>：<code>quad.json</code>（9 個函數的 d<sub>0</sub>、<b>l</b>、<b>Q</b> 與核對誤差）與 <code>quad.py</code> 的 <code>coeffs()</code>（由相位算出這三組係數的函式）。M4 s2 從這個二次式出發，對一個小延遲盒寫出判讀量的保守下界。</p>
+<p class="terms"><b>名詞對照</b>：輸入包絡＝各路資料開關造成的場振幅變化，範圍 0 到 1；二次式判讀（quadratic decision function）＝D 寫成 d<sub>0</sub>＋<b>l</b><sup>T</sup><b>x</b>＋<b>x</b><sup>T</sup><b>Q</b><b>x</b>，常數、一次、二次三項；線性可分（linearly separable）＝16 組字可以用一個平面分成判 1 與判 0 兩邊，也就是只用常數加一次項就能做出這個函數。</p>
+</div>
+
+<figure class="concept"><img src="figures/paper/m4/s1_concept.png" alt="本步概念圖：輸入包絡經線性的 B7 與取平方的偵測器，得到 D＝d0＋lᵀx＋xᵀQx"><figcaption><b>本步概念</b>　光場是線性的、偵測器取平方，所以 D 恰好是二次式；證明可以從它出發。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p>兩支手電筒照在同一面牆上，亮度不是兩支各自的亮度相加，而是先把光波相加再取平方，所以多了一個「交叉項」：兩道光同相時更亮，反相時互相抵消。B7 的偵測器也是這樣：參考光與資料光、資料光與資料光之間都有交叉項。把這些項全部寫出來，D 就是輸入包絡的二次多項式，不是近似，而是恆等式。有了恆等式，延遲造成的變化就能精確推導，不必靠抽樣。</p>
+<p>學習目標：(1) 從線性傳遞矩陣與平方偵測推出 d<sub>0</sub>、<b>l</b>、<b>Q</b>；(2) 用三種輸入核對二次式與逐點模擬一致；(3) 說明為什麼證明必須保留二次項。</p>
+
+<h3>② 原理與推導</h3>
+<h4>1. 從場到功率差</h4>
+<p>輸入向量 <b>v</b>＝[x<sub>1</sub>, x<sub>2</sub>, x<sub>3</sub>, x<sub>4</sub>, R]，x<sub>i</sub> 是第 i 路的場包絡（0 到 1，轉態時取中間值），R＝3 是參考光。B7 的傳遞矩陣 U 第 2、4 列記為 <b>u</b><sub>2</sub>、<b>u</b><sub>4</sub>，判讀量是兩個讀取埠的功率差：</p>
+<math display="block"><mi>D</mi><mo>=</mo><msup><mrow><mo>|</mo><msub><mi mathvariant="bold">u</mi><mn>2</mn></msub><mi mathvariant="bold">v</mi><mo>|</mo></mrow><mn>2</mn></msup><mo>−</mo><msup><mrow><mo>|</mo><msub><mi mathvariant="bold">u</mi><mn>4</mn></msub><mi mathvariant="bold">v</mi><mo>|</mo></mrow><mn>2</mn></msup><mo>=</mo><msup><mi mathvariant="bold">v</mi><mi>T</mi></msup><mi>Re</mi><mo>(</mo><mi>M</mi><mo>)</mo><mi mathvariant="bold">v</mi><mo>,</mo><mspace width="1em"/><mi>M</mi><mo>=</mo><msubsup><mi mathvariant="bold">u</mi><mn>2</mn><mi>H</mi></msubsup><msub><mi mathvariant="bold">u</mi><mn>2</mn></msub><mo>−</mo><msubsup><mi mathvariant="bold">u</mi><mn>4</mn><mi>H</mi></msubsup><msub><mi mathvariant="bold">u</mi><mn>4</mn></msub></math>
+<p>D 的單位是 P<sub>u</sub>；H 是共軛轉置。<b>v</b> 是實數，是因為兩個前提：各路輸入的光學相位已校準（M1 的靜態校正之後，輸入相位差併進 U），而且 x<sub>i</sub> 是功率調變的實數場包絡（啁啾 chirp、相位雜訊不在本模型內）。在這兩個前提下虛部互相抵消，只剩 Re(M)。把 <b>v</b> 拆回資料 <b>x</b> 與參考光 R：</p>
+<math display="block"><mi>D</mi><mo>(</mo><mi mathvariant="bold">x</mi><mo>)</mo><mo>=</mo><msub><mi>d</mi><mn>0</mn></msub><mo>+</mo><msup><mi mathvariant="bold">l</mi><mi>T</mi></msup><mi mathvariant="bold">x</mi><mo>+</mo><msup><mi mathvariant="bold">x</mi><mi>T</mi></msup><mi mathvariant="bold">Q</mi><mi mathvariant="bold">x</mi><mo>,</mo><mspace width="1em"/><msub><mi>d</mi><mn>0</mn></msub><mo>=</mo><msup><mi>R</mi><mn>2</mn></msup><mi>Re</mi><msub><mi>M</mi><mn>55</mn></msub><mo>,</mo><mspace width="0.5em"/><msub><mi>l</mi><mi>i</mi></msub><mo>=</mo><mn>2</mn><mi>R</mi><mspace width="0.2em"/><mi>Re</mi><msub><mi>M</mi><mrow><mi>i</mi><mn>5</mn></mrow></msub><mo>,</mo><mspace width="0.5em"/><msub><mi>Q</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mi>Re</mi><msub><mi>M</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></math>
+<p>d<sub>0</sub>（P<sub>u</sub>）是只有參考光時的功率差；<b>l</b>（P<sub>u</sub>）是參考光與資料光的干涉；<b>Q</b>（4×4 對稱矩陣，P<sub>u</sub>）是資料光之間的干涉。粗體 <b>Q</b> 是矩陣，與判讀倍數 Q＝7 不同。這就是草稿式 6；推導只用到「場是線性的」與「偵測器取平方」，所以對任何 x<sub>i</sub>（包括轉態中的中間值）都精確成立。</p>
+<h4>2. 為什麼不能只留一次項</h4>
+<p>如果拿掉 <b>Q</b>，D 只剩 d<sub>0</sub>＋<b>l</b><sup>T</sup><b>x</b>，判 1 與判 0 的分界是 4 維空間中的一個平面。AND、OR、多數決這類門檻函數可以用平面分開（線性可分）；XOR2 的 (0,0)、(1,1) 判 0，(1,0)、(0,1) 判 1，任何平面都分不開，所以一定要有交叉項 x<sub>1</sub>x<sub>2</sub>。以 XOR2 為例，D＝d<sub>0</sub>＋l(x<sub>1</sub>＋x<sub>2</sub>)＋Q<sub>11</sub>(x<sub>1</sub><sup>2</sup>＋x<sub>2</sub><sup>2</sup>)＋2Q<sub>12</sub>x<sub>1</sub>x<sub>2</sub>，負的 Q<sub>12</sub> 讓 (1,1) 落回判 0 的一側。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\paper\m4_cert\s1_quad\quad.py
+.\lab design\paper\m4_cert\s1_quad\figs.py
+.\lab design\paper\m4_cert\concept.py</code></pre>
+<p><code>quad.py</code> 對 9 個函數（M3 s2 的 0.9 dB／MZI 相位）寫出 d<sub>0</sub>、<b>l</b>、<b>Q</b>，再用三種輸入核對：16 組字、2000 組 [0,1]<sup>4</sup> 的隨機中間值、M3 s3 的時域波形（AND4、MAJ4、XOR2，對齊與 4 個延遲盒角落）。另外用線性規劃檢查每個函數是否線性可分。約 10 秒。預期輸出（節錄）：</p>
+<pre><code>AND4：d0 -4.541｜‖l‖ 1.857｜‖Q‖ 0.416｜margin 0.829、拿掉 Q -0.831｜線性可分 True｜誤差 字 2.7e-15、隨機 5.3e-15、時域 5.3e-15
+…
+XOR2：d0 -0.239｜‖l‖ 0.593｜‖Q‖ 0.537｜margin 0.239、拿掉 Q -0.599｜線性可分 False｜誤差 字 2.8e-16、隨機 4.4e-16、時域 5.3e-16
+時域取樣點中至少一路在轉態（0 &lt; x &lt; 1）的比例：33.9%
+最大誤差 5.3e-15 P_u｜檢查： {'exact_words': True, 'exact_random': True, 'exact_time': True, 'q_symmetric': True, 'not_separable_are_sop2_xor2': True, 'not_separable_need_Q': True}</code></pre>
+<p>實際遇到的錯誤：第一版只比較 XOR2 與 AND4「拿掉 Q 之後」的 margin，兩者都變成負的，看起來 AND4 也非靠 Q 不可，和「只有 XOR 類需要 Q」的說法矛盾。原因是拿掉 Q 時沿用了為完整二次式求的相位，d<sub>0</sub>、<b>l</b> 沒有重新調整。改成另外用線性規劃判斷函數本身是否線性可分，才把「這組相位用到了 Q」和「這個函數必須用 Q」分開。</p>
+<p>自己動手：在 <code>quad.py</code> 把 <code>R_AMP</code> 換成 0（拿掉參考光），看 d<sub>0</sub>、<b>l</b> 變成多少，哪些函數還能做。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/paper/m4/s1_quad.png" alt="(a) XOR2 的 D(t)：逐點模擬與二次式重疊及兩者的差；(b) 9 個函數完整與拿掉 Q 的 margin；(c) XOR2 的 Q 矩陣"><figcaption>圖 M4-1　(a) XOR2 在延遲盒角落（x1 早 6.6 ps、x2 晚 6.6 ps）的判讀量 D(t)，灰色粗線是逐點模擬（先算場再取平方），紅線是二次式；下方是兩者的差，在 10<sup>−15</sup> P<sub>u</sub> 量級，也就是浮點數的捨入誤差。(b) 同一組相位下，16 組字中最差的 b·D：藍色是完整二次式，橘色是拿掉 <b>Q</b>；「不可分」標出不是線性可分的函數。(c) XOR2 的 <b>Q</b>：只有 x1、x2 之間有交叉項，而且是負的。</figcaption></figure>
+<table>
+<tr><th>函數</th><th>margin（P<sub>u</sub>）</th><th>拿掉 <b>Q</b> 後</th><th>線性可分</th><th>二次式與逐點的最大差（P<sub>u</sub>）</th></tr>
+<tr><td>AND4</td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['AND4']['margin']" data-fmt="{:.3f}">0.829</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['AND4']['margin_linear_only']" data-fmt="{:+.3f}">−0.831</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="'是' if d['functions']['AND4']['linearly_separable'] else '否'" data-fmt="{}">是</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="max(d['functions']['AND4']['err_words'], d['functions']['AND4']['err_random'], d['functions']['AND4'].get('err_time', 0))" data-fmt="{:.0e}">5e-15</span></td></tr>
+<tr><td>OR4</td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['OR4']['margin']" data-fmt="{:.3f}">0.793</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['OR4']['margin_linear_only']" data-fmt="{:+.3f}">+0.779</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="'是' if d['functions']['OR4']['linearly_separable'] else '否'" data-fmt="{}">是</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="max(d['functions']['OR4']['err_words'], d['functions']['OR4']['err_random'], d['functions']['OR4'].get('err_time', 0))" data-fmt="{:.0e}">4e-15</span></td></tr>
+<tr><td>MAJ4</td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['MAJ4']['margin']" data-fmt="{:.3f}">0.810</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['MAJ4']['margin_linear_only']" data-fmt="{:+.3f}">+0.142</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="'是' if d['functions']['MAJ4']['linearly_separable'] else '否'" data-fmt="{}">是</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="max(d['functions']['MAJ4']['err_words'], d['functions']['MAJ4']['err_random'], d['functions']['MAJ4'].get('err_time', 0))" data-fmt="{:.0e}">4e-15</span></td></tr>
+<tr><td>TH2</td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['TH2']['margin']" data-fmt="{:.3f}">0.800</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['TH2']['margin_linear_only']" data-fmt="{:+.3f}">+0.619</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="'是' if d['functions']['TH2']['linearly_separable'] else '否'" data-fmt="{}">是</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="max(d['functions']['TH2']['err_words'], d['functions']['TH2']['err_random'], d['functions']['TH2'].get('err_time', 0))" data-fmt="{:.0e}">4e-15</span></td></tr>
+<tr><td>AND3</td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['AND3']['margin']" data-fmt="{:.3f}">0.871</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['AND3']['margin_linear_only']" data-fmt="{:+.3f}">−0.278</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="'是' if d['functions']['AND3']['linearly_separable'] else '否'" data-fmt="{}">是</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="max(d['functions']['AND3']['err_words'], d['functions']['AND3']['err_random'], d['functions']['AND3'].get('err_time', 0))" data-fmt="{:.0e}">3e-15</span></td></tr>
+<tr><td>AND2</td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['AND2']['margin']" data-fmt="{:.3f}">1.025</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['AND2']['margin_linear_only']" data-fmt="{:+.3f}">+0.504</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="'是' if d['functions']['AND2']['linearly_separable'] else '否'" data-fmt="{}">是</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="max(d['functions']['AND2']['err_words'], d['functions']['AND2']['err_random'], d['functions']['AND2'].get('err_time', 0))" data-fmt="{:.0e}">2e-15</span></td></tr>
+<tr><td>AND2′</td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['AND2\'']['margin']" data-fmt="{:.3f}">1.166</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['AND2\'']['margin_linear_only']" data-fmt="{:+.3f}">+0.678</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="'是' if d['functions']['AND2\'']['linearly_separable'] else '否'" data-fmt="{}">是</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="max(d['functions']['AND2\'']['err_words'], d['functions']['AND2\'']['err_random'], d['functions']['AND2\''].get('err_time', 0))" data-fmt="{:.0e}">3e-15</span></td></tr>
+<tr><td>SOP2</td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['SOP2']['margin']" data-fmt="{:.3f}">0.290</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['SOP2']['margin_linear_only']" data-fmt="{:+.3f}">−0.397</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="'是' if d['functions']['SOP2']['linearly_separable'] else '否'" data-fmt="{}">否</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="max(d['functions']['SOP2']['err_words'], d['functions']['SOP2']['err_random'], d['functions']['SOP2'].get('err_time', 0))" data-fmt="{:.0e}">9e-16</span></td></tr>
+<tr><td>XOR2</td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['XOR2']['margin']" data-fmt="{:.3f}">0.239</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['XOR2']['margin_linear_only']" data-fmt="{:+.3f}">−0.599</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="'是' if d['functions']['XOR2']['linearly_separable'] else '否'" data-fmt="{}">否</span></td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="max(d['functions']['XOR2']['err_words'], d['functions']['XOR2']['err_random'], d['functions']['XOR2'].get('err_time', 0))" data-fmt="{:.0e}">5e-16</span></td></tr>
+</table>
+<p><b>精確性</b>：三種輸入下，二次式與逐點模擬的最大差是 <span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['max_err']" data-fmt="{:.0e}">5e-15</span> P<sub>u</sub>，在雙精度浮點數的捨入範圍內，比驗收門檻 10<sup>−9</sup> P<sub>u</sub> 小 6 個數量級以上。時域核對中，至少一路處於轉態中間值的取樣點佔 <span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['frac_intermediate']*100" data-fmt="{:.1f}">33.9</span>%，所以二次式在轉態中也成立，不只是在 0 與 1 的字上。要注意，兩邊用的是同一個傳遞矩陣 U，這個核對證明的是展開式沒有寫錯，不是獨立驗證物理模型；模型本身的可信度來自 M3 對草稿表 I、表 III 的重現，以及尚未進行的硬體量測。</p>
+<p><b>二次項的角色</b>：SOP2 與 XOR2 不是線性可分，拿掉 <b>Q</b> 後一定判錯（XOR2 的 margin 從 <span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['XOR2']['margin']" data-fmt="{:.3f}">0.239</span> 變成 <span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['functions']['XOR2']['margin_linear_only']" data-fmt="{:+.3f}">−0.599</span> P<sub>u</sub>）。另外，AND4、AND3 雖然線性可分，但合成出的相位也用到了 <b>Q</b>：拿掉後 margin 變負。所以證明不能只取一次近似，二次項要完整保留；草稿說「兩項都保留」，本步的數字支持這一點。</p>
+<p><b>驗收</b>：二次式與逐點模擬的最大差 &lt; 10<sup>−9</sup> P<sub>u</sub>（通過）；<b>Q</b> 對稱（通過）；不可分的函數正好是 SOP2、XOR2，而且拿掉 <b>Q</b> 後都判錯（通過）。</p>
+<p><b>本步結論</b>：(1) 草稿式 6 是恆等式，對 9 個函數、轉態中的中間值都成立，誤差只有浮點數捨入；(2) 線性項來自參考光與資料光的干涉，二次項來自資料光之間的干涉；XOR2、SOP2 這類不可分的函數非靠二次項不可，部分可分的函數在合成出的相位下也用到二次項；(3) 因為 D 是二次式，延遲造成的變化可以精確寫成梯度項加上一個有上界的二次剩餘，這是 M4 s2 下界的出發點。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>把功率相加</b>：偵測器看的是場相加後的平方，不是各路功率相加；功率相加會漏掉所有交叉項。</li>
+<li><b>只在 0、1 的字上核對</b>：轉態中 x<sub>i</sub> 是中間值，延遲證明關心的正是這段；核對要包含中間值。</li>
+<li><b>只取一次近似</b>：XOR 類的判讀量全在交叉項，一次近似會把它整個丟掉。</li>
+<li><b>把「這組相位用到 Q」當成「這個函數需要 Q」</b>：要分開檢查函數本身是否線性可分。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：用 XOR2 的係數驗算 (0,0)、(1,0)、(1,1) 三組字的 D。</summary>
+<p>d<sub>0</sub>＝−0.239，l＝0.419，Q<sub>11</sub>＝0.059，Q<sub>12</sub>＝−0.478。(0,0)：−0.239；(1,0)：−0.239＋0.419＋0.059＝＋0.239；(1,1)：−0.239＋0.838＋0.118−0.956＝−0.239。三組字的 |D| 都是 0.239，正好就是 XOR2 的 margin：合成把三種字推到同樣的距離。</p></details>
+<details class="quiz"><summary>自我檢查 2：為什麼 x3、x4 對 XOR2 的 l 與 Q 都是 0？</summary>
+<p>XOR2 只用 x1、x2；合成把 x3、x4 的光導到不讀的輸出，所以它們既不和參考光、也不和其他資料光在讀取埠干涉。這也表示 x3、x4 的延遲不會影響 XOR2 的判讀，證明時這兩路可以不切。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>相位</td><td>M3 s2 的 0.9 dB／MZI 相位（9 個函數）；R＝3；讀取 o2−o4</td></tr>
+<tr><td>核對輸入</td><td>16 組字；<span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['n_random']" data-fmt="{:d}">2000</span> 組 [0,1]<sup>4</sup> 隨機包絡（種子 <span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['seed']" data-fmt="{:d}">4100</span>）；M3 s3 的時域包絡（升餘弦全寬 31.25 ps、0.5 ps 格點、Euler 序列＋768 個隨機符號），對齊與 4 個盒角落</td></tr>
+<tr><td>線性可分</td><td>線性規劃找 w、c 使 b<sub>s</sub>(w<sup>T</sup>x<sub>s</sub>＋c) ≥ 1（求解器 HiGHS）</td></tr>
+<tr><td>驗收門檻</td><td><span class="num" data-json="design/paper/m4_cert/s1_quad/out/quad.json" data-expr="d['tol']" data-fmt="{:.0e}">1e-09</span> P<sub>u</sub></td></tr>
+</table>
+<div class="auto-code" data-files="design/paper/m4_cert/s1_quad/quad.py design/paper/m4_cert/s1_quad/figs.py design/paper/m4_cert/concept.py"></div>
+<div class="auto-history" data-file="design/paper/m4_cert/s1_quad/HISTORY.md"></div>
+</section>

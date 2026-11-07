@@ -1,0 +1,271 @@
+{
+  "pdk": {
+    "name": "CORNERSTONE",
+    "version": "2.6.luceda1",
+    "mmi_cell": "SOI220nm_1550nm_TE_STRIP_2x2_MMI"
+  },
+  "engine": "IPKISS 電路模型（Caphe）",
+  "wavelength_um": 1.55,
+  "model_scope": "PDK MMI 模型＋自建理想相位區；元件之間為理想連接（無傳播損耗、無 EC、無熱模型）",
+  "pdk_mmi_vs_H": {
+    "1.50": 1.1102230246251565e-16,
+    "1.55": 1.1102230246251565e-16,
+    "1.60": 1.1102230246251565e-16
+  },
+  "functions": {
+    "AND2": {
+      "passed": 16,
+      "total": 16,
+      "margin": 2.115379,
+      "U_err": 1.072098405376252e-15,
+      "reflection": 0.0,
+      "input_crosstalk": 0.0,
+      "energy_err": 1.2434497875801753e-14,
+      "dP_vs_M1_csv": 2.0684494561606925e-07
+    },
+    "OR2": {
+      "passed": 16,
+      "total": 16,
+      "margin": 2.120502,
+      "U_err": 1.1443916996305594e-15,
+      "reflection": 0.0,
+      "input_crosstalk": 0.0,
+      "energy_err": 1.2434497875801753e-14,
+      "dP_vs_M1_csv": 4.1682506646267825e-07
+    },
+    "XOR2": {
+      "passed": 16,
+      "total": 16,
+      "margin": 0.486486,
+      "U_err": 1.159106867033638e-15,
+      "reflection": 0.0,
+      "input_crosstalk": 0.0,
+      "energy_err": 5.329070518200751e-15,
+      "dP_vs_M1_csv": 4.864864879272623e-07
+    },
+    "AND4": {
+      "passed": 16,
+      "total": 16,
+      "margin": 1.496028,
+      "U_err": 1.1102230246251565e-15,
+      "reflection": 0.0,
+      "input_crosstalk": 0.0,
+      "energy_err": 1.2434497875801753e-14,
+      "dP_vs_M1_csv": 4.6594969038693534e-07
+    },
+    "OR4": {
+      "passed": 16,
+      "total": 16,
+      "margin": 1.499855,
+      "U_err": 7.823737499270239e-16,
+      "reflection": 0.0,
+      "input_crosstalk": 0.0,
+      "energy_err": 1.2434497875801753e-14,
+      "dP_vs_M1_csv": 4.4670277876690534e-07
+    }
+  },
+  "passed": 80,
+  "total": 80,
+  "U_err_max": 1.159106867033638e-15,
+  "margin_min": 0.486486,
+  "faults": {
+    "swap_all": {
+      "passed": 80,
+      "U_err_max": 1.159106867033638e-15,
+      "per_function": {
+        "AND2": {
+          "passed": 16,
+          "U_err": 1.072098405376252e-15
+        },
+        "OR2": {
+          "passed": 16,
+          "U_err": 1.1443916996305594e-15
+        },
+        "XOR2": {
+          "passed": 16,
+          "U_err": 1.159106867033638e-15
+        },
+        "AND4": {
+          "passed": 16,
+          "U_err": 1.1102230246251565e-15
+        },
+        "OR4": {
+          "passed": 16,
+          "U_err": 7.823737499270239e-16
+        }
+      }
+    },
+    "swap_out": {
+      "passed": 58,
+      "U_err_max": 1.9999999999999996,
+      "per_function": {
+        "AND2": {
+          "passed": 12,
+          "U_err": 1.9999999999999984
+        },
+        "OR2": {
+          "passed": 8,
+          "U_err": 1.9999999999999996
+        },
+        "XOR2": {
+          "passed": 8,
+          "U_err": 1.414213564791968
+        },
+        "AND4": {
+          "passed": 15,
+          "U_err": 1.6249663822438698
+        },
+        "OR4": {
+          "passed": 15,
+          "U_err": 1.5580987566973676
+        }
+      }
+    },
+    "phi_low": {
+      "passed": 40,
+      "U_err_max": 1.9328240198366986,
+      "per_function": {
+        "AND2": {
+          "passed": 12,
+          "U_err": 1.5637948650304674
+        },
+        "OR2": {
+          "passed": 4,
+          "U_err": 1.3919591681300176
+        },
+        "XOR2": {
+          "passed": 8,
+          "U_err": 1.9328240198366986
+        },
+        "AND4": {
+          "passed": 15,
+          "U_err": 1.0142492785323876
+        },
+        "OR4": {
+          "passed": 1,
+          "U_err": 1.3972131319461132
+        }
+      }
+    }
+  },
+  "recalibration": {
+    "loss_db": 0.33,
+    "starts": 24,
+    "maxiter": 600,
+    "per_function": {
+      "AND2": {
+        "margin_before": 0.9233003221751512,
+        "margin_after": 1.2436006867934077,
+        "margin_ideal": 2.115379
+      },
+      "OR2": {
+        "margin_before": 1.1423588408792065,
+        "margin_after": 1.2458984766698795,
+        "margin_ideal": 2.120502
+      },
+      "XOR2": {
+        "margin_before": 0.18990762306239017,
+        "margin_after": 0.28867600096133716,
+        "margin_ideal": 0.486486
+      },
+      "AND4": {
+        "margin_before": 0.15035475852021118,
+        "margin_after": 0.9702587385060162,
+        "margin_ideal": 1.496028
+      },
+      "OR4": {
+        "margin_before": 0.6026616555901767,
+        "margin_after": 0.9417569806794628,
+        "margin_ideal": 1.499855
+      }
+    }
+  },
+  "nonideal": {
+    "loss_meas": {
+      "passed": 80,
+      "margin": 0.15035475852021118,
+      "margin_ideal": 0.4864864864864856,
+      "per_function": {
+        "AND2": {
+          "passed": 16,
+          "margin": 0.9233003221751512
+        },
+        "OR2": {
+          "passed": 16,
+          "margin": 1.1423588408792065
+        },
+        "XOR2": {
+          "passed": 16,
+          "margin": 0.18990762306239017
+        },
+        "AND4": {
+          "passed": 16,
+          "margin": 0.15035475852021118
+        },
+        "OR4": {
+          "passed": 16,
+          "margin": 0.6026616555901767
+        }
+      }
+    },
+    "loss_range_ok": [
+      0.0,
+      0.38
+    ],
+    "delta_range_ok": [
+      -0.0775,
+      0.07
+    ],
+    "delta_range_per_function": {
+      "AND2": [
+        -0.115,
+        0.15
+      ],
+      "OR2": [
+        -0.15,
+        0.08
+      ],
+      "XOR2": [
+        -0.15,
+        0.15
+      ],
+      "AND4": [
+        -0.0775,
+        0.07
+      ],
+      "OR4": [
+        -0.1325,
+        0.1325
+      ]
+    },
+    "random": {
+      "0.01": {
+        "pass_rate": 1.0,
+        "margin_p05": 0.14306803148046648,
+        "margin_min": 0.13252271979010466
+      },
+      "0.02": {
+        "pass_rate": 1.0,
+        "margin_p05": 0.124524742570655,
+        "margin_min": 0.07982587803243923
+      },
+      "0.05": {
+        "pass_rate": 0.9,
+        "margin_p05": -0.05737320548403817,
+        "margin_min": -0.4477329756978087
+      }
+    }
+  },
+  "checks": {
+    "netlist_sha": true,
+    "ops_from_netlist_match_common": true,
+    "pdk_mmi_is_H": true,
+    "all_80": true,
+    "U_err_lt_1e12": true,
+    "no_reflection": true,
+    "energy": true,
+    "symmetric_swap_harmless": true,
+    "faults_caught": true,
+    "nonideal_model_match": true
+  }
+}

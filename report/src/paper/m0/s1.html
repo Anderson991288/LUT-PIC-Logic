@@ -1,0 +1,102 @@
+<section class="step" id="p-m0-s1" data-milestone="M0" data-step="s1" data-title="study 重點提示">
+<h4>目的</h4>
+<p>B7 是用光完成邏輯判斷的晶片佈局。目前的驗證只涵蓋靜態情況，也就是每組輸入穩定之後才讀取。本頁研究三個問題：資料每 100 ps 更換一組（10 Gb/s）時，判讀是否仍然正確；需要滿足哪些條件；晶片上唯一可調的 heater 能補償到什麼程度。</p>
+<h4>結論</h4>
+<p>以下結論全部來自模型模擬，不是量測結果。</p>
+<ul>
+<li><b>限制在片外</b>：晶片內的路徑時間差最多 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['worst_skew_ps']" data-fmt="{:.3f}">0.335</span> ps。要求最嚴的是 5 路輸入光之間的相對相位（M1 s1）。</li>
+<li><b>兩種校正都只調 heater</b>：固定的殘留光可用重新求相位吸收，消光比需求由 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_fixed_db']" data-fmt="{:g}">38</span> dB 降到 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_required_db']" data-fmt="{:.1f}">25.8</span> dB（M1 s2）。慢的相位漂移可用 heater 小幅擺動加同步偵測追蹤，但餘裕只有約 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['ramp_rate_allow_rad_s']/d['fiber_ramp_rad_s']" data-fmt="{:.1f}">1.3</span> 倍，而且 5 個輸出都要接偵測器（M1 s3）。</li>
+<li><b>校正後的時序</b>：AND4 與 XOR2 在聯合驗收中都保有 23 ps 的取樣窗。XOR2 決定光功率，每根資料光纖需要 <span class="num" data-json="design/paper/m1_timing/s5_assess/out/assess.json" data-expr="d['budget']['fiber_data_dbm']" data-fmt="{:.1f}">−2.5</span> dBm（M1 s5）。</li>
+<li><b>XOR2 沒有功率餘量</b>：MMI 分光比有 ±3% 誤差時，<span class="num" data-json="design/paper/m2_evidence/s4_deviation/out/deviation.json" data-expr="d['n_inst']" data-fmt="{:d}">32</span> 個模擬實例在系統預算內都沒有取樣窗（M2 s4）。</li>
+<li><b>簡單估算不足</b>：只數 MZI 的固定加總模型與時域模擬，在 25 個情境中有 <span class="num" data-json="design/paper/m2_evidence/s1_baseline/out/baseline.json" data-expr="d['n_disagree']" data-fmt="{:d}">9</span> 個判定不同（M2 s1）。</li>
+<li><b>單顆 B7 的時序保證</b>：每路延遲都在 ±6.6 ps 以內時，AND4、MAJ4、XOR2 在本模型與宣告的資料序列下，至少有 <span class="num" data-json="design/paper/m4_cert/s3_cert/out/cert.json" data-expr="d['functions']['AND4']['scenario']['configs']['1']['window']" data-fmt="{:g}">30.5</span>、<span class="num" data-json="design/paper/m4_cert/s3_cert/out/cert.json" data-expr="d['functions']['MAJ4']['scenario']['configs']['1']['window']" data-fmt="{:g}">33</span>、<span class="num" data-json="design/paper/m4_cert/s3_cert/out/cert.json" data-expr="d['functions']['XOR2']['scenario']['configs']['1']['window']" data-fmt="{:g}">37</span> ps 的共同取樣窗，大於需要的 23 ps（M4 s3）。</li>
+<li><b>靜態可實現不等於有時序窗</b>：4 輸入函數分成 222 個類別，其中在這個延遲範圍內有共同取樣窗的只有 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['dynamic']['box_ge']" data-fmt="{:g}">44</span> 類，能證明的有 <span class="num" data-json="design/paper/m5_cascade/s4_screen/out/screen.json" data-expr="d['summary']['dynamic']['cert_ge']" data-fmt="{:g}">34</span> 類（M5 s4）。</li>
+</ul>
+<h4>範圍</h4>
+<ul>
+<li>全部結果都是模擬，沒有任何一項來自晶片量測。M2 s4 的「硬體實例」也是模型抽樣產生的虛擬晶片。</li>
+<li>發射端與接收端的參數、EC 損耗、heater 時間常數都是假設值。</li>
+<li>M4、M5 的「證明」與「認證」只在本模型下成立，不是硬體保證。</li>
+<li>結論只適用於文中列出的函數、延遲範圍、相位條件與資料序列，不能推廣到任意延遲、相位或序列。</li>
+</ul>
+<h4>系統組成</h4>
+<table>
+<tr><th>位置</th><th>元件</th><th>功能</th></tr>
+<tr><td>片外（發射端）</td><td>雷射</td><td>單一光源，在片外分成 5 路：4 路資料光 x1–x4 與 1 路參考光 R</td></tr>
+<tr><td>片外（發射端）</td><td>資料調變</td><td>把 0／1 資料寫到 x1–x4 上；R 不調變</td></tr>
+<tr><td>片外</td><td>heater 驅動</td><td>供電給晶片上的 heater，設定相位</td></tr>
+<tr><td>片外（接收端）</td><td>PD（光偵測器）</td><td>把光功率轉成電流</td></tr>
+<tr><td>片外（接收端）</td><td>TIA（轉阻放大器）</td><td>把電流轉成電壓</td></tr>
+<tr><td>片外（接收端）</td><td>比較器</td><td>比較兩路訊號的大小，輸出 0 或 1</td></tr>
+<tr><td>晶片上</td><td>EC（邊緣耦合器）</td><td>光纖與晶片波導之間的接口</td></tr>
+<tr><td>晶片上</td><td>波導</td><td>在晶片上傳光的線路</td></tr>
+<tr><td>晶片上</td><td>MMI</td><td>把光分成兩路或合成兩路的元件</td></tr>
+<tr><td>晶片上</td><td>MZI</td><td>由兩顆 MMI 與兩條臂組成的可調干涉單元</td></tr>
+<tr><td>晶片上</td><td>TiN heater</td><td>加熱波導以改變光的相位</td></tr>
+<tr><td>晶片上</td><td>Ti/AL 金屬、PAD</td><td>金屬繞線與對外的電氣接點</td></tr>
+</table>
+<h4>基本用語</h4>
+<table>
+<tr><th>用語</th><th>定義</th></tr>
+<tr><td>B7</td><td>7 顆 MZI 排成 4 層的電路。輸入是 x1–x4 與參考光 R，輸出是 o1–o5。判讀只比較 o2 與 o4。</td></tr>
+<tr><td>θ、φ</td><td>每顆 MZI 的兩個 heater 相位。θ 是內相位，決定分光比例；φ 是外相位，加在輸入上。7 顆共 14 個相位。</td></tr>
+<tr><td>函數名稱</td><td>同一顆晶片只改相位就能切換邏輯函數。AND2、OR2、XOR2 用 2 個輸入，AND4、OR4、MAJ4 用 4 個輸入；MAJ4 是多數決。</td></tr>
+<tr><td>字、符號</td><td>字是 4 個輸入位元的一組值，共 16 種。符號是一個位元時間內送出的一個字。</td></tr>
+<tr><td>P<sub>u</sub></td><td>一路資料光為「1」時的功率，是本頁的功率單位。參考光振幅為 3，功率為 9 P<sub>u</sub>。</td></tr>
+<tr><td>判讀量（ΔP）</td><td>o2 與 o4 的功率差，大於 0 判 1。</td></tr>
+<tr><td>margin</td><td>所有輸入中最差的判讀量，以 P<sub>u</sub> 為單位。margin 越大，越不容易判錯。</td></tr>
+<tr><td>靜態、動態</td><td>靜態指輸入穩定後的情況；動態指輸入隨時間轉換的情況。</td></tr>
+<tr><td>名義</td><td>沒有誤差時的設計值。</td></tr>
+<tr><td>dB、dBm</td><td>dB 是功率比的對數單位，3 dB 約為 2 倍。dBm 是以 1 mW 為基準的功率。</td></tr>
+<tr><td>DRC、LVS、foundry</td><td>DRC 是佈局幾何規則檢查，LVS 是佈局與電路一致性檢查，foundry 是晶圓代工廠。</td></tr>
+<tr><td>草稿</td><td>本研究已寫成的完整版論文稿。M3 起逐表重現它的數字；「表 I」「式 6」「II-A」這類編號都是草稿內的編號，全文不在本頁。</td></tr>
+</table>
+<h4>閱讀順序</h4>
+<ul>
+<li>M1 是主線：找出 10 Gb/s 的問題、校正、驗收。</li>
+<li>M2 檢驗主線：與簡單模型比較、整理規格，並測試功率與模型偏差的影響。</li>
+<li>M3 把設定換成草稿的設定，重現草稿的表格。</li>
+<li>M4 用數學證明整個延遲範圍內都安全。</li>
+<li>M5 擴充到兩級串接與全部函數類別。</li>
+<li>M6–M8 尚未開始，只列在頁首目錄。</li>
+</ul>
+<p>每一步開頭的方框說明上一步交來什麼、本步要回答什麼、交給下一步什麼。每一步都分成 ①–⑥ 六節，③–⑥ 預設收合，點選標題即可展開。</p>
+<p>步驟代號的規則如下：「M1 s2」與「論文 M1 s2」都指本頁的步驟；「課程 M1 s2」指課程頁的步驟，點選後會連到該處。</p>
+<p>每一步 ③ 列出的檔案中，<code>figs.py</code> 畫本步的圖，<code>concept.py</code> 畫開頭的概念圖，其餘是本步的計算程式。<code>.json</code> 是計算結果檔，本頁的數字由它帶入。</p>
+<h4>課程成果摘要</h4>
+<div class="bridge">
+<p><b>用途</b>：課程（study，M0–M3）以學員的過程完成一顆 B7 PIC。這裡只摘出論文會用到的結論與數字，每一項都連回課程的對應段落；推導與細節請點連結回課程看。最右欄列出這些結果「還不能證明什麼」：已保存的結果不等於高速性能已通過。</p>
+<p><b>交給下一步</b>：M1 以這顆晶片為對象，做 10 Gb/s 的時序分析與校正；範圍只有晶片上的 heater MZI，資料調變在片外。</p>
+</div>
+
+<figure><img src="figures/paper/m1/flow.png" alt="論文延伸的流程：預算找問題、靜態校正、動態校正、校正後的取樣窗、整合"><figcaption>圖 M0-0　論文延伸的流程。M1 s1 用一階預算找出問題（在宣告的模型下，晶片內的時間差小、功率可滿足，要求最嚴的是輸入相位）；接著用兩種校正處理兩類誤差：固定的誤差量一次就能算進去，重新求 heater 相位吸收（M1 s2，靜態校正）；會漂的誤差要一邊傳資料一邊量、一邊修（M1 s3，動態校正）。兩種校正都只用晶片上原有的 heater。M1 s4 在校正後的條件下，用完整時域模型驗收 10 Gb/s 的時序；M1 s5 整合成介面規格、總功率預算與論文主張。</figcaption></figure>
+
+<figure><img src="figures/m1/s2_b7.png" alt="B7 的 7 顆 MZI、4 層與 5 個輸入、5 個輸出"><figcaption>圖 M0-1　B7：7 顆 MZI 排成 4 層，輸入 x1–x4 與參考光 R，輸出 o1–o5，o2、o4 比大小判讀（課程 M1 s2）。</figcaption></figure>
+
+<h4>1. 原理與電路</h4>
+<table>
+<tr><th>重點</th><th>結論與數字</th><th>論文用在</th><th>仍未證明</th></tr>
+<tr><td>光如何做邏輯</td><td>資料光（「1」振幅 1、「0」為 0）與參考光 R（振幅 3）干涉，比較 o2、o4 的功率：ΔP＝P2 − P4 ＞ 0 判 1。需要 R 才能用比大小判讀（課程 M1 s1）。</td><td>M1 s2：發射端「0」不全暗時，殘留光會和 R 干涉</td><td>實際光源的同調性（各路光的相位關係是否固定）與輸入相位穩定度（M1 s1、s3 才處理）</td></tr>
+<tr><td>B7 能算什麼</td><td>二輸入的 <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['b7_2in']['count']" data-fmt="{:d}">16</span>/16 種函數都做得到，最小 margin <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['b7_2in']['min_margin']" data-fmt="{:.3f}">0.486</span>（XOR2）；單顆 MZI 一種也做不到（課程 M1 s2）。</td><td>margin 是 M1 各項預算與需求的基準</td><td>只在理想、靜態的模型下；高速轉態時是否仍判對（M1 s4）</td></tr>
+<tr><td>ΔP 的形式</td><td>ΔP 是輸入光場的二次式：常數項（R²）、一次項（R 與 x<sub>j</sub> 干涉）、二次項（x<sub>j</sub> 與 x<sub>k</sub> 干涉）（課程 M1 s3）。</td><td>相位漂移、殘留光、轉態時的干涉都經由這三項影響判讀</td><td>—（數學性質，已由程式核對）</td></tr>
+<tr><td>可程式化</td><td>同一個晶片只換 14 個 heater 相位，就能切換 AND2、OR2、XOR2、AND4、OR4；heater 相位誤差 σ<sub>h</sub> ≤ 0.05 rad 時全部判對（課程 M1 s4）。</td><td>M1 s2、s3 都只靠重新求相位補償</td><td>相位誤差容許是隨機誤差；固定偏差另算（M1 s1）</td></tr>
+</table>
+
+<h4>2. 規格與電路模擬</h4>
+<table>
+<tr><th>重點</th><th>結論與數字</th><th>論文用在</th><th>仍未證明</th></tr>
+<tr><td>輸入相位容許</td><td>5 路輸入光之間的相對相位 σ<sub>in</sub> ≤ <span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="d['input_phase_sigma_ok']" data-fmt="{:g}">0.1</span> rad；heater 總功率 <span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="min(v['total_mW'] for v in d['heater_power'].values())" data-fmt="{:.0f}">134</span>–<span class="num" data-json="design/m2_circuit/s1_spec/out/tolerance.json" data-expr="max(v['total_mW'] for v in d['heater_power'].values())" data-fmt="{:.0f}">181</span> mW（課程 M2 s1）。這是隨機誤差的標準差。</td><td>M1 s1 另求固定偏差的容許值，作為相位預算與 M1 s3 的追蹤目標</td><td>固定的漂移不能用這個 σ（M1 s1 另求 δ<sub>det</sub>）</td></tr>
+<tr><td>PDK 電路模擬</td><td>5 個函數 × 16 組輸入 <span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['passed']" data-fmt="{:d}">80</span>/<span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['total']" data-fmt="{:d}">80</span> 判對；計入 MMI 損耗（每顆 0.33 dB，取自同平台的公開量測資料）並重新校正後，最小 margin <span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="min(v['margin_after'] for v in d['recalibration']['per_function'].values())" data-fmt="{:.3f}">0.289</span>（XOR2）（課程 M2 s3）。</td><td>M1 s1 功率預算用的 margin</td><td>MMI 只計損耗，不含相位與分光誤差、波長相依；本晶片沒有實測</td></tr>
+</table>
+
+<figure><img src="figures/m3/s5_chip.png" alt="交付的整顆晶片：10 個 EC、21 個 PAD、中央 B7 核心"><figcaption>圖 M0-2　交付的整顆晶片：西緣 5 個輸入 EC、東緣 5 個輸出 EC、上下緣 21 個 PAD、中央 B7 核心（課程 M3 s5）。</figcaption></figure>
+
+<h4>3. 佈局、驗證與交付</h4>
+<table>
+<tr><th>重點</th><th>結論與數字</th><th>論文用在</th><th>仍未證明</th></tr>
+<tr><td>分欄同步佈局</td><td>每條軌在每一欄走同樣的水平距離，走 MZI 的軌只多 <span class="num" data-json="design/m3_layout/s1_core/out/layout_info.json" data-expr="d['geometry']['rail_vs_bypass_extra_um']" data-fmt="{:.2f}">11.72</span> µm（兩段 S 彎）；兩臂等長（課程 M3 s1）。</td><td>M1 s1：晶片內各路的到達時間差由結構決定、不到 1 ps</td><td>MMI 內部的群延遲未知，以等效長度近似</td></tr>
+<tr><td>整顆晶片</td><td><span class="num" data-json="delivery/interfaces/chip_info.json" data-expr="d['die_um'][0]" data-fmt="{:g}">4280</span>×<span class="num" data-json="delivery/interfaces/chip_info.json" data-expr="d['die_um'][1]" data-fmt="{:g}">1200</span> µm；<span class="num" data-json="delivery/interfaces/chip_info.json" data-expr="len(d['ec'])" data-fmt="{:d}">10</span> 個 EC（輸入扇入等長）、<span class="num" data-json="delivery/interfaces/chip_info.json" data-expr="d['n_pads']" data-fmt="{:d}">21</span> 個 PAD 在最外圍；傳播損耗估計 2.6–4.3 dB（課程 M3 s3）。</td><td>M1 s1 的扇入／扇出長度與損耗</td><td>EC 的損耗與結構未經平台確認、未量測</td></tr>
+<tr><td>驗證</td><td>DRC <span class="num" data-json="design/m3_layout/s4_verify/out/drc_result.json" data-expr="d['total']" data-fmt="{:d}">0</span>；heater 通道 <span class="num" data-json="design/m3_layout/s4_verify/out/connectivity.json" data-expr="len(d['electrical']['channels'])" data-fmt="{:d}">14</span> 個全部接對；故障注入 <span class="num" data-json="design/m3_layout/s4_verify/out/connectivity.json" data-expr="sum(d['faults'].values())" data-fmt="{:d}">8</span>/<span class="num" data-json="design/m3_layout/s4_verify/out/connectivity.json" data-expr="len(d['faults'])" data-fmt="{:d}">8</span> 抓到（課程 M3 s4）。</td><td>佈局通過 DRC 與電氣連接核對（未經 foundry 簽核）</td><td>只有幾何與電氣連接；沒有完整光學 LVS 與量測</td></tr>
+<tr><td>交付</td><td>交付檢查 <span class="num" data-json="design/m3_layout/s5_delivery/out/delivery_check.json" data-expr="sum(v['ok'] for v in d['checks'].values())" data-fmt="{:d}">10</span>/<span class="num" data-json="design/m3_layout/s5_delivery/out/delivery_check.json" data-expr="len(d['checks'])" data-fmt="{:d}">10</span> 通過；規格寫明「靜態驗證：每組輸入穩定後讀取」，高速時序不在課程範圍（課程 M3 s5）。</td><td>M1 從這裡接手：把它推到 10 Gb/s</td><td>10 Gb/s 的動態性能（論文 M1 的主題）</td></tr>
+</table>
+</section>

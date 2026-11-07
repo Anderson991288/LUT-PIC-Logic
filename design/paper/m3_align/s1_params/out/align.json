@@ -1,0 +1,449 @@
+{
+ "draft_pu_dbm": -7.0,
+ "enbw_ghz": 7.775,
+ "params": [
+  {
+   "item": "接收端（響應度、TIA 雜訊、Z_T、頻寬、RIN、PD 失配、比較器雜訊與偏移、q）",
+   "draft": "0.5 A/W、20 pA/√Hz、1 kΩ、7 GHz 二階 Butterworth、−140 dB/Hz、2%、0.5 mV、0.3 mV、7",
+   "ours": "0.5 A/W、20 pA/√Hz、1 kΩ、7 GHz 二階 Butterworth、-140 dB/Hz、2%、0.5 mV、0.3 mV、7",
+   "status": "相同",
+   "handled": "—"
+  },
+  {
+   "item": "取樣需求 T_req（setup、hold、抖動）",
+   "draft": "10＋5＋8＝23 ps",
+   "ours": "10＋5＋8＝23 ps",
+   "status": "相同",
+   "handled": "—"
+  },
+  {
+   "item": "雜訊項",
+   "draft": "熱、比較器、RIN（含 PD 失配）；未列 shot",
+   "ours": "熱、比較器、shot、RIN（差動與共模）",
+   "status": "不同（多 shot）",
+   "handled": "本步量化"
+  },
+  {
+   "item": "參考光",
+   "draft": "場振幅 3（9 P_u）",
+   "ours": "場振幅 3",
+   "status": "相同",
+   "handled": "—"
+  },
+  {
+   "item": "P_u 的參考面",
+   "draft": "macro 輸入端＝偵測器端（輸出側無損耗），−7 dBm 固定",
+   "ours": "B7 輸入端，由預算反推；輸出側另有傳播 1.64 dB＋EC 2 dB",
+   "status": "不同",
+   "handled": "本步；之後用草稿的定義"
+  },
+  {
+   "item": "元件損耗",
+   "draft": "每顆 MZI 0.9 dB（模型值）",
+   "ours": "每顆 MMI 0.33 dB（每顆 MZI 約 0.66 dB）",
+   "status": "不同",
+   "handled": "M3 s2 以 0.9 dB 重新合成"
+  },
+  {
+   "item": "輸入邊緣",
+   "draft": "升餘弦全寬 31.25 ps（10–90% 18.4 ps）",
+   "ours": "升餘弦 10–90% 30 ps（全寬 50.8 ps）",
+   "status": "不同",
+   "handled": "M3 s3 改用草稿值"
+  },
+  {
+   "item": "群折射率",
+   "draft": "4.27",
+   "ours": "4.28",
+   "status": "不同（差 0.2%）",
+   "handled": "M3 s3"
+  },
+  {
+   "item": "佈局",
+   "draft": "每欄 489 µm（7.0 ps）；macro 內 skew 0.6 ps",
+   "ours": "課程的緊湊佈局；晶片內路徑差 0.335 ps",
+   "status": "不同",
+   "handled": "M3 s3 用草稿的 macro 內 skew"
+  },
+  {
+   "item": "情境集",
+   "draft": "Euler 序列（256 種有序轉移）＋ 768 個隨機符號",
+   "ours": "B(16,3) de Bruijn 序列（4096 個符號，含全部有序轉移）",
+   "status": "不同（我們的較多）",
+   "handled": "M3 s3 改用草稿的"
+  },
+  {
+   "item": "延遲掃描",
+   "draft": "12 個方向 × 11 段跨距（0–60 ps）",
+   "ours": "skew 角落（各路 0 或 skew）",
+   "status": "不同",
+   "handled": "M3 s3"
+  },
+  {
+   "item": "時間格點",
+   "draft": "1 ps 與 0.5 ps",
+   "ours": "0.5 ps",
+   "status": "部分相同",
+   "handled": "M3 s3"
+  },
+  {
+   "item": "合成",
+   "draft": "annealed log-sum-exp soft-min ＋ L-BFGS，16 個隨機起點",
+   "ours": "SLSQP（把最差 margin 寫成限制式後最大化），24 個起點",
+   "status": "不同",
+   "handled": "M3 s2"
+  }
+ ],
+ "n_diff": 10,
+ "guards": {
+  "AND2": {
+   "m": 1.2436,
+   "S_worst": 6.794,
+   "S_max": 6.794,
+   "guard_ours": 0.1784,
+   "guard_ours_smax": 0.1784,
+   "parts": {
+    "th": 0.0177,
+    "comp": 0.005,
+    "shot": 0.013,
+    "rin_diff": 0.011,
+    "rin_cm": 0.0006,
+    "off": 0.003
+   },
+   "guard_draft_style": 0.1573,
+   "guard_draft_style_smax": 0.1573
+  },
+  "OR2": {
+   "m": 1.2459,
+   "S_worst": 5.977,
+   "S_max": 6.794,
+   "guard_ours": 0.1756,
+   "guard_ours_smax": 0.2886,
+   "parts": {
+    "th": 0.0177,
+    "comp": 0.005,
+    "shot": 0.0122,
+    "rin_diff": 0.011,
+    "rin_cm": 0.0005,
+    "off": 0.003
+   },
+   "guard_draft_style": 0.1568,
+   "guard_draft_style_smax": 0.281
+  },
+  "XOR2": {
+   "m": 0.2887,
+   "S_worst": 0.289,
+   "S_max": 0.345,
+   "guard_ours": 0.1342,
+   "guard_ours_smax": 0.1345,
+   "parts": {
+    "th": 0.0177,
+    "comp": 0.005,
+    "shot": 0.0027,
+    "rin_diff": 0.0025,
+    "rin_cm": 0.0,
+    "off": 0.003
+   },
+   "guard_draft_style": 0.1329,
+   "guard_draft_style_smax": 0.1329
+  },
+  "AND4": {
+   "m": 0.9703,
+   "S_worst": 8.44,
+   "S_max": 8.44,
+   "guard_ours": 0.1776,
+   "guard_ours_smax": 0.1776,
+   "parts": {
+    "th": 0.0177,
+    "comp": 0.005,
+    "shot": 0.0145,
+    "rin_diff": 0.0086,
+    "rin_cm": 0.0007,
+    "off": 0.003
+   },
+   "guard_draft_style": 0.1496,
+   "guard_draft_style_smax": 0.1496
+  },
+  "OR4": {
+   "m": 0.9418,
+   "S_worst": 6.019,
+   "S_max": 8.077,
+   "guard_ours": 0.1682,
+   "guard_ours_smax": 0.4514,
+   "parts": {
+    "th": 0.0177,
+    "comp": 0.005,
+    "shot": 0.0123,
+    "rin_diff": 0.0083,
+    "rin_cm": 0.0005,
+    "off": 0.003
+   },
+   "guard_draft_style": 0.1474,
+   "guard_draft_style_smax": 0.4498
+  }
+ },
+ "guard_compare": {
+  "AND2": {
+   "ours": 0.1784,
+   "draft_style": 0.1573,
+   "draft_style_smax": 0.1573,
+   "draft": 0.17
+  },
+  "XOR2": {
+   "ours": 0.1342,
+   "draft_style": 0.1329,
+   "draft_style_smax": 0.1329,
+   "draft": 0.14
+  },
+  "AND4": {
+   "ours": 0.1776,
+   "draft_style": 0.1496,
+   "draft_style_smax": 0.1496,
+   "draft": 0.17
+  },
+  "OR4": {
+   "ours": 0.1682,
+   "draft_style": 0.1474,
+   "draft_style_smax": 0.4498,
+   "draft": 0.17
+  }
+ },
+ "tol_guard": 0.02,
+ "plane": {
+  "AND2": {
+   "b7_input_dbm": -12.99,
+   "pd_dbm": -16.63,
+   "guard_at_pd_need": 1.2431,
+   "margin": 1.2436,
+   "guard_at_m7": 0.1784,
+   "ratio": 6.968
+  },
+  "OR2": {
+   "b7_input_dbm": -13.01,
+   "pd_dbm": -16.65,
+   "guard_at_pd_need": 1.2449,
+   "margin": 1.2459,
+   "guard_at_m7": 0.1756,
+   "ratio": 7.089
+  },
+  "XOR2": {
+   "b7_input_dbm": -6.74,
+   "pd_dbm": -10.38,
+   "guard_at_pd_need": 0.2886,
+   "margin": 0.2887,
+   "guard_at_m7": 0.1342,
+   "ratio": 2.151
+  },
+  "AND4": {
+   "b7_input_dbm": -11.85,
+   "pd_dbm": -15.49,
+   "guard_at_pd_need": 0.9709,
+   "margin": 0.9703,
+   "guard_at_m7": 0.1776,
+   "ratio": 5.467
+  },
+  "OR4": {
+   "b7_input_dbm": -11.77,
+   "pd_dbm": -15.41,
+   "guard_at_pd_need": 0.9427,
+   "margin": 0.9418,
+   "guard_at_m7": 0.1682,
+   "ratio": 5.605
+  }
+ },
+ "loss_out_db": 3.64,
+ "curve_dbm": [
+  -14.0,
+  -13.75,
+  -13.5,
+  -13.25,
+  -13.0,
+  -12.75,
+  -12.5,
+  -12.25,
+  -12.0,
+  -11.75,
+  -11.5,
+  -11.25,
+  -11.0,
+  -10.75,
+  -10.5,
+  -10.25,
+  -10.0,
+  -9.75,
+  -9.5,
+  -9.25,
+  -9.0,
+  -8.75,
+  -8.5,
+  -8.25,
+  -8.0,
+  -7.75,
+  -7.5,
+  -7.25,
+  -7.0,
+  -6.75,
+  -6.5,
+  -6.25,
+  -6.0,
+  -5.75,
+  -5.5,
+  -5.25,
+  -5.0,
+  -4.75,
+  -4.5,
+  -4.25,
+  -4.0,
+  -3.75,
+  -3.5,
+  -3.25,
+  -3.0,
+  -2.75,
+  -2.5,
+  -2.25,
+  -2.0
+ ],
+ "curve": {
+  "XOR2": [
+   0.6613,
+   0.6244,
+   0.5896,
+   0.5567,
+   0.5257,
+   0.4964,
+   0.4687,
+   0.4426,
+   0.418,
+   0.3947,
+   0.3728,
+   0.352,
+   0.3325,
+   0.314,
+   0.2966,
+   0.2801,
+   0.2646,
+   0.25,
+   0.2361,
+   0.2231,
+   0.2108,
+   0.1991,
+   0.1882,
+   0.1778,
+   0.168,
+   0.1588,
+   0.1501,
+   0.1419,
+   0.1342,
+   0.1269,
+   0.12,
+   0.1136,
+   0.1074,
+   0.1017,
+   0.0962,
+   0.0911,
+   0.0863,
+   0.0818,
+   0.0775,
+   0.0735,
+   0.0697,
+   0.0661,
+   0.0628,
+   0.0596,
+   0.0567,
+   0.0539,
+   0.0513,
+   0.0489,
+   0.0466
+  ],
+  "AND4": [
+   0.7013,
+   0.6645,
+   0.6297,
+   0.5969,
+   0.566,
+   0.5367,
+   0.5092,
+   0.4832,
+   0.4586,
+   0.4354,
+   0.4136,
+   0.393,
+   0.3735,
+   0.3552,
+   0.3379,
+   0.3215,
+   0.3061,
+   0.2916,
+   0.2779,
+   0.265,
+   0.2528,
+   0.2413,
+   0.2305,
+   0.2203,
+   0.2107,
+   0.2017,
+   0.1932,
+   0.1852,
+   0.1776,
+   0.1705,
+   0.1638,
+   0.1575,
+   0.1516,
+   0.146,
+   0.1407,
+   0.1358,
+   0.1312,
+   0.1268,
+   0.1227,
+   0.1189,
+   0.1153,
+   0.1119,
+   0.1087,
+   0.1057,
+   0.1029,
+   0.1003,
+   0.0978,
+   0.0955,
+   0.0933
+  ]
+ },
+ "margins": {
+  "AND2": {
+   "ours": 1.2436,
+   "draft_lossless": 2.11,
+   "draft_lossy": 1.02
+  },
+  "OR2": {
+   "ours": 1.2459,
+   "draft_lossless": null,
+   "draft_lossy": null
+  },
+  "XOR2": {
+   "ours": 0.2887,
+   "draft_lossless": 0.49,
+   "draft_lossy": 0.24
+  },
+  "AND4": {
+   "ours": 0.9703,
+   "draft_lossless": 1.49,
+   "draft_lossy": 0.83
+  },
+  "OR4": {
+   "ours": 0.9418,
+   "draft_lossless": 1.5,
+   "draft_lossy": 0.79
+  }
+ },
+ "edge": {
+  "ours_1090_ps": 30.0,
+  "ours_full_ps": 50.8,
+  "draft_full_ps": 31.25,
+  "draft_1090_ps": 18.4
+ },
+ "checks": {
+  "receiver_same": true,
+  "guard_same_plane_close": true,
+  "self_consistent_xor2": true,
+  "xor2_guard_smallest": true
+ }
+}

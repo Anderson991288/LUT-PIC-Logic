@@ -1,0 +1,74 @@
+{
+ "source": "this round (independent full replay; synth4 not imported)",
+ "encoding": "OOK",
+ "topology": "3142132",
+ "loss_db_per_mzi": 0.9,
+ "R": 3.0,
+ "round1_24_starts": {
+  "tables": 65536,
+  "rows": 1048576,
+  "passed_tables": 65536,
+  "failed_tables": 0,
+  "wrong_rows": 0,
+  "boundary_rows": 0,
+  "missing": 0,
+  "min_margin_pu": 0.0531907718552836,
+  "worst_mask": "0x9667",
+  "median_margin_pu": 0.23207287208382876,
+  "ge_0p05": 65536,
+  "ge_0p1": 64143,
+  "tolerance_pu": 1e-08,
+  "max_abs_diff_vs_synth": 6.661338147750939e-15,
+  "max_abs_diff_vs_reference_margins": 6.661338147750939e-15
+ },
+ "merged_round1_plus_refine": {
+  "tables": 65536,
+  "rows": 1048576,
+  "passed_tables": 65536,
+  "failed_tables": 0,
+  "wrong_rows": 0,
+  "boundary_rows": 0,
+  "missing": 0,
+  "min_margin_pu": 0.057818134100411395,
+  "worst_mask": "0x7996",
+  "median_margin_pu": 0.23207287208382876,
+  "ge_0p05": 65536,
+  "ge_0p1": 64143,
+  "tolerance_pu": 1e-08
+ },
+ "refined_masks": 40,
+ "round1_failures": [],
+ "merged_bank": "out/merged_phases.npz",
+ "merged_bank_sha256": "e26eab856153c42764bc9de6abda9dd6c8c334efa21b92e125f18e318e2af11c",
+ "negative_tests": {
+  "wrong_encoding_EPM": {
+   "failed_tables": 65512,
+   "wrong_rows": 530692,
+   "logic_detected": true,
+   "max_margin_shift_pu": 8.833283849568197,
+   "detected": true
+  },
+  "swap_theta_phi": {
+   "failed_tables": 65534,
+   "wrong_rows": 524346,
+   "logic_detected": true,
+   "max_margin_shift_pu": 7.993996587767947,
+   "detected": true
+  },
+  "topology_1421324": {
+   "failed_tables": 65535,
+   "wrong_rows": 525038,
+   "logic_detected": true,
+   "max_margin_shift_pu": 8.021419757935252,
+   "detected": true
+  },
+  "R_2p9": {
+   "failed_tables": 0,
+   "wrong_rows": 0,
+   "logic_detected": false,
+   "max_margin_shift_pu": 0.3868477585933672,
+   "detected": true
+  }
+ },
+ "elapsed_s": 3.8
+}

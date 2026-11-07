@@ -1,0 +1,42 @@
+{
+ "version": "lut4v2",
+ "chip_sha256": "a7a20dbecfe79076a80c6425ac803c36534d1f7a17b6d8ac9bb2fc4ce7bad7a2",
+ "fault_sha256": "2da7df1c1e4ccf83e870c3888af20a45961abc4c395fc47c5d9f7da8039171d9",
+ "commercial_run_end_utc": "2026-11-07T08:24:12.951002+00:00",
+ "all_shots_after_commercial_run": true,
+ "gds_matches_commercial_run": true,
+ "shots": {
+  "v_chip.png": {
+   "sha256": "2d634e96c26a47ecc624e6385f19cc3bb87bccbe548e46283bf92926344553f8",
+   "taken_utc": "2026-11-07T08:31:25.468385+00:00"
+  },
+  "v_core.png": {
+   "sha256": "6d197db7f2e1dd9249a974f23a7c47bce864d630caf6e376570c0aec249a2bcb",
+   "taken_utc": "2026-11-07T08:31:35.555284+00:00"
+  },
+  "v_mzi.png": {
+   "sha256": "5e8f57c667f66e5ed816c0fb64659c1d66aff5d268d434357e377da573bc0ff6",
+   "taken_utc": "2026-11-07T08:31:45.633707+00:00"
+  },
+  "v_fault.png": {
+   "sha256": "a279da190051cb82ee596d874e9f365de38e3a05dd5a03fe9b32c24e42489c09",
+   "taken_utc": "2026-11-07T08:32:01.062411+00:00"
+  },
+  "rve_chip.png": {
+   "sha256": "3c49ca2a85728b531ca6e0823f4e4b43e590fc5e51095a427c9fe2b07e1ecf26",
+   "taken_utc": "2026-11-07T08:30:49.598176+00:00"
+  },
+  "rve_fault.png": {
+   "sha256": "ffd9108a0ae74768db88ff81d5622251aa42d9cf1c0b927242a9aaa5758ae583",
+   "taken_utc": "2026-11-07T08:30:16.523592+00:00"
+  }
+ },
+ "method": "WSLg 視窗由 Windows 螢幕擷取；Virtuoso 開啟本次交付 GDS 與故障檔，RVE 開啟本次 calibre_*.results",
+ "reviewed": "拍完後人工看過畫面：標題為本次 cell、沒有遮擋與反白",
+ "later_change": {
+  "fault_gds_rewritten": "2026-11-07 s6_verify 重跑時重寫了故障檔，時間戳改變，雜湊與本紀錄的 fault_sha256 不同",
+  "current_fault_sha256": "b36cdeccf6c1f660205e0e58809021332ac3a100ba13b0eefd71cb5b93dbaceb",
+  "stripped_sha256": "4ee5b8bfd30e55bbd8b2b4284be70749e88f49de8c9fb6f2b5a0414c17800882",
+  "geometry_same_as_reference": true
+ }
+}

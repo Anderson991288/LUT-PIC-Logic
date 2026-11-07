@@ -1,0 +1,460 @@
+{
+ "scope": "相位固定、每顆 MZI 0.9 dB、R＝3、只有三路增益誤差；模型下的確定性界，不是量測或良率",
+ "definition": "ε：三路增益各自落在 [1−ε, 1+ε] 內的任何組合下，16 組判讀全對的上確界",
+ "method": {
+  "target1": "線性差值的角落極值",
+  "target0": "線性規劃：盒內是否存在 Da＞0 且 Db＞0",
+  "bisect_iterations": 40
+ },
+ "self_test": {
+  "counterexample": {
+   "P2_P3_P4": [
+    1.0,
+    1.01,
+    1.005
+   ],
+   "delta": 0.03,
+   "corner_margin_min": 0.00485,
+   "corners_all_zero": true,
+   "lp_t_star": 0.02515,
+   "lp_gain": [
+    1.03,
+    0.97,
+    0.999851
+   ],
+   "review_gain": [
+    1.03,
+    0.97,
+    1.0
+   ],
+   "review_gain_Da_Db": [
+    0.025,
+    0.0253
+   ]
+  },
+  "random_rows": {
+   "n": 300,
+   "lp_vs_closed_form_max": 4.440892098500626e-16,
+   "grid_minus_lp_max": 0.014249,
+   "margin_at_closed_eps_max": 4.440892098500626e-16
+  }
+ },
+ "functions": {
+  "AND2": {
+   "truth_hex": "0x8888",
+   "phases": "s1_handoff/out/phases.json",
+   "margin_nominal": 2.059,
+   "eps": 0.3344494,
+   "eps_pct": 33.4449,
+   "eps_closed_form": 0.3344494,
+   "agree": true,
+   "binding": {
+    "row": 3,
+    "x": [
+     1,
+     1,
+     0,
+     0
+    ],
+    "target": 1,
+    "P2_P3_P4": [
+     4.12979,
+     0.00067,
+     2.05971
+    ]
+   },
+   "counter_gain_just_outside": {
+    "row": 3,
+    "gain": [
+     0.665517,
+     0.665517,
+     1.334483
+    ]
+   },
+   "margin_at_3pct_box": 1.8844,
+   "corner_only_first_fail_eps": 0.33453,
+   "corner_scan_step": 0.00017
+  },
+  "OR2": {
+   "truth_hex": "0xEEEE",
+   "phases": "s1_handoff/out/phases.json",
+   "margin_nominal": 1.6783,
+   "eps": 0.296137,
+   "eps_pct": 29.6137,
+   "eps_closed_form": 0.296137,
+   "agree": true,
+   "binding": {
+    "row": 9,
+    "x": [
+     1,
+     0,
+     0,
+     1
+    ],
+    "target": 1,
+    "P2_P3_P4": [
+     3.72975,
+     0.34716,
+     2.02543
+    ]
+   },
+   "counter_gain_just_outside": {
+    "row": 9,
+    "gain": [
+     0.703833,
+     0.703833,
+     1.296167
+    ]
+   },
+   "margin_at_3pct_box": 1.5317,
+   "corner_only_first_fail_eps": 0.29617,
+   "corner_scan_step": 0.000151
+  },
+  "XOR2": {
+   "truth_hex": "0x6666",
+   "phases": "s1_handoff/out/phases.json",
+   "margin_nominal": 1.3464,
+   "eps": 0.2076067,
+   "eps_pct": 20.7607,
+   "eps_closed_form": 0.2076067,
+   "agree": true,
+   "binding": {
+    "row": 15,
+    "x": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "target": 0,
+    "P2_P3_P4": [
+     2.60907,
+     0.16979,
+     3.97622
+    ]
+   },
+   "counter_gain_just_outside": {
+    "row": 15,
+    "gain": [
+     1.207627,
+     0.792373,
+     0.792373
+    ]
+   },
+   "margin_at_3pct_box": 1.1696,
+   "corner_only_first_fail_eps": 0.20761,
+   "corner_scan_step": 0.000106
+  },
+  "NAND2": {
+   "truth_hex": "0x7777",
+   "phases": "s1_handoff/out/phases.json",
+   "margin_nominal": 1.6783,
+   "eps": 0.2961352,
+   "eps_pct": 29.6135,
+   "eps_closed_form": 0.2961352,
+   "agree": true,
+   "binding": {
+    "row": 5,
+    "x": [
+     1,
+     0,
+     1,
+     0
+    ],
+    "target": 1,
+    "P2_P3_P4": [
+     3.72974,
+     0.34716,
+     2.02543
+    ]
+   },
+   "counter_gain_just_outside": {
+    "row": 5,
+    "gain": [
+     0.703835,
+     0.703835,
+     1.296165
+    ]
+   },
+   "margin_at_3pct_box": 1.5317,
+   "corner_only_first_fail_eps": 0.29617,
+   "corner_scan_step": 0.000151
+  },
+  "AND4": {
+   "truth_hex": "0x8000",
+   "phases": "s1_handoff/out/phases.json",
+   "margin_nominal": 1.8868,
+   "eps": 0.2761815,
+   "eps_pct": 27.6181,
+   "eps_closed_form": 0.2761815,
+   "agree": true,
+   "binding": {
+    "row": 15,
+    "x": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "target": 1,
+    "P2_P3_P4": [
+     4.35928,
+     0.40717,
+     2.47248
+    ]
+   },
+   "counter_gain_just_outside": {
+    "row": 15,
+    "gain": [
+     0.723791,
+     0.723791,
+     1.276209
+    ]
+   },
+   "margin_at_3pct_box": 1.6819,
+   "corner_only_first_fail_eps": 0.27626,
+   "corner_scan_step": 0.000141
+  },
+  "XOR4": {
+   "truth_hex": "0x6996",
+   "phases": "s1_handoff/out/phases.json",
+   "margin_nominal": 0.3085,
+   "eps": 0.1066623,
+   "eps_pct": 10.6662,
+   "eps_closed_form": 0.1066623,
+   "agree": true,
+   "binding": {
+    "row": 6,
+    "x": [
+     0,
+     1,
+     1,
+     0
+    ],
+    "target": 0,
+    "P2_P3_P4": [
+     1.80638,
+     0.0409,
+     2.23773
+    ]
+   },
+   "counter_gain_just_outside": {
+    "row": 6,
+    "gain": [
+     1.106673,
+     0.893327,
+     0.893327
+    ]
+   },
+   "margin_at_3pct_box": 0.2558,
+   "corner_only_first_fail_eps": 0.10669,
+   "corner_scan_step": 5.6e-05
+  },
+  "MUX": {
+   "truth_hex": "0xCACA",
+   "phases": "s1_handoff/out/phases.json",
+   "margin_nominal": 1.3131,
+   "eps": 0.2059028,
+   "eps_pct": 20.5903,
+   "eps_closed_form": 0.2059028,
+   "agree": true,
+   "binding": {
+    "row": 2,
+    "x": [
+     0,
+     1,
+     0,
+     0
+    ],
+    "target": 0,
+    "P2_P3_P4": [
+     2.58143,
+     0.19911,
+     3.92012
+    ]
+   },
+   "counter_gain_just_outside": {
+    "row": 2,
+    "gain": [
+     1.205923,
+     0.794077,
+     0.794077
+    ]
+   },
+   "margin_at_3pct_box": 1.1436,
+   "corner_only_first_fail_eps": 0.20595,
+   "corner_scan_step": 0.000105
+  },
+  "0x0069": {
+   "truth_hex": "0x0069",
+   "phases": "gain_robust.json nominal（與 s9 其他 0x0069 分析相同的標稱解）",
+   "margin_nominal": 0.5168,
+   "eps": 0.1543971,
+   "eps_pct": 15.4397,
+   "eps_closed_form": 0.1543971,
+   "agree": true,
+   "binding": {
+    "row": 7,
+    "x": [
+     1,
+     1,
+     1,
+     0
+    ],
+    "target": 0,
+    "P2_P3_P4": [
+     1.4403,
+     0.02552,
+     1.96627
+    ]
+   },
+   "counter_gain_just_outside": {
+    "row": 7,
+    "gain": [
+     1.154413,
+     0.845587,
+     0.845587
+    ]
+   },
+   "margin_at_3pct_box": 0.4238,
+   "corner_only_first_fail_eps": 0.15446,
+   "corner_scan_step": 8e-05
+  }
+ },
+ "robust": {
+  "0x0069": {
+   "truth_hex": "0x0069",
+   "phases": "gain_robust.json robust（δ＝0.03 的盒內最差裕量最佳化）",
+   "margin_nominal": 0.4965,
+   "eps": 0.1767881,
+   "eps_pct": 17.6788,
+   "eps_closed_form": 0.1767881,
+   "agree": true,
+   "binding": {
+    "row": 7,
+    "x": [
+     1,
+     1,
+     1,
+     0
+    ],
+    "target": 0,
+    "P2_P3_P4": [
+     1.333,
+     0.04198,
+     1.90553
+    ]
+   },
+   "counter_gain_just_outside": {
+    "row": 7,
+    "gain": [
+     1.176806,
+     0.823194,
+     0.823194
+    ]
+   },
+   "margin_at_3pct_box": 0.4467,
+   "corner_only_first_fail_eps": 0.17679,
+   "corner_scan_step": 9.1e-05
+  },
+  "XOR4": {
+   "truth_hex": "0x6996",
+   "phases": "gain_robust.json robust（δ＝0.03 的盒內最差裕量最佳化）",
+   "margin_nominal": 0.2998,
+   "eps": 0.1280555,
+   "eps_pct": 12.8055,
+   "eps_closed_form": 0.1280555,
+   "agree": true,
+   "binding": {
+    "row": 6,
+    "x": [
+     0,
+     1,
+     1,
+     0
+    ],
+    "target": 0,
+    "P2_P3_P4": [
+     1.7222,
+     0.04186,
+     2.22806
+    ]
+   },
+   "counter_gain_just_outside": {
+    "row": 6,
+    "gain": [
+     1.128068,
+     0.871932,
+     0.871932
+    ]
+   },
+   "margin_at_3pct_box": 0.271,
+   "corner_only_first_fail_eps": 0.12807,
+   "corner_scan_step": 6.7e-05
+  }
+ },
+ "xor4_gain_robust_nominal": {
+  "truth_hex": "0x6996",
+  "phases": "gain_robust.json nominal",
+  "margin_nominal": 0.3085,
+  "eps": 0.1066623,
+  "eps_pct": 10.6662,
+  "eps_closed_form": 0.1066623,
+  "agree": true,
+  "binding": {
+   "row": 6,
+   "x": [
+    0,
+    1,
+    1,
+    0
+   ],
+   "target": 0,
+   "P2_P3_P4": [
+    1.80638,
+    0.0409,
+    2.23773
+   ]
+  },
+  "counter_gain_just_outside": {
+   "row": 6,
+   "gain": [
+    1.106673,
+    0.893327,
+    0.893327
+   ]
+  },
+  "margin_at_3pct_box": 0.2558,
+  "corner_only_first_fail_eps": 0.10669,
+  "corner_scan_step": 5.6e-05
+ },
+ "library": {
+  "file": "s0_coverage/out/merged_phases.npz",
+  "n_tables": 65536,
+  "eps_min": 0.043579,
+  "eps_min_pct": 4.3579,
+  "mask": "0x8D6C",
+  "row": 10,
+  "target": 1,
+  "eps_lp_bisect": 0.043579,
+  "worst_table_mc": {
+   "0.01": 1.0,
+   "0.02": 0.999,
+   "0.03": 0.9825
+  },
+  "eps_min_target1_pct": 4.3579,
+  "eps_min_target0_pct": 4.717,
+  "percentiles_pct": {
+   "1": 7.221,
+   "10": 9.65,
+   "50": 12.766,
+   "90": 17.184
+  },
+  "n_below": {
+   "1%": 0,
+   "2%": 0,
+   "3%": 0,
+   "5%": 7
+  }
+ }
+}

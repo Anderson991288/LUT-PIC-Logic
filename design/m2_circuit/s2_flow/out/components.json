@@ -1,0 +1,418 @@
+{
+  "pdk": {
+    "name": "CORNERSTONE",
+    "variant": "SOI220",
+    "version": "2.6.luceda1"
+  },
+  "waveguide": {
+    "width_um": 0.45,
+    "tech_wire_width_um": 0.5,
+    "template_default_um": 0.4,
+    "bend_radius_um": 5.0
+  },
+  "drc_rules": {
+    "3": {
+      "width_um": 0.35,
+      "space_um": 0.2
+    },
+    "39": {
+      "width_um": 0.6,
+      "space_um": 10.0
+    },
+    "41": {
+      "width_um": 2.0,
+      "space_um": 10.0
+    }
+  },
+  "ec_like_cells": [],
+  "components": [
+    {
+      "id": "C1",
+      "function": "2×2 分光／合光（50:50）",
+      "quantity": 14,
+      "where": "每顆 MZI 前後各一",
+      "pdk": {
+        "cell": "SOI220nm_1550nm_TE_STRIP_2x2_MMI",
+        "exists": true,
+        "module": "cornerstone_components220",
+        "gds_layers": [
+          [
+            3,
+            0
+          ]
+        ],
+        "size_um": [
+          82.5,
+          6.0
+        ],
+        "ports": [
+          {
+            "name": "in1",
+            "domain": "StripWaveguidePort",
+            "xy": [
+              -20.0,
+              -1.015
+            ]
+          },
+          {
+            "name": "in2",
+            "domain": "StripWaveguidePort",
+            "xy": [
+              -20.0,
+              1.015
+            ]
+          },
+          {
+            "name": "out1",
+            "domain": "StripWaveguidePort",
+            "xy": [
+              62.5,
+              -1.015
+            ]
+          },
+          {
+            "name": "out2",
+            "domain": "StripWaveguidePort",
+            "xy": [
+              62.5,
+              1.015
+            ]
+          }
+        ],
+        "circuit_model": true,
+        "drc_total": 0,
+        "drc_counts": {}
+      },
+      "decision": "PDK cell",
+      "reason": "晶圓廠提供佈局與電路模型；埠序 in2／out2 在上方（M0 s1 已用座標確認）",
+      "step": "M2 s3、M3 s1",
+      "ok": true
+    },
+    {
+      "id": "C2",
+      "function": "相位區（光學）",
+      "quantity": 14,
+      "where": "每顆 MZI 的 θ（臂）與 φ（輸入端）",
+      "pdk": null,
+      "decision": "自建（模型）",
+      "reason": "PDK 沒有「加熱後的波導相位」電路模型；模擬時用一段理想相位 e^{iφ}，佈局上就是一段直波導",
+      "step": "M2 s3",
+      "ok": true
+    },
+    {
+      "id": "C3",
+      "function": "heater（TiN 加熱條）",
+      "quantity": 14,
+      "where": "蓋在每個相位區的波導上方",
+      "pdk": {
+        "cell": "StraightHeaterFilament",
+        "exists": true,
+        "module": "cornerstone_pcells",
+        "gds_layers": [
+          [
+            39,
+            0
+          ],
+          [
+            41,
+            0
+          ]
+        ],
+        "size_um": [
+          102.4,
+          2.4
+        ],
+        "ports": [
+          {
+            "name": "in",
+            "domain": "ElectricalPort",
+            "xy": [
+              0.45,
+              0.0
+            ]
+          },
+          {
+            "name": "out",
+            "domain": "ElectricalPort",
+            "xy": [
+              99.55,
+              -0.0
+            ]
+          }
+        ],
+        "circuit_model": true,
+        "drc_total": 16208,
+        "drc_counts": {
+          "Minimum feature size violate (GDS41<2micro)": 16208
+        }
+      },
+      "decision": "自建（幾何）",
+      "reason": "PDK 有加熱條 cell，但它單獨跑平台 DRC 就有 16208 處違規：兩端 GDS 41 接點是直徑 2 µm 的圓（畫成多邊形），被判為小於最小寬度 2 µm。改依平台設計規範自畫：TiN 條（寬 0.9 µm）＋兩端 TiN 落墊＋Ti/AL 接點；尺寸沿用 PDK 加熱條。它只有電氣作用，相位由 C2 處理",
+      "step": "M3 s1",
+      "ok": true
+    },
+    {
+      "id": "C4",
+      "function": "訊號 PAD",
+      "quantity": 14,
+      "where": "晶片上下緣",
+      "pdk": {
+        "cell": "HeaterPad",
+        "exists": true,
+        "module": "cornerstone_pcells",
+        "gds_layers": [
+          [
+            41,
+            0
+          ]
+        ],
+        "size_um": [
+          80.0,
+          100.0
+        ],
+        "ports": [
+          {
+            "name": "pad",
+            "domain": "ElectricalPort",
+            "xy": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "circuit_model": false,
+        "drc_total": 0,
+        "drc_counts": {}
+      },
+      "decision": "PDK cell",
+      "reason": "PDK 提供 80×100 µm 的 PAD 層方塊，給探針或打線使用",
+      "step": "M3 s3",
+      "ok": true
+    },
+    {
+      "id": "C5",
+      "function": "GND PAD",
+      "quantity": 1,
+      "where": "晶片上下緣（數量在 M3 s3 依繞線決定，至少 1 個）",
+      "pdk": {
+        "cell": "HeaterPad",
+        "exists": true,
+        "module": "cornerstone_pcells",
+        "gds_layers": [
+          [
+            41,
+            0
+          ]
+        ],
+        "size_um": [
+          80.0,
+          100.0
+        ],
+        "ports": [
+          {
+            "name": "pad",
+            "domain": "ElectricalPort",
+            "xy": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "circuit_model": false,
+        "drc_total": 0,
+        "drc_counts": {}
+      },
+      "decision": "PDK cell",
+      "reason": "與訊號 PAD 相同的 cell",
+      "step": "M3 s3",
+      "ok": true
+    },
+    {
+      "id": "C6",
+      "function": "繞線（heater→PAD）",
+      "quantity": 14,
+      "where": "14 條訊號線（heater 一端到各自的訊號 PAD），另一端全部並接到 GND 匯流線（條數在 M3 s3 決定）",
+      "pdk": null,
+      "decision": "自建（幾何）",
+      "reason": "PDK 沒有走線 cell；用 PAD 層（GDS 41，Ti/AL 直接壓在 TiN 上）畫多邊形，寬度與間距依 DRC 規則",
+      "step": "M3 s3",
+      "ok": true
+    },
+    {
+      "id": "C7",
+      "function": "波導與彎道",
+      "quantity": null,
+      "where": "MZI 之間、核心到 EC",
+      "pdk": {
+        "cell": "StripWaveguideTemplate",
+        "exists": true,
+        "module": "strip",
+        "kind": "trace template"
+      },
+      "decision": "PDK 模板",
+      "reason": "用 PDK 的條形波導模板由 IPKISS 產生直線與彎道；寬度取 MMI 埠的 0.45 µm（模板預設 0.4 µm、技術檔 0.5 µm，三者不同，取與 MMI 相接時不跳變的寬度）",
+      "step": "M3 s1、M3 s3",
+      "ok": true
+    },
+    {
+      "id": "C8",
+      "function": "光學 I/O：EC",
+      "quantity": 10,
+      "where": "西緣 5 個輸入、東緣 5 個輸出",
+      "pdk": null,
+      "decision": "自建（幾何）",
+      "reason": "PDK 沒有 EC cell（查無 edge／EC 類名稱）；M2 s1 選 EC 是為了 10 個埠分兩緣各用一組光纖陣列。自建的尖端波導未經晶圓廠驗證，列為風險",
+      "step": "M3 s3",
+      "ok": true
+    },
+    {
+      "id": "C9",
+      "function": "光學 I/O 備選：GC",
+      "quantity": 0,
+      "where": "不使用",
+      "pdk": {
+        "cell": "SOI220nm_1550nm_TE_STRIP_GC",
+        "exists": true,
+        "module": "cornerstone_components220",
+        "gds_layers": [
+          [
+            3,
+            0
+          ],
+          [
+            6,
+            0
+          ]
+        ],
+        "size_um": [
+          50.0,
+          11.0
+        ],
+        "ports": [
+          {
+            "name": "in",
+            "domain": "StripWaveguidePort",
+            "xy": [
+              -25.0,
+              0.0
+            ]
+          },
+          {
+            "name": "out",
+            "domain": "StripWaveguidePort",
+            "xy": [
+              25.0,
+              0.0
+            ]
+          },
+          {
+            "name": "vertical_in",
+            "domain": "VerticalOpticalPort",
+            "xy": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "circuit_model": true,
+        "drc_total": 0,
+        "drc_counts": {}
+      },
+      "decision": "不使用（記錄備選）",
+      "reason": "PDK 有驗證過的 GC 與模型；若 EC 風險太高，可改成 10 個 GC（光纖要斜入射，埠需排成一列）",
+      "step": "—",
+      "ok": true
+    },
+    {
+      "id": "C10",
+      "function": "波導交叉",
+      "quantity": 0,
+      "where": "不需要",
+      "pdk": {
+        "cell": "SOI220nm_1550nm_TE_STRIP_Waveguide_Crossing",
+        "exists": true,
+        "module": "cornerstone_components220",
+        "gds_layers": [
+          [
+            3,
+            0
+          ]
+        ],
+        "size_um": [
+          9.24,
+          9.24
+        ],
+        "ports": [
+          {
+            "name": "east",
+            "domain": "OpticalPort",
+            "xy": [
+              4.62,
+              0.0
+            ]
+          },
+          {
+            "name": "north",
+            "domain": "OpticalPort",
+            "xy": [
+              0.0,
+              4.62
+            ]
+          },
+          {
+            "name": "west",
+            "domain": "OpticalPort",
+            "xy": [
+              -4.62,
+              0.0
+            ]
+          },
+          {
+            "name": "south",
+            "domain": "OpticalPort",
+            "xy": [
+              0.0,
+              -4.62
+            ]
+          }
+        ],
+        "circuit_model": true,
+        "drc_total": 0,
+        "drc_counts": {}
+      },
+      "decision": "不需要",
+      "reason": "B7 的 7 顆 MZI 都只連相鄰兩條波導，平面上不會交叉",
+      "step": "—",
+      "ok": true
+    }
+  ],
+  "summary": {
+    "n_components": 10,
+    "n_pdk": 4,
+    "n_custom": 4,
+    "n_unused": 2,
+    "heater_width_um": 0.9,
+    "heater_length_um": 100.0,
+    "pad_size_um": [
+      80.0,
+      100.0
+    ],
+    "mmi_size_um": [
+      82.5,
+      6.0
+    ],
+    "pad_pitch_min_um": 90.0,
+    "pad_row_top": 8,
+    "pad_row_bottom": 7,
+    "pad_row_min_um": 710.0,
+    "heater_gap_min_um": 10.0
+  },
+  "checks": {
+    "netlist_sha": true,
+    "every_component_justified": true,
+    "pdk_cells_exist": true,
+    "pdk_cells_drc_clean": true,
+    "flow_inputs_produced": true,
+    "no_crossing_needed": true
+  }
+}

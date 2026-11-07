@@ -1,0 +1,121 @@
+<section class="step" id="p-m1-s1" data-milestone="M1" data-step="s1" data-title="10 Gb/s 預算：問題在哪">
+<div class="bridge">
+<p><b>承接</b>：課程 M3 交出一顆 B7 晶片佈局（DRC 0 違規、heater 電氣連接核對 14/14、光學端點核對；未經 foundry 簽核），規格寫明「靜態驗證：每組輸入穩定後讀取」。M1 要把它推到高速：資料以 10 Gb/s 送入，每 100 ps 換一組輸入，晶片要在下一組到來之前給出判讀。</p>
+<p><b>本步要回答</b>：現有晶片若直接以 10 Gb/s 運作，在時序、功率、相位三方面，需要多少、現在有多少？哪一項要求最嚴？</p>
+<p><b>交給下一步</b>：<code>budget.json</code>（三項預算與介面假設）與一個結論：在宣告的模型下（假設的接收端、未量測的光功率），晶片內幾何 skew 較小、功率需求在假設的接收端下可以滿足，相位穩定度的要求最嚴，主要來自 5 根輸入光纖之間的相對相位。接下來用兩種校正處理誤差：M1 s2 處理固定的誤差（靜態校正），M1 s3 處理會漂的相位（動態校正），M1 s4 再在校正後的條件下驗收時序。</p>
+<p class="terms"><b>名詞對照</b>：位元率（每秒傳送的位元數，10 Gb/s＝每秒 10<sup>10</sup> 個位元）、UI（unit interval，一個位元占的時間；10 Gb/s 時 1 UI＝100 ps）、skew（同一個判讀所用的各路訊號之間的到達時間差）、取樣窗（一個 UI 內可以取樣、且每種輸入都判對的時間範圍）、響應度（光偵測器把光功率轉成電流的比例，A/W）、轉態（訊號由 0 變 1 或由 1 變 0 的過程）。</p>
+</div>
+
+<figure class="concept"><img src="figures/paper/m1/s1_concept.png" alt="本步概念圖：片外 5 根光纖送光進晶片，兩個輸出由偵測器比大小；時序、功率、相位三項預算"><figcaption><b>本步概念</b>　把 10 Gb/s 的要求拆成三項，各用「需要多少、現在有多少」比較。時序與功率都只用前面步驟已有的結果計算；相位這一項決定下一步要改什麼。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能把「跑得多快」拆成時序、功率、相位三項可以計算的預算；能用路徑長度算到達時間差；能由接收端的雜訊反推需要的光功率；能說明為什麼干涉電路特別在意各路輸入光的相對相位。</p>
+<div class="example">
+<p>類比：五個人從不同地方出發，要在同一個路口同時舉牌（輸入），路口的裁判（偵測器）看牌子做決定，每 100 ps 換一輪。要問三件事：(1) 五個人是不是幾乎同時到？（時序）(2) 牌子夠不夠大，裁判看得清楚嗎？（功率）(3) B7 是干涉：不只看牌子大小，也看彼此「步伐對齊」（相位）；步伐一亂，結果就錯。前兩件事看路程與距離，第三件事看路上的溫度：光纖長、受溫度影響大，路口前的晶片短、幾乎不受影響。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 到達時間差（skew）</h4>
+<p>光在波導中的速度由群折射率 n<sub>g</sub> 決定。兩條路徑長度差 ΔL，到達時間差為</p>
+<math display="block"><mrow><mi>Δτ</mi><mo>=</mo><mfrac><mrow><msub><mi>n</mi><mi>g</mi></msub><mspace width="0.2em"/><mi>ΔL</mi></mrow><mi>c</mi></mfrac></mrow></math>
+<p>c 是真空光速。矽波導 n<sub>g</sub>＝<span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['assume']['ng_si']" data-fmt="{:g}">4.28</span>，每 µm 約 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['ps_per_um']*1000" data-fmt="{:.1f}">14.3</span> fs。課程 M3 s1 的佈局是分欄同步：每條軌在每一欄都走同樣的水平距離，差別只在這一欄是 MZI（多兩段 S 彎）還是直通，所以只要數「每條路經過幾顆 MZI」。</p>
+<p>一個 UI 裡，訊號的上升與下降要占掉一段時間，取樣本身也需要一段時間。一階估計下，允許的 skew 為</p>
+<math display="block"><mrow><msub><mi>Δτ</mi><mtext>允許</mtext></msub><mo>≈</mo><mtext>UI</mtext><mo>−</mo><msub><mi>t</mi><mi>e</mi></msub><mo>−</mo><msub><mi>T</mi><mtext>req</mtext></msub><mo>,</mo><mspace width="1em"/><msub><mi>t</mi><mi>e</mi></msub><mo>=</mo><msqrt><mrow><msubsup><mi>t</mi><mtext>tx</mtext><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>t</mi><mtext>rx</mtext><mn>2</mn></msubsup></mrow></msqrt><mo>,</mo><mspace width="1em"/><msub><mi>t</mi><mtext>rx</mtext></msub><mo>≈</mo><mfrac><mn>0.35</mn><msub><mi>B</mi><mtext>rx</mtext></msub></mfrac></mrow></math>
+<p>t<sub>tx</sub>、t<sub>rx</sub> 是發射端與接收端（頻寬 B<sub>rx</sub>）造成的轉態時間（光場振幅的 10–90%），t<sub>e</sub> 是兩者合成的邊緣寬度；T<sub>req</sub> 是取樣需要的時間，由三項相加：setup（取樣前資料要先穩定的時間）、hold（取樣後資料要維持的時間）與時脈抖動（jitter，取樣時刻的隨機偏移）。這是只看邊緣、不看干涉細節的估計；干涉會讓不同輸入的轉態互相影響，M1 s4 再用完整模型確認。</p>
+
+<h4>2. 功率：由偵測器反推</h4>
+<p>判讀是兩個偵測器電流相減。課程 M1 s2 定義的 margin m 是最差那組輸入的 |ΔP|（以 P<sub>u</sub> 為單位），所以最差情況下的電流差是 ℛ m η P<sub>u</sub>：ℛ 是響應度，η 是從 B7 輸入到偵測器的穿透率（傳播損耗與輸出 EC）。扣掉比較器的偏移 I<sub>off</sub> 之後，要大於 Q 倍的總雜訊：</p>
+<math display="block"><mrow><mi>ℛ</mi><mi>m</mi><mi>η</mi><msub><mi>P</mi><mi>u</mi></msub><mo>−</mo><msub><mi>I</mi><mtext>off</mtext></msub><mo>≥</mo><mi>Q</mi><msqrt><mrow><msubsup><mi>i</mi><mi>n</mi><mn>2</mn></msubsup><msub><mi>B</mi><mtext>N</mtext></msub><mo>+</mo><msubsup><mi>σ</mi><mtext>comp</mtext><mn>2</mn></msubsup><mo>+</mo><mn>2</mn><mi>q</mi><msub><mi>I</mi><mtext>PD</mtext></msub><msub><mi>B</mi><mtext>N</mtext></msub><mo>+</mo><msubsup><mi>σ</mi><mtext>RIN</mtext><mn>2</mn></msubsup></mrow></msqrt></mrow></math>
+<p>Q 是訊號要超過總雜訊標準差的倍數。根號內四項依序是 TIA 熱雜訊（TIA 本身固定的電子雜訊）、比較器雜訊（換算到 TIA 輸入）、兩個偵測器的 shot noise（光子到達的隨機性造成的電流起伏，隨光功率增加；I<sub>PD</sub> 是兩者電流和）、雷射強度雜訊（RIN，relative intensity noise，雷射功率本身的相對起伏；5 路來自同一顆雷射，差動部分與判讀量成正比，共模部分經偵測器不匹配漏進來）。Q＝7 對應約 10<sup>−12</sup> 的錯誤率。B<sub>N</sub> 是<b>等效雜訊頻寬</b>，不是接收端的 −3 dB 頻寬。接收端以二階 Butterworth（一種常用的低通濾波器）代表，它的 B<sub>N</sub>＝1.11 B<sub>rx</sub>＝<span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['power']['enbw_ghz']" data-fmt="{:.2f}">7.78</span> GHz。每個函數都取 margin 最差的那組輸入（含 MMI 損耗的 B7），求出最小的 P<sub>u</sub>，再取最大者。</p>
+
+<h4>3. 相位：溫度與波長</h4>
+<p>B7 的輸出是各輸入光場的加權和，判讀靠干涉，所以各路輸入光之間的相對相位必須固定。課程 M2 s1 求得的 σ ≤ 0.1 rad 是「隨機」誤差的標準差（看通過率）；溫度造成的漂移則是「固定」的偏差，要另外求：每路用到的輸入各偏 −δ、0 或 ＋δ，取所有組合中最差者，margin 仍保留 90% 的最大 δ。用含 MMI 損耗的 B7 算得 δ<sub>det</sub>＝<span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['det_rad']" data-fmt="{:.2f}">0.10</span> rad（XOR2 最嚴；AND4 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['det_per_function']['AND4']" data-fmt="{:.2f}">0.11</span>、AND2 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['det_per_function']['AND2']" data-fmt="{:.2f}">0.22</span>、OR2／OR4 約 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['det_per_function']['OR4']" data-fmt="{:.2f}">0.32</span> rad）。數值碰巧與 σ 接近，但意義不同，以下的相位預算用 δ<sub>det</sub>。一段長 L 的路徑，溫度改變 δT 時相位改變</p>
+<math display="block"><mrow><mi>δφ</mi><mo>=</mo><mi>κ</mi><mspace width="0.2em"/><mi>L</mi><mspace width="0.2em"/><mi>δT</mi><mo>,</mo><mspace width="1em"/><mi>κ</mi><mo>=</mo><mfrac><mrow><mn>2</mn><mi>π</mi></mrow><mi>λ</mi></mfrac><mrow><mo>(</mo><mfrac><mrow><mi>d</mi><mi>n</mi></mrow><mrow><mi>d</mi><mi>T</mi></mrow></mfrac><mo>+</mo><mi>n</mi><mi>α</mi><mo>)</mo></mrow></mrow></math>
+<p>κ 是每公尺、每度的相位變化（rad/(m·K)），dn/dT 是折射率的溫度係數，α 是熱膨脹係數（矽波導以有效折射率的溫度係數計，熱膨脹的貢獻小，忽略）。容許的溫度變化為 δT ≤ δ<sub>det</sub>／(κL)。L 有兩種意思：兩條路「長度不同、溫度一起變」時是長度差；兩根光纖「各自溫度不同」時是整段長度，本設計的 5 路光在片外分開、各走一根光纖，所以後者無法避免。同理，雷射波長變化 δλ 造成的相位差為 2π n<sub>g</sub> ΔL δλ／λ<sup>2</sup>。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\paper\m1_timing\s1_budget\budget.py
+.\lab design\paper\m1_timing\s1_budget\figs.py
+.\lab design\paper\m1_timing\concept.py</code></pre>
+<p><code>budget.py</code> 讀 課程 M3 s1 的每欄長度差、課程 M3 s3 的扇入與扇出長度、課程 M2 s3 的校正後 margin、含 MMI 損耗的 B7 模型（求相位偏差的確定性容許），逐欄傳遞每條軌上「各來源最早與最晚的路程」，算出每顆 MZI 輸入端與每個輸出的 skew；再算功率與相位預算，寫出 <code>budget.json</code>。不跑元件模擬，約 1 秒。預期輸出：</p>
+<pre><code>時序：每欄 MZI 多 11.7183 µm＝0.1673 ps；最差 MZI-7 0.3346 ps；一階允許 18.69 ps（占 1.8%）；o2、o4 所有路徑 [4078.09, 4089.81]、[4066.37, 4089.81] µm，範圍 0.3346 ps
+相位預算：確定性偏差容許 {'AND2': 0.217, 'OR2': 0.321, 'XOR2': 0.099, 'AND4': 0.11, 'OR4': 0.317} → 0.099 rad（XOR2）；隨機 σ 0.1 rad
+功率：margin 0.2887（XOR2）；等效雜訊頻寬 7.775 GHz；雜訊 1.846 µA（熱＋比較器占 99%）；P_u（B7 輸入）≥ -6.74 dBm（舊算法 -7.27）；資料光纖 ≥ -4.74、參考 4.8、合計 6.4 dBm
+相位：晶片內 MZI-7 兩條輸入路徑差：0.0171 rad/K → 溫度容許 5.79 K；波長容許 377.0 pm
+相位：兩根光纖長度差 1 cm：0.4381 rad/K → 溫度容許 0.226 K；波長容許 2.58 pm
+相位：兩根 1 m 光纖溫度不同：43.80961 rad/K → 溫度容許 0.00226 K；波長容許 None pm</code></pre>
+<p>自己動手：把 <code>ASSUME</code> 的 <code>bit_rate_gbps</code> 改成 25，看允許的 skew 剩多少；再把 <code>ec_loss_db</code> 改成 4，看每根光纖要多少功率。兩者都只改一個數字，結論會不會變？</p>
+
+<h3>④ 結果與驗收</h3>
+<h4>1. 時序：晶片內足夠，片外要對齊</h4>
+<figure><img src="figures/paper/m1/s1_skew.png" alt="10 Gb/s 的時序預算：晶片內與片外各來源的到達時間差，和允許值、1 UI 比較"><figcaption>圖 M1-1　時序預算（對數刻度）。藍色是晶片內（由佈局幾何計算），橘色是片外常見的長度差。晶片內最差的是 MZI-7 的兩個輸入（多經過兩顆 MZI 的累積），也只占一階允許值的 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['worst_fraction_of_allow']*100" data-fmt="{:.1f}">1.8</span>%；淺藍是 5 個輸出之間的差，但只有 o2、o4 判讀，判讀用到的所有路徑只差 0.335 ps。片外光纖或 RF 線（把高速電訊號送到資料調變的同軸線）差 1 cm 就超過允許值。</figcaption></figure>
+<table>
+<tr><th>項目</th><th>結果</th></tr>
+<tr><td>每多經過一顆 MZI</td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['column_extra_um']" data-fmt="{:.2f}">11.72</span> µm，<span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['column_extra_ps']" data-fmt="{:.3f}">0.167</span> ps</td></tr>
+<tr><td>晶片內最差（MZI 輸入端）</td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['worst_mzi']" data-fmt="{}">MZI-7</span>：<span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['worst_skew_ps']" data-fmt="{:.3f}">0.335</span> ps</td></tr>
+<tr><td>判讀埠 o2、o4 的所有路徑</td><td>o2 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['readout']['o2_um'][0]" data-fmt="{:.1f}">4078.1</span>–<span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['readout']['o2_um'][1]" data-fmt="{:.1f}">4089.8</span> µm、o4 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['readout']['o4_um'][0]" data-fmt="{:.1f}">4066.4</span>–<span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['readout']['o4_um'][1]" data-fmt="{:.1f}">4089.8</span> µm：最晚的路徑相同，最早的不同；判讀用到的所有路徑相差 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['readout']['spread_ps']" data-fmt="{:.3f}">0.335</span> ps</td></tr>
+<tr><td>一階允許的 skew</td><td>UI <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['ui_ps']" data-fmt="{:g}">100</span> − t<sub>e</sub> <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['t_edge_ps']" data-fmt="{:.1f}">58.3</span> − T<sub>req</sub> <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['t_req_ps']" data-fmt="{:g}">23</span> ＝ <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['timing']['skew_allow_ps']" data-fmt="{:.1f}">18.7</span> ps</td></tr>
+</table>
+
+<h4>2. 相位：要求最嚴的一項</h4>
+<figure><img src="figures/paper/m1/s1_phase.png" alt="相位預算：矽波導與光纖在不同路徑長度下的容許溫度變化"><figcaption>圖 M1-2　要讓相對相位的固定偏差不超過 δ<sub>det</sub>（margin 保留 90%），容許的溫度變化與路徑長度的關係（兩條斜線分別是矽波導與光纖）。晶片內 MZI-7 的兩條輸入路徑只差 23 µm，容許 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['cases'][0]['dT_allow_K']" data-fmt="{:.2g}">5.8</span> K，一般實驗室的溫度變化（灰帶）都在容許範圍內。片外分光時，兩根 1 m 光纖只要溫度相差 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['cases'][2]['dT_allow_K']*1000" data-fmt="{:.2g}">2.3</span> mK，相位就超出範圍；這比灰帶的溫度變化（約 0.1–1 K）小約 1.6 到 2.6 個數量級。</figcaption></figure>
+<table>
+<tr><th>情況</th><th>每度相位變化</th><th>容許溫度變化</th><th>容許雷射波長變化</th></tr>
+<tr><td>晶片內 MZI-7 兩條輸入路徑差</td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['cases'][0]['rad_per_K']" data-fmt="{:.3f}">0.017</span> rad/K</td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['cases'][0]['dT_allow_K']" data-fmt="{:.2g}">5.8</span> K</td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['cases'][0]['dlambda_allow_pm']" data-fmt="{:.0f}">377</span> pm</td></tr>
+<tr><td>兩根光纖長度差 1 cm</td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['cases'][1]['rad_per_K']" data-fmt="{:.2f}">0.44</span> rad/K</td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['cases'][1]['dT_allow_K']" data-fmt="{:.2g}">0.23</span> K</td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['cases'][1]['dlambda_allow_pm']" data-fmt="{:.1f}">2.6</span> pm</td></tr>
+<tr><td>兩根 1 m 光纖溫度不同</td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['cases'][2]['rad_per_K']" data-fmt="{:.1f}">43.8</span> rad/K</td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['cases'][2]['dT_allow_K']*1000" data-fmt="{:.2g}">2.3</span> mK</td><td>—（與波長無關）</td></tr>
+</table>
+<p>heater 可以補償慢的相位漂移，但光纖還會受振動與氣流影響，變化快、而且 5 路各自不同，等於要對 4 個相對相位持續追蹤。有兩條路：在片外把 5 根光纖放在一起、縮短並固定，減少漂移（寫成 M1 s5 的介面規格，本研究不設計這部分）；或在晶片上用 heater MZI 持續校正剩下的漂移（M1 s3）。</p>
+
+<h4>3. 功率：在假設的接收端下可滿足</h4>
+<figure><img src="figures/paper/m1/s1_power.png" alt="功率預算：由偵測器需要的電流差反推到每根輸入光纖的功率"><figcaption>圖 M1-3　功率預算，由右往左讀是光的路線，由左往右是反推的順序：偵測器需要的 ΔP → 除以 margin 得到偵測器端的 P<sub>u</sub> → 加上傳播損耗與輸出 EC 得到 B7 輸入端的 P<sub>u</sub> → 加上輸入 EC 得到每根資料光纖。參考光是 9 P<sub>u</sub>，5 根合計 13 P<sub>u</sub>。EC 損耗尚未量測，暫以每個 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['power']['ec_loss_db']" data-fmt="{:g}">2</span> dB 估計。</figcaption></figure>
+<table>
+<tr><th>項目</th><th>結果</th></tr>
+<tr><td>最難的函數</td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['power']['margin_function']" data-fmt="{}">XOR2</span>，校正後 margin <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['power']['margin_min']" data-fmt="{:.3f}">0.289</span></td></tr>
+<tr><td>B7 輸入端需要的 P<sub>u</sub></td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['power']['pu_core_dbm']" data-fmt="{:.1f}">−6.7</span> dBm</td></tr>
+<tr><td>每根資料光纖／參考光纖</td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['power']['pu_fiber_dbm']" data-fmt="{:.1f}">−4.7</span> dBm／<span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['power']['r_fiber_dbm']" data-fmt="{:+.1f}">+4.8</span> dBm</td></tr>
+<tr><td>雜訊組成</td><td>總雜訊 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['power']['noise_ua']" data-fmt="{:.2f}">1.85</span> µA；熱雜訊加比較器雜訊占 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['power']['thermal_share']*100" data-fmt="{:.0f}">99</span>%，shot 與 RIN 合計約 1%（只計熱雜訊、用 −3 dB 頻寬的舊算法會少算 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['power']['pu_core_dbm']-d['power']['pu_core_old_dbm']" data-fmt="{:.2f}">0.53</span> dB）</td></tr>
+<tr><td>5 根合計</td><td><span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['power']['total_dbm']" data-fmt="{:+.1f}">+6.4</span> dBm</td></tr>
+</table>
+
+<h4>4. 結論</h4>
+<table>
+<tr><th>預算</th><th>需要</th><th>現在</th><th>判斷</th></tr>
+<tr><td>時序</td><td>skew ≤ 18.7 ps（一階）</td><td>晶片內最差 0.335 ps；片外要對齊到幾 ps 以內</td><td>晶片內小（模型下）</td></tr>
+<tr><td>功率</td><td>每根資料光纖 ≥ <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['power']['pu_fiber_dbm']" data-fmt="{:.1f}">−4.7</span> dBm</td><td>合計 <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['power']['total_dbm']" data-fmt="{:+.1f}">+6.4</span> dBm，由片外雷射提供（片外分光與調變的損耗未計入）</td><td>可達（假設的接收端）</td></tr>
+<tr><td>相位</td><td>相對相位的固定偏差 ≤ <span class="num" data-json="design/paper/m1_timing/s1_budget/out/budget.json" data-expr="d['phase']['det_rad']" data-fmt="{:.2f}">0.10</span> rad</td><td>片外分光時，光纖溫差要 ≤ 2.3 mK</td><td><b>要求最嚴 → M1 s2</b></td></tr>
+</table>
+<p>在宣告的模型下（由路徑長度與群折射率換算延遲），晶片內的幾何 skew 很小：分欄同步的佈局讓 skew 不到 1 ps，判讀用到的所有路徑也只差 0.335 ps，不需要補長；相較之下，相位穩定度的要求較嚴。要跑 10 Gb/s，關鍵在輸入光的誤差。誤差分兩類，用兩種<b>校正</b>處理，都只用晶片上原有的 heater、不加元件：</p>
+<ul>
+<li><b>靜態校正</b>：誤差固定不變（例如發射端「0」不全暗的殘留光），量一次就能算進模型，重新求 14 個 heater 相位吸收（M1 s2）。</li>
+<li><b>動態校正</b>：誤差一直在變（例如光纖的相位漂移），要一邊傳資料一邊量、一邊修（M1 s3）。</li>
+</ul>
+<p>兩種校正完成後，M1 s4 用完整的時域模型驗收 10 Gb/s 的時序（本步的允許 skew 只是一階估計）；M1 s5 把結果整合成發射端的介面規格與總功率預算。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>把總延遲當成限制</b>：光通過晶片約 60 ps，但每一輪輸入都延遲同樣的時間，像管線一樣，不會限制位元率；限制位元率的是同一個判讀的各路輸入之間的差（skew）。</li>
+<li><b>只看晶片內的 skew</b>：晶片內 0.3 ps，但片外光纖、RF 線差 1 cm 就是約 50 ps；高速時片外對齊往往才是主要工作。</li>
+<li><b>以為功率夠就能動</b>：干涉電路還要求各路光的相對相位固定；功率再大，相位亂了判讀一樣會錯。</li>
+<li><b>把一階估計當成驗收</b>：允許 skew 18.7 ps 只看邊緣寬度，沒有算干涉造成的轉態交互作用與雜訊，只用來判斷「差多少個數量級」。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：o2、o4 最晚的路徑一樣長，可以說兩者「同時到達」嗎？</summary>
+<p>不行。o2、o4 對稱地位在第 2、4 軌，扇出長度相同，最晚的路徑都是 4089.8 µm；但每個輸出是多條路徑的光加起來，最早的路徑不同（o2 4078.1、o4 4066.4 µm）。判讀用到的所有路徑相差 0.335 ps，這才是要看的量；它遠小於取樣窗的尺度（M1 s4 估計造成的代價 ≤ <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['chip_bound_db']" data-fmt="{:.2f}">0.01</span> dB）。o1、o3、o5 不參與判讀，5 個輸出之間的 3.25 ps 不影響結果。</p></details>
+<details class="quiz"><summary>自我檢查 2：位元率改成 25 Gb/s，晶片內的 skew 還夠嗎？</summary>
+<p>UI 變成 40 ps，晶片內 0.335 ps 只占 0.8%，晶片本身仍然足夠；能不能跑，取決於發射端與接收端能否把邊緣與取樣時間縮到 40 ps 以內，片外對齊的要求也跟著變嚴。這也說明分欄同步佈局的好處：skew 由結構決定，不隨位元率改變。</p></details>
+<details class="quiz"><summary>自我檢查 3：如果 5 根光纖綁在一起、放在同一個溫控箱裡，相位問題就解決了嗎？</summary>
+<p>只能減輕。綁在一起時溫度變化大多是共同的，影響的是長度差（1 cm 差容許 0.23 K，可以做到），但光纖之間仍有局部溫差、振動與應力，1 m 光纖 mK 等級的差異就超出範圍；仍需要持續的相位追蹤。本設計的資料調變在片外，5 路光必須各走一根光纖，這段光纖無法省略，所以需要 M1 s3 的追蹤。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>輸入</td><td>課程 M3 s1 的佈局資訊（每欄長度差、MZI 擺放）、課程 M3 s3 的扇入與扇出長度與傳播損耗估計、課程 M2 s3 的校正後 margin、課程 M2 s1 的輸入相位容許</td></tr>
+<tr><td>時序假設</td><td>10 Gb/s；n<sub>g</sub> 4.28；t<sub>tx</sub>＝0.3 UI；B<sub>rx</sub> 7 GHz；setup 10、hold 5、時脈抖動 8 ps；光纖 n<sub>g</sub> 1.468；RF 同軸線速度 0.7 c</td></tr>
+<tr><td>功率假設</td><td>響應度 0.5 A/W；TIA 雜訊 20 pA/√Hz、轉阻 1 kΩ；比較器雜訊 0.5 mV rms、偏移 0.3 mV；RIN −140 dB/Hz（共同光源）、偵測器不匹配 2%；等效雜訊頻寬 1.11 × 7 GHz；Q＝7；EC 每個 2 dB（待量測）；傳播損耗取判讀軌的上限，全部算在輸出側（保守）</td></tr>
+<tr><td>相位假設</td><td>λ＝1.55 µm；矽波導 dn<sub>eff</sub>/dT＝1.8×10<sup>−4</sup> /K；光纖 dn/dT＝1.0×10<sup>−5</sup> /K、α＝5.5×10<sup>−7</sup> /K</td></tr>
+<tr><td>接收端與光源</td><td>平衡偵測：兩個偵測器的電流相減後進同一個 TIA（若用兩個 TIA 再相減，熱雜訊 ×√2，需求約多 1.5 dB）；5 路來自同一顆雷射，路徑差（晶片內 µm 級、光纖 cm 級）遠小於雷射的同調長度（光還能保持穩定干涉的路徑差上限），相位雜訊忽略</td></tr>
+<tr><td>範圍</td><td>接收端與發射端是介面假設，不是本研究設計的元件；雜訊不含偵測器的暗電流與 TIA 的頻率相依；允許 skew 為一階估計，M1 s4 以完整模型確認</td></tr>
+</table>
+<div class="auto-code" data-files="design/paper/m1_timing/s1_budget/budget.py design/paper/m1_timing/s1_budget/figs.py design/paper/m1_timing/concept.py"></div>
+<div class="auto-history" data-file="design/paper/m1_timing/s1_budget/HISTORY.md"></div>
+</section>

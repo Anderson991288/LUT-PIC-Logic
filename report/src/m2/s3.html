@@ -1,0 +1,103 @@
+<section class="step" id="m2-s3" data-milestone="M2" data-step="s3" data-title="電路模擬">
+<div class="bridge">
+<p><b>承接</b>：M2 s2 的元件清單決定了模擬要用的模型：C1（2×2 MMI）用 PDK 的電路模型，C2（相位區）用自建的理想相位 e<sup>iφ</sup>；接線依 M1 的接線表，相位依 M1 的相位設定檔。</p>
+<p><b>本步要回答</b>：U 是 B7 的 5×5 傳輸矩陣（M1 s3）。把 B7 換成 PDK 的 MMI 模型、交給電路模擬工具去接線求解後，結果和 M1 的矩陣乘法一樣嗎？80 組真值表還對嗎？如果實際的 MMI 有損耗、分光不均，結果會怎樣？</p>
+<p><b>交給下一步</b>：<code>sim_results.json</code>（80/80、U 與 M1 的差、三種接線錯誤的比對結果）與 <code>mmi_sweep.json</code>（MMI 不理想時的容許範圍）。M3 s1 用同一個 PDK MMI cell 做佈局；不理想 MMI 的結果則告訴我們：晶片做好後相位必須重新校正，M1 的相位只是起點。</p>
+<p class="terms"><b>名詞對照</b>：電路模擬（circuit simulation，把每個元件的模型依接線連起來，求整個電路的響應）、反射（光從進來的埠反彈回去）、額外損耗（excess loss，元件本身損失的光功率，以 dB 表示）、分光偏差 δ（MMI 直通與交叉兩路的功率不是各 50%）、校正（calibration，依實際元件的特性重新找相位）</p>
+</div>
+
+<figure class="concept"><img src="figures/m2/s3_concept.png" alt="本步概念圖：兩條路算同一個 U，再看元件不完美的影響"><figcaption><b>本步概念</b>　用矩陣乘法與電路模擬各算一次 U，一致才表示接線正確；再讓 MMI 有損耗與分光偏差，看 margin 剩多少、能否靠重新校正補回。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能用 IPKISS 把 PDK 元件與自建模型接成 B7 並求出散射矩陣；能從 S 取出 U 並與手算比較；知道哪些接線錯誤會被比對檢出、哪些「錯誤」實際上不影響結果；能說出 MMI 損耗與分光偏差對判讀 margin 的影響。</p>
+<div class="example">
+<p>類比：M1 像是用計算機自己算一張報表；本步改用公司的會計軟體（電路模擬工具），把每張單據（元件模型）依科目（接線）輸入，讓軟體自己加總。兩邊的總數一樣，才表示單據和科目都輸入對了。接著再問：如果某些單據的金額有誤差（MMI 不理想），報表的結論還成立嗎？</p>
+<p>這一步仍然不畫佈局，只驗證「用晶圓廠的元件模型，電路還是對的」，並找出元件誤差的容許範圍。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 從散射矩陣取出 U</h4>
+<p>B7 對外有 10 個埠：輸入 in0–in4、輸出 out0–out4。電路模擬求出的是 10×10 的散射矩陣 S。我們只關心「從輸入進、從輸出出」那一塊：</p>
+<math display="block"><mrow><msub><mi>u</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mi>S</mi><mo>[</mo><msub><mtext>out</mtext><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mtext>in</mtext><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>]</mo><mo>,</mo><mspace width="1em"/><mi>i</mi><mo>,</mo><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mo>…</mo><mo>,</mo><mn>5</mn></mrow></math>
+<p>u<sub>ij</sub> 是輸入 j 到輸出 i 的係數（無單位；佈局埠名從 0 編號，所以埠名的數字比 i、j 小 1）；S 的其他部分（例如 S[in<sub>0</sub>, in<sub>0</sub>]）是反射，理想情況應為 0。取出 U 後，與 M1 用矩陣乘法得到的 U<sub>ref</sub> 逐項相減，最大差應只剩數值誤差（約 10<sup>−15</sup>）。本步把這個最大差寫成 ‖U − U<sub>ref</sub>‖：兩個矩陣所有元素之差的絕對值中，最大的一個。</p>
+<h4>2. MMI 的埠序與對稱性</h4>
+<p>PDK 的 MMI 中 in2、out2 在上方（M0 s1 已用座標確認），所以 2×2 矩陣要這樣取：</p>
+<math display="block"><mrow><msub><mi>H</mi><mtext>PDK</mtext></msub><mo>=</mo><mrow><mo>[</mo><mtable><mtr><mtd><mi>S</mi><mo>[</mo><mtext>out2</mtext><mo>,</mo><mtext>in2</mtext><mo>]</mo></mtd><mtd><mi>S</mi><mo>[</mo><mtext>out2</mtext><mo>,</mo><mtext>in1</mtext><mo>]</mo></mtd></mtr><mtr><mtd><mi>S</mi><mo>[</mo><mtext>out1</mtext><mo>,</mo><mtext>in2</mtext><mo>]</mo></mtd><mtd><mi>S</mi><mo>[</mo><mtext>out1</mtext><mo>,</mo><mtext>in1</mtext><mo>]</mo></mtd></mtr></mtable><mo>]</mo></mrow></mrow></math>
+<p>理想 MMI 的 H 是上下對稱的：把上下對調（P＝[[0, 1], [1, 0]]）再對調回來，P H P＝H。所以「輸入和輸出都上下接反」不會改變結果；只有一端接反（P H ≠ H），或把 φ 接到下方輸入，才會改變 U。這說明故障注入要選對錯誤，否則會誤以為檢查無效。</p>
+<h4>3. 不理想的 MMI</h4>
+<p>PDK 的 MMI 模型就是理想的 H。實際元件會有額外損耗 L（dB）與分光偏差 δ，本步自建一個模型：</p>
+<math display="block"><mrow><mi>H</mi><mo>(</mo><mi>δ</mi><mo>,</mo><mi>L</mi><mo>)</mo><mo>=</mo><msup><mn>10</mn><mrow><mo>−</mo><mi>L</mi><mo>/</mo><mn>20</mn></mrow></msup><mrow><mo>[</mo><mtable><mtr><mtd><msqrt><mrow><mn>1</mn><mo>/</mo><mn>2</mn><mo>+</mo><mi>δ</mi></mrow></msqrt></mtd><mtd><mi>i</mi><msqrt><mrow><mn>1</mn><mo>/</mo><mn>2</mn><mo>−</mo><mi>δ</mi></mrow></msqrt></mtd></mtr><mtr><mtd><mi>i</mi><msqrt><mrow><mn>1</mn><mo>/</mo><mn>2</mn><mo>−</mo><mi>δ</mi></mrow></msqrt></mtd><mtd><msqrt><mrow><mn>1</mn><mo>/</mo><mn>2</mn><mo>+</mo><mi>δ</mi></mrow></msqrt></mtd></mtr></mtable><mo>]</mo></mrow></mrow></math>
+<p>δ 是直通功率比例超過 50% 的部分（δ＝0.05 表示直通 55%、交叉 45%），L 是每顆 MMI 的額外損耗（dB）。δ＝0、L＝0 時就回到理想 H。</p>
+<p>直覺上，每顆 MMI 都損耗一樣，看似只是整體變暗、ΔP 的正負不變。實際並非如此：B7 中不同路徑經過的 MZI 數不同（2 到 4 顆），經過越多顆衰減越多，各路光場的相對大小因此改變，干涉結果也跟著改變。這等於讓 U 偏離 M1 設計時的值，所以 margin 會下降，甚至判錯。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\m2_circuit\s3_sim\sim.py
+.\lab design\m2_circuit\s3_sim\figs.py</code></pre>
+<p><code>sim.py</code> 的流程：先取出 PDK MMI 的 S，確認它等於 H；再依接線表追蹤每條波導目前接到哪個埠，逐顆把 MZI 接成 B7，對五個函數各求一次 S，取出 U 與 M1 比較並重算真值表；接著做三種接線錯誤；最後用自建的不理想 MMI 模型掃描損耗與分光偏差，並在損耗 0.33 dB 下重新找相位。預期輸出（節錄）：</p>
+<pre><code>XOR2: 16/16，margin 0.4865，‖U−U_ref‖max 1.2e-15，反射 0.0e+00
+PDK 模型：80/80，‖U−U_ref‖max 1.2e-15，最小 margin 0.4865
+故障注入 swap_all：80/80，‖U−U_ref‖max 1.16e-15
+故障注入 swap_out：58/80，‖U−U_ref‖max 2.00e+00
+故障注入 phi_low：40/80，‖U−U_ref‖max 1.93e+00
+全對的損耗範圍 [0.0, 0.38] dB；分光偏差 δ 範圍 [-0.0775, 0.07]
+一致性：{… 'U_err_lt_1e12': True, … 'faults_caught': True, 'nonideal_model_match': True}</code></pre>
+<p>練習：打開 <code>sim_truth.csv</code>，找 XOR2 的 1100 這一列，確認 ΔP＜0；再把 <code>sim.py</code> 的 <code>LOSS_MEAS_DB</code> 改成 0.5 重跑，看哪個函數先判錯。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/m2/s3_verify.png" alt="左：80 組 ΔP 的散布圖，M1 與 IPKISS 結果落在對角線上；右：五個函數與三種接線錯誤的 U 誤差（對數座標）"><figcaption>圖 M2-7　左：80 組輸入的 ΔP，橫軸是 M1 矩陣乘法、縱軸是 IPKISS 電路模擬（PDK MMI），全部落在對角線上，紅點都在 0 以上、藍點都在 0 以下。右：U 與 U<sub>ref</sub> 的最大差（對數座標），綠色是正確接線或不影響結果的接法，紅色是被檢出的接線錯誤；柱上數字是判對組數。</figcaption></figure>
+<table>
+<tr><th>項目</th><th>結果</th></tr>
+<tr><td>PDK MMI 與 H 的差</td><td>1.50、1.55、1.60 µm 都是 <span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="max(d['pdk_mmi_vs_H'].values())" data-fmt="{:.1e}">1.1e-16</span>：PDK 的 MMI 模型就是理想的 H，也沒有波長相依性</td></tr>
+<tr><td>真值表</td><td><span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['passed']" data-fmt="{:d}">80</span>/80 判對</td></tr>
+<tr><td>‖U − U<sub>ref</sub>‖ 最大</td><td><span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['U_err_max']" data-fmt="{:.1e}">1.2e-15</span>（驗收 &lt; 1e-12）</td></tr>
+<tr><td>最小 margin</td><td><span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['margin_min']" data-fmt="{:.4f}">0.4865</span>（XOR2），與 M1 s4 相同</td></tr>
+<tr><td>反射、能量</td><td>反射 0；每組輸出總功率等於輸入總功率</td></tr>
+</table>
+<table>
+<tr><th>接線錯誤（故障注入）</th><th>判對</th><th>U 的最大差</th><th>結論</th></tr>
+<tr><td>MMI 輸入、輸出都上下接反</td><td><span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['faults']['swap_all']['passed']" data-fmt="{:d}">80</span>/80</td><td><span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['faults']['swap_all']['U_err_max']" data-fmt="{:.1e}">1.2e-15</span></td><td>不是錯誤：MMI 上下對稱</td></tr>
+<tr><td>只有 MMI 輸出接反</td><td><span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['faults']['swap_out']['passed']" data-fmt="{:d}">58</span>/80</td><td><span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['faults']['swap_out']['U_err_max']" data-fmt="{:.2f}">2.00</span></td><td>檢出</td></tr>
+<tr><td>φ 接到下方輸入</td><td><span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['faults']['phi_low']['passed']" data-fmt="{:d}">40</span>/80</td><td><span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['faults']['phi_low']['U_err_max']" data-fmt="{:.2f}">1.93</span></td><td>檢出</td></tr>
+</table>
+<p>注意「只有輸出接反」仍有 58 組判對：只看真值表會以為大致正確，比對 U 才能確定接線錯了。所以驗收用 U 的差，不只用判對組數。</p>
+<figure><img src="figures/m2/s3_nonideal.png" alt="三個子圖：MMI 損耗對 margin 的影響、分光偏差對 margin 的影響、重新校正前後的 margin"><figcaption>圖 M2-8　MMI 不理想時（PDK 模型沒有包含的情況）。(a) 每顆 MMI 損耗相同、相位沿用 M1：AND4 的 margin 下降最快，超過 0.38 dB 就判錯；紅色帶是同平台 MMI 的實測損耗 0.30–0.36 dB。(b) 加上 0.33 dB 損耗後，每顆 MMI 有相同的分光偏差 δ：δ 在藍底範圍內五個函數都全對。(c) 在 0.33 dB 損耗下重新找相位，margin 大幅回升；回不到理想值，主要是因為損耗讓所有光功率都變小；把最佳化的起始相位從 10 組增加到 24 組，結果幾乎不變（XOR2 0.2886 → 0.2887），可排除最佳化不足。</figcaption></figure>
+<table>
+<tr><th>MMI 不理想（相位沿用 M1）</th><th>結果</th></tr>
+<tr><td>全對的每顆 MMI 損耗</td><td>0–<span class="num" data-json="design/m2_circuit/s3_sim/out/mmi_sweep.json" data-expr="d['loss_range_ok'][1]" data-fmt="{:g}">0.38</span> dB；實測值 0.33 dB 時 80/80，但五個函數的最小 margin 由 0.4865（XOR2）降到 <span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['nonideal']['loss_meas']['margin']" data-fmt="{:.3f}">0.150</span>（AND4）；AND4 本身由 <span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['functions']['AND4']['margin']" data-fmt="{:.2f}">1.50</span> 降到 0.15，約少了九成</td></tr>
+<tr><td>全對的分光偏差（每顆相同，含 0.33 dB）</td><td>δ＝<span class="num" data-json="design/m2_circuit/s3_sim/out/mmi_sweep.json" data-expr="d['delta_range_ok'][0]*100" data-fmt="{:+.2f}">−7.75</span>％ 到 <span class="num" data-json="design/m2_circuit/s3_sim/out/mmi_sweep.json" data-expr="d['delta_range_ok'][1]*100" data-fmt="{:+.2f}">+7.00</span>％；由 AND4 決定</td></tr>
+<tr><td>每顆 MMI 隨機偏差（含 0.33 dB，500 次）</td><td>σ＝2％ 時 <span class="num" data-json="design/m2_circuit/s3_sim/out/mmi_sweep.json" data-expr="d['random']['0.02']['pass_rate']" data-fmt="{:.0%}">100%</span> 全對；σ＝5％ 時 <span class="num" data-json="design/m2_circuit/s3_sim/out/mmi_sweep.json" data-expr="d['random']['0.05']['pass_rate']" data-fmt="{:.0%}">90%</span></td></tr>
+<tr><td>重新校正後（0.33 dB）</td><td>AND4 的 margin 由 <span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['recalibration']['per_function']['AND4']['margin_before']" data-fmt="{:.3f}">0.150</span> 回到 <span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['recalibration']['per_function']['AND4']['margin_after']" data-fmt="{:.3f}">0.970</span>；最小的 XOR2 為 <span class="num" data-json="design/m2_circuit/s3_sim/out/sim_results.json" data-expr="d['recalibration']['per_function']['XOR2']['margin_after']" data-fmt="{:.3f}">0.289</span></td></tr>
+</table>
+<p><b>結論</b>：用 PDK 模型模擬，B7 的接線與相位都正確（80/80，U 與 M1 只差數值誤差）。但這是因為 PDK 的 MMI 模型就是理想的 H；它沒有告訴我們實際元件的誤差。自建模型的掃描顯示，實測的 MMI 損耗已經接近相位沿用 M1 時的極限（0.38 dB），所以晶片做好後必須依量測結果重新找相位，M1 的相位只能當起點。M2 s1 的 R 與輸入相位容許範圍也是在理想 MMI 下單獨算的，校正後要重算。這兩點已寫成規格的需求 K1（校正，見 M2 s1 的需求表），交給量測與交付（M3 s5）。</p>
+<p><b>實際遇到的情況</b>：</p>
+<ul>
+<li>第一版故障注入只做「MMI 上下全部接反」，結果 80/80、U 也沒變，看起來像是檢查失效。推導後才發現 MMI 上下對稱，這種接法本來就不影響結果；改成「只接反輸出」與「φ 接到下方」兩種真正的錯誤，兩者都被檢出。</li>
+<li>自建 MMI 模型的散射矩陣第一次用迴圈填入，IPKISS 在編譯模型時報錯（模型函式會被即時編譯，不支援迭代混合型別的 tuple）；改成逐項寫出四個元素後通過。</li>
+</ul>
+<p><b>參考文獻</b>：MMI 實測額外損耗 0.30–0.36 dB 取自 CORNERSTONE 晶片量測的公開模型檔（gdsfactory cspdk：https://github.com/gdsfactory/cspdk）；PDK：https://github.com/cornerstone-uos/cornerstone-pdk</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>以為「PDK 模型通過」就代表實際晶片會通過</b>：PDK 的 MMI 模型是理想的；實際的損耗與分光偏差要另外評估。</li>
+<li><b>只看判對組數</b>：接線錯了也可能有 58/80 判對；比對整個 U 才可靠。</li>
+<li><b>把埠名當成上下位置</b>：in1 在下方、in2 在上方；接線時要以座標為準。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：為什麼「MMI 的輸入和輸出都上下接反」不影響結果？</summary>
+<p>接反等於把 H 換成 P H P，其中 P＝[[0, 1], [1, 0]]。H 的對角兩項相等、非對角兩項也相等，所以 P H P＝H。換成不對稱的元件（例如 δ 只在一邊）就不成立了。</p></details>
+<details class="quiz"><summary>自我檢查 2：每顆 MMI 損耗都一樣，為什麼判讀會改變，而不只是整體變暗？</summary>
+<p>不同路徑經過的 MZI 數不同（2 到 4 顆），各路光場衰減的倍數不同，到達輸出時的相對大小就變了。干涉結果取決於相對大小，所以 ΔP 的大小甚至正負都會改變。</p></details>
+<details class="quiz"><summary>自我檢查 3：如果量到每顆 MMI 損耗是 0.5 dB，應如何處理？</summary>
+<p>相位沿用 M1 時，超過 0.38 dB 就會判錯（0.39 dB 時 AND4 最先判錯）。這時要用量到的損耗建立模型，以 M1 的方法重新找相位（本步在 0.33 dB 示範過，margin 可大幅回升），再用量測確認。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>輸入</td><td>M1 s5 的接線表、相位設定檔、真值表；M2 s1 的規格；M2 s2 的元件清單</td></tr>
+<tr><td>模型</td><td>PDK 2×2 MMI＋自建理想相位區；元件之間理想連接（無傳播損耗、無 EC、無熱模型）；波長 1.55 µm</td></tr>
+<tr><td>損耗掃描</td><td>每顆 MMI 0–1.5 dB，步長 0.01 dB</td></tr>
+<tr><td>分光偏差</td><td>每顆相同：δ＝−15％～＋15％，步長 0.25％；隨機：N(0, σ²)，σ＝1、2、5％，各 500 次，種子 700＋k</td></tr>
+<tr><td>重新校正</td><td>SLSQP，24 個起點，種子 700＋k，maxiter 600（與 M1 s4 相同的方法與設定）</td></tr>
+</table>
+<div class="auto-code" data-files="design/m2_circuit/s3_sim/sim.py design/m2_circuit/s3_sim/figs.py"></div>
+<div class="auto-history" data-file="design/m2_circuit/s3_sim/HISTORY.md"></div>
+</section>

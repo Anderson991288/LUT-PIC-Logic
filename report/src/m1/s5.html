@@ -1,0 +1,92 @@
+<section class="step" id="m1-s5" data-milestone="M1" data-step="s5" data-title="小實作與交接">
+<div class="bridge">
+<p><b>承接</b>：M1 s4 找到五個函數的相位，80 組判讀全對；M1 s2 定下 B7 的接線。</p>
+<p><b>本步要回答</b>：怎樣把「固定光路」和「功能設定」分開保存，讓下一個人（或之後的自己）只拿這幾個檔案，就能重算出同樣的結果？</p>
+<p><b>交給下一步</b>：三個交接檔：<code>b7_netlist.json</code>（固定光路）、<code>phases.json</code>（相位設定檔）、<code>truth_tables.csv</code>（驗收答案）。M2 從這裡開始，不再回頭讀 M1 的程式。</p>
+<p class="terms"><b>名詞對照</b>：接線表（netlist，記錄元件與連接方式的檔案）、相位設定檔（phase settings，每個函數的 14 個相位）、交接（handoff）、SHA-256（檔案內容的雜湊值，內容改一個字元就完全不同，用來確認兩個檔案是同一版本）、竄改測試（tamper test，故障注入的一種：故意改錯交接檔的一處，確認檢查會發現）</p>
+</div>
+
+<figure class="concept"><img src="figures/m1/s5_concept.png" alt="本步概念圖：三個交接檔"><figcaption><b>本步概念</b>　把固定光路、功能設定與驗收答案分成三個檔案，並以 SHA-256 綁定；下一步只用這三個檔案就能重算並驗收。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能說出三個交接檔各裝什麼、為什麼要分開；能用重播程式切換函數、算出任一組輸入的判讀；知道交接檔要如何證明自己是「完整的」。</p>
+<div class="example">
+<p>類比：一台鋼琴（固定光路）可以彈很多首曲子（功能設定），樂譜（相位設定檔）和鋼琴是分開保存的。換一首曲子只換樂譜，不必重新造一台鋼琴。但樂譜要註明是寫給哪一台琴（88 鍵還是 61 鍵），否則拿錯琴就彈不出來。<code>phases.json</code> 裡記錄的接線 SHA-256 就是這個註明。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<p>本步沒有新的物理公式，重點是交接的三個原則：</p>
+<table>
+<tr><th>原則</th><th>做法</th><th>為什麼</th></tr>
+<tr><td>固定的與會變的分開</td><td>接線放 <code>b7_netlist.json</code>，相位放 <code>phases.json</code></td><td>佈局（M3）只需要接線；相位要等晶片做好之後才設定，也可能日後增加新函數</td></tr>
+<tr><td>寫明慣例，不靠程式</td><td>接線表寫出 MZI 矩陣 T(θ, φ)、埠的上下順序、相位的位置與單位、讀取規則</td><td>別人用自己的程式也能算出同樣結果；慣例不寫清楚，最常見的錯是埠序或 θ／φ 對調</td></tr>
+<tr><td>可以自己驗證</td><td>附上真值表答案；相位檔記錄接線的 SHA-256</td><td>接手者能立刻確認「接線對、相位對、算法對」</td></tr>
+</table>
+<p>為了證明交接檔是完整的，本步另寫一份<b>重播程式</b>：它不使用本課程前面任何一支程式或共用模組，只讀三個交接檔，依接線表寫明的慣例重新實作 MZI 與 B7，再把 80 組判讀重算一次。兩邊結果相同，證明的是交接檔<b>自足、一致</b>：只靠這三個檔案就能重算出同樣的結果。它不證明物理模型正確：重播程式照同一條公式重寫，公式若錯，兩邊會一起錯；模型的正確性由 M0 s1 與 PDK 模型的對照負責，M2 會再用 PDK 模型模擬一次。</p>
+<p>重播程式也核對三件容易漏掉的事：接線的 SHA-256 不符時<b>直接停止</b>，不往下計算；真值表的目標欄與判讀欄也要和重算一致，不只比 ΔP；竄改測試除了數判對幾組，也比 ΔP 與真值表的差，因為小錯可能被 margin 吸收、判讀仍然全對。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\m1_logic\s5_handoff\handoff.py
+.\lab design\m1_logic\s5_handoff\replay.py
+.\lab design\m1_logic\s5_handoff\figs.py</code></pre>
+<p><code>handoff.py</code> 從 M1 s4 的結果整理出三個交接檔；<code>replay.py</code> 只讀這三個檔案重播 80 組，並做六種竄改測試。預期輸出：</p>
+<pre><code>接線 SHA-256 相符：True；重播 80/80；…目標／判讀欄不符 0 列
+  竄改 a 交換 AND4 的 θ1、φ1：79/80，ΔP 與真值表最大差 2.774
+  竄改 b AND2 的相位當 XOR2：68/80，…
+  竄改 c MZI-6 移到波導 3、4：49/80，…，SHA-256 相符：False
+  竄改 d 讀取埠 o2、o4 對調：0/80，…
+  竄改 e R 改成 2.9：80/80，ΔP 與真值表最大差 0.515
+  竄改 f θ 放在下臂：58/80，…</code></pre>
+<p><b>小實作：切換函數</b>。用重播程式查任一函數、任一組輸入：</p>
+<pre><code>.\lab design\m1_logic\s5_handoff\replay.py --func XOR2 --input 1011</code></pre>
+<pre><code>XOR2，輸入 1011，R＝3
+  y2＝-0.499-0.501i → P2＝0.500
+  y4＝+0.045-0.107i → P4＝0.014
+  ΔP＝+0.486 → 判讀 1（目標 1）</code></pre>
+<p>把 <code>--func</code> 換成 AND2、OR2、AND4、OR4，輸入不變，觀察 ΔP 與判讀如何改變；光路完全沒動，只換了 <code>phases.json</code> 裡的一組相位。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/m1/s5_handoff.png" alt="M1 的成果整理成三個交接檔，分別交給 M2 s1、M2 s3 與 M3"><figcaption>圖 M1-17　交接：M1 的成果整理成三個檔案。接線表給規格、模擬與佈局三方使用；相位設定檔給規格（每個相位對應一個控制通道）與模擬使用，並以 SHA-256 綁定所搭配的接線表；真值表是模擬的驗收答案。佈局只需要接線，相位在晶片做好之後才設定。</figcaption></figure>
+<figure><img src="figures/m1/s5_ports.png" alt="B7 接線圖，左右兩側同時標出教學編號與佈局埠名"><figcaption>圖 M1-18　教學編號與佈局埠名的對照（記錄在接線表）。輸入 x1–x4、R 依序是 in0–in4；輸出 o1–o5 是 out0–out4；判讀的 o2、o4 在佈局中叫 out1、out3。這裡的 out0–out4 是 B7 的埠名，從 0 起算，與 MMI 的 PDK 埠名 out1、out2 不同。之後的規格、模擬與佈局都用埠名，報告說明用教學編號。</figcaption></figure>
+<table>
+<tr><th>檢查</th><th>結果</th></tr>
+<tr><td>接線 SHA-256</td><td>相位檔記錄值與接線表相符：<span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="'是' if d['netlist_sha_ok'] else '否'">是</span></td></tr>
+<tr><td>獨立重播</td><td><span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="f&quot;{d['passed']}／{d['total']}&quot;">80／80</span> 組判讀正確</td></tr>
+<tr><td>與真值表 ΔP 的差</td><td>最大 <span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="d['csv_max_dP_err']" data-fmt="{:.1e}">4.9e-07</span> P<sub>u</sub>（真值表 ΔP 只存 6 位小數，捨入誤差最多 5e-7）</td></tr>
+</table>
+<p><b>竄改測試</b>：每次只改一處，重播都會發現（(e) 要靠 ΔP 比對才發現）。</p>
+<table>
+<tr><th>竄改</th><th>判對組數</th><th>ΔP 與真值表最大差（P<sub>u</sub>）</th><th>說明</th></tr>
+<tr><td>(a) 交換 AND4 的 θ1、φ1</td><td><span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="d['tamper']['a 交換 AND4 的 θ1、φ1']['passed']">79</span>／80</td><td><span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="d['tamper']['a 交換 AND4 的 θ1、φ1']['max_dP_diff']" data-fmt="{:.2f}">2.77</span></td><td>只錯一組輸入：θ／φ 對調的錯誤可能很隱蔽，所以要全部 80 組都核對</td></tr>
+<tr><td>(b) AND2 的相位當 XOR2</td><td><span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="d['tamper']['b AND2 的相位當 XOR2']['passed']">68</span>／80</td><td><span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="d['tamper']['b AND2 的相位當 XOR2']['max_dP_diff']" data-fmt="{:.2f}">5.23</span></td><td>XOR2 的 16 組中有 12 組錯（AND2 與 XOR2 只在 00 那四組一致）</td></tr>
+<tr><td>(c) MZI-6 移到波導 3、4</td><td><span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="d['tamper']['c MZI-6 移到波導 3、4']['passed']">49</span>／80</td><td><span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="d['tamper']['c MZI-6 移到波導 3、4']['max_dP_diff']" data-fmt="{:.2f}">15.62</span></td><td>接線一改，SHA-256 就和相位檔記錄的不同；正式重播在這一步就停止，不往下算。表中是強行計算的後果</td></tr>
+<tr><td>(d) 讀取埠對調</td><td><span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="d['tamper']['d 讀取埠 o2、o4 對調']['passed']">0</span>／80</td><td><span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="d['tamper']['d 讀取埠 o2、o4 對調']['max_dP_diff']" data-fmt="{:.2f}">22.00</span></td><td>所有判讀反相；接收端的正負極性接反就會這樣</td></tr>
+<tr><td>(e) R 改成 2.9</td><td><span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="d['tamper']['e R 改成 2.9']['passed']">80</span>／80</td><td><span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="d['tamper']['e R 改成 2.9']['max_dP_diff']" data-fmt="{:.2f}">0.51</span></td><td>判讀全對：參考光差 3%（功率差約 6.6%）被 margin 吸收了，只數判對組數檢查不出；比對 ΔP 才看得出來</td></tr>
+<tr><td>(f) θ 放在下臂</td><td><span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="d['tamper']['f θ 放在下臂']['passed']">58</span>／80</td><td><span class="num" data-json="design/m1_logic/s5_handoff/out/replay.json" data-expr="d['tamper']['f θ 放在下臂']['max_dP_diff']" data-fmt="{:.2f}">8.87</span></td><td>慣例設錯：同一組數字放到錯的位置就是另一個電路，這正是接線表要寫明慣例的原因</td></tr>
+</table>
+<p><b>實際遇到的情況</b>：第一次重播時，ΔP 與真值表差了 4.3e-6。原因是 M1 s4 存檔時把相位四捨五入到 6 位小數，而真值表是用未捨入的相位算的。差異雖小（相位差約 1e-6 rad，遠小於容許的 0.05 rad），但交接檔應該彼此完全一致，所以改成相位以全精度存檔；之後剩下的差只來自真值表本身的 6 位小數。</p>
+<p><b>M1 結論</b>：一顆 B7（5 條波導、7 顆 MZI、14 個相位）加上參考光 R＝3、讀 o2 − o4，只換相位就能做出 AND2、OR2、XOR2、AND4、OR4；功能規格已經整理成三個交接檔，下一個里程碑把它做成晶片的介面規格並用 PDK 模型模擬。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>只交相位、不交慣例</b>：同一組數字，換一種 MZI 定義（例如 θ 放在下臂，或 φ 放在輸出端）就是另一個電路。</li>
+<li><b>只抽查幾組輸入</b>：竄改 (a) 只讓 80 組中的 1 組出錯，抽查很容易漏掉。</li>
+<li><b>交接檔各自四捨五入</b>：小誤差會讓「重算結果和答案不一樣」，接手的人無法判斷是誤差還是錯誤。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：M3 做佈局時需要 phases.json 嗎？</summary>
+<p>不需要。佈局只需要接線：每顆 MZI 放在哪兩條波導、第幾層，以及埠名。相位是晶片做好之後，用控制訊號設定的；但每顆 MZI 要有能調 θ、φ 的元件，這個要求來自接線表。</p></details>
+<details class="quiz"><summary>自我檢查 2：日後想加一個新函數（例如 NAND2），三個檔案中哪些要改？</summary>
+<p>只改 phases.json（多一組相位）與 truth_tables.csv（多 16 列答案）。b7_netlist.json 不變，SHA-256 也不變，已經做好的晶片可以直接用新的相位。</p></details>
+<details class="quiz"><summary>自我檢查 3：竄改 (d) 讀取埠對調後 0／80 全錯。如果接收端確實接反了，最簡單的補救是什麼？</summary>
+<p>把判讀規則反過來（ΔP＜0 判 1）即可，因為 ΔP 只是整體變號，沒有任何一組落在邊界。這也說明為什麼接線表要寫清楚讀取埠的順序。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>交接檔</td><td>b7_netlist.json（UTF-8 JSON）、phases.json（相位 rad，全精度）、truth_tables.csv（UTF-8，檔頭帶 BOM 標記，方便用試算表開啟）</td></tr>
+<tr><td>重播程式</td><td>只用 numpy 與 Python 標準函式庫，不 import 本課程的任何模組；依接線表的慣例獨立實作</td></tr>
+<tr><td>執行時間</td><td>每支數秒</td></tr>
+</table>
+<div class="auto-code" data-files="design/m1_logic/s5_handoff/handoff.py design/m1_logic/s5_handoff/replay.py design/m1_logic/s5_handoff/figs.py"></div>
+<div class="auto-history" data-file="design/m1_logic/s5_handoff/HISTORY.md"></div>
+</section>

@@ -1,0 +1,151 @@
+{
+ "ptf2": {
+  "method": "LP（highs）：11 個特徵的二次門檻可分性，65,536 張逐張判定（本輪重算）",
+  "elapsed_s": 82.7,
+  "n_ptf2": 57574,
+  "n_non_ptf2": 7962,
+  "reference": {
+   "n_ptf2": 57574,
+   "n_non_ptf2": 7962
+  },
+  "match_reference": true,
+  "flags_file": "ptf2_flags.npy",
+  "xor4_is_ptf2": false,
+  "xor3_0x0069_is_ptf2": false,
+  "mux_0xCACA_is_ptf2": true
+ },
+ "bins": [
+  0.0,
+  0.05,
+  0.1,
+  0.15
+ ],
+ "columns": {
+  "reference_scan24": {
+   "source": "reference evidence (24-start scan, not rerun this round)",
+   "file": "coverage_margins.npy",
+   "sha256": "97df4218980e8f84c7021be700434ac73ff26edbd6e3ec0158f8da186ef0b026",
+   "all": {
+    "n": 65536,
+    "realizable": 65536,
+    "ge_0p05": 65536,
+    "ge_0p1": 64143,
+    "ge_0p15": 52479,
+    "median": 0.2321,
+    "min": 0.0532,
+    "argmin": "0x9667"
+   },
+   "ptf2": {
+    "n": 57574,
+    "realizable": 57574,
+    "ge_0p05": 57574,
+    "ge_0p1": 57391,
+    "ge_0p15": 51483,
+    "median": 0.3076,
+    "min": 0.069,
+    "argmin": "0x604F"
+   },
+   "non_ptf2": {
+    "n": 7962,
+    "realizable": 7962,
+    "ge_0p05": 7962,
+    "ge_0p1": 6752,
+    "ge_0p15": 996,
+    "median": 0.1231,
+    "min": 0.0532,
+    "argmin": "0x1333"
+   },
+   "hist": {
+    "不可實現": 0,
+    "0～0.05": 0,
+    "0.05～0.1": 1393,
+    "0.1～0.15": 11664,
+    "≥ 0.15": 52479
+   }
+  },
+  "codex_bank_replay": {
+   "source": "this round: replay of the Codex phase bank (replay_bank.py)",
+   "file": "bank_replay_margins.npy",
+   "sha256": "9eb6d6981af3524256e13e4809d90e2f65811bec42a853f9c417e1208c353c47",
+   "all": {
+    "n": 65536,
+    "realizable": 65536,
+    "ge_0p05": 65536,
+    "ge_0p1": 49739,
+    "ge_0p15": 25366,
+    "median": 0.132,
+    "min": 0.0536,
+    "argmin": "0x8798"
+   },
+   "ptf2": {
+    "n": 57574,
+    "realizable": 57574,
+    "ge_0p05": 57574,
+    "ge_0p1": 46221,
+    "ge_0p15": 25111,
+    "median": 0.1398,
+    "min": 0.0591,
+    "argmin": "0x0B64"
+   },
+   "non_ptf2": {
+    "n": 7962,
+    "realizable": 7962,
+    "ge_0p05": 7962,
+    "ge_0p1": 3518,
+    "ge_0p15": 255,
+    "median": 0.0964,
+    "min": 0.0536,
+    "argmin": "0x10E5"
+   },
+   "hist": {
+    "不可實現": 0,
+    "0～0.05": 0,
+    "0.05～0.1": 15797,
+    "0.1～0.15": 24373,
+    "≥ 0.15": 25366
+   }
+  },
+  "this_round_scan24": {
+   "source": "this round: full 24-start scan (cover4.py, only present after the full rerun)",
+   "file": "coverage_margins.npy",
+   "sha256": "97df4218980e8f84c7021be700434ac73ff26edbd6e3ec0158f8da186ef0b026",
+   "all": {
+    "n": 65536,
+    "realizable": 65536,
+    "ge_0p05": 65536,
+    "ge_0p1": 64143,
+    "ge_0p15": 52479,
+    "median": 0.2321,
+    "min": 0.0532,
+    "argmin": "0x9667"
+   },
+   "ptf2": {
+    "n": 57574,
+    "realizable": 57574,
+    "ge_0p05": 57574,
+    "ge_0p1": 57391,
+    "ge_0p15": 51483,
+    "median": 0.3076,
+    "min": 0.069,
+    "argmin": "0x604F"
+   },
+   "non_ptf2": {
+    "n": 7962,
+    "realizable": 7962,
+    "ge_0p05": 7962,
+    "ge_0p1": 6752,
+    "ge_0p15": 996,
+    "median": 0.1231,
+    "min": 0.0532,
+    "argmin": "0x1333"
+   },
+   "hist": {
+    "不可實現": 0,
+    "0～0.05": 0,
+    "0.05～0.1": 1393,
+    "0.1～0.15": 11664,
+    "≥ 0.15": 52479
+   }
+  }
+ }
+}

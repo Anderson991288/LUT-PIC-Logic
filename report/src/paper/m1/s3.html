@@ -1,0 +1,90 @@
+<section class="step" id="p-m1-s3" data-milestone="M1" data-step="s3" data-title="輸入相位追蹤（動態校正）">
+<div class="bridge">
+<p><b>承接</b>：M1 s1 指出要求最嚴的是 5 路輸入光之間的相對相位：光纖會隨溫度慢慢漂移，固定偏差要 ≤ 0.10 rad。M1 s2 用靜態校正吸收了固定的誤差；相位漂移卻一直在變，量一次不夠，要動態校正。晶片上只有 heater MZI，不加任何晶片元件。</p>
+<p><b>本步要回答</b>：一邊傳資料、一邊只用 B7 原有的 heater，能不能把輸入相位漂移補回來？漂移要怎麼量？能追多快的漂移？</p>
+<p><b>交給下一步</b>：<code>tracking.json</code>（補償、量測、追蹤頻寬）與一個介面要求：慢於回授頻寬的漂移由晶片追蹤，快於它的相位擾動要由發射端壓在分配到的容許量以內（相位預算的分配見 ④）。M1 s4 在校正後的條件下驗收時序，假設輸入相位已被追蹤到容許範圍內。</p>
+<p class="terms"><b>名詞對照</b>：同步偵測（lock-in：給某個參數加上已知頻率的小擺動，只取輸出中同頻率的成分，得到輸出對該參數的斜率）、回授頻寬（量測加修正這個迴路能跟上的最快變化）、Jacobian 秩（量測值對各相位的偏微分矩陣的秩；秩等於相位個數才分辨得開）、Gauss-Newton（由量測反求未知數的疊代法）。</p>
+</div>
+
+<figure class="concept"><img src="figures/paper/m1/s3_concept.png" alt="本步概念圖：片外 5 路光進入 B7，heater 加小擺動，量 5 個輸出的平均功率與擺動響應，估計漂移後只調 φ 補回"><figcaption><b>本步概念</b>　把「追蹤」拆成三個問題：補得回來嗎、量得出來嗎、追得上嗎。三個都只用 B7 原有的 heater 與 5 個輸出的光功率回答。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能說明輸入相位漂移為什麼可以用外相位補償；能說明為什麼在最佳相位上「量平均功率」分辨不出漂移，以及擺動加同步偵測怎麼解決；能由雜訊估計回授頻寬。</p>
+<div class="example">
+<p>類比：要把收音機調到訊號最強的位置，指針停在最強點時，往左或往右偏一點，音量都只是「稍微變小」，光聽音量分不出偏了哪個方向。若讓旋鈕自己左右輕輕晃，聽音量是在往左時變大還是往右時變大，就知道該往哪邊轉。heater 擺動加同步偵測就是這個「晃一晃」。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 漂移可以用外相位補償</h4>
+<p>輸入光 x<sub>j</sub> 多了相位 δ<sub>j</sub>（以 R 為基準），等於在 U 的右邊乘上對角矩陣：</p>
+<math display="block"><mrow><msup><mi>U</mi><mo>′</mo></msup><mo>=</mo><mi>U</mi><mspace width="0.2em"/><mtext>diag</mtext><mo>(</mo><msup><mi>e</mi><mrow><mi>i</mi><msub><mi>δ</mi><mn>1</mn></msub></mrow></msup><mo>,</mo><mo>…</mo><mo>,</mo><msup><mi>e</mi><mrow><mi>i</mi><msub><mi>δ</mi><mn>4</mn></msub></mrow></msup><mo>,</mo><mn>1</mn><mo>)</mo></mrow></math>
+<p>每顆 MZI 的外相位 φ 就是加在它上方輸入的一個相位（課程 M1 s2）。輸入端的相位差可以一層一層往後推到各 MZI 的外相位上，所以只要重新設定 7 個 φ、內相位 θ 不動，就能抵消任意的 δ。判讀只看功率，輸出端多出的相位不影響結果。</p>
+<h4>2. 為什麼平均功率量不出漂移</h4>
+<p>資料是隨機的，但多個位元平均後，各輸出的平均功率 P̄<sub>i</sub> 是固定的，而且隨 δ 改變。問題是：課程 M1 s4 求得的相位讓 margin 最大，在這個點上，參考光與資料光的干涉項多半落在極值（相位差 0 或 π），所以</p>
+<math display="block"><mrow><mfrac><mrow><mo>∂</mo><msub><mover><mi>P</mi><mo>¯</mo></mover><mi>i</mi></msub></mrow><mrow><mo>∂</mo><msub><mi>δ</mi><mi>j</mi></msub></mrow></mfrac><mo>≈</mo><mn>0</mn></mrow></math>
+<p>漂移只造成二次方的變化，看不出往哪個方向偏。給第 k 個 heater 加一個小擺動 φ<sub>k</sub>＋ε sin(2π f<sub>k</sub> t)（每個 heater 用不同頻率），用同步偵測取出輸出中頻率 f<sub>k</sub> 的成分，得到斜率 ∂P̄<sub>i</sub>/∂φ<sub>k</sub>。這個斜率在最佳點是 0 附近，偏離後會依偏離的方向變正或變負，對 δ 是一階的。7 個 heater × 5 個輸出共 35 個斜率，足以分辨要追的相位。</p>
+<h4>3. 量測要多久</h4>
+<p>雜訊主要來自資料本身：不同的輸入圖樣，輸出功率差很多，每個位元的功率起伏 σ<sub>bit</sub> 遠大於接收端雜訊。擺動幅度 ε、平均 N 個位元時，斜率的雜訊約為</p>
+<math display="block"><mrow><msub><mi>σ</mi><mtext>斜率</mtext></msub><mo>≈</mo><mfrac><mrow><msqrt><mn>2</mn></msqrt><mspace width="0.2em"/><msub><mi>σ</mi><mtext>bit</mtext></msub></mrow><mrow><mi>ε</mi><msqrt><mi>N</mi></msqrt></mrow></mfrac><mo>,</mo><mspace width="1em"/><msub><mi>f</mi><mi>L</mi></msub><mo>≈</mo><mfrac><mn>1</mn><mrow><mn>2</mn><mi>π</mi><mspace width="0.2em"/><msub><mi>T</mi><mtext>meas</mtext></msub></mrow></mfrac></mrow></math>
+<p>平均功率 P̄ 本身的雜訊是 σ<sub>bit</sub>／√N。這兩個雜訊估計都假設各位元的功率起伏互相獨立，資料要夠隨機（例如經過擾碼，即以固定規則打亂資料）。相位估計誤差＝斜率雜訊 × 由斜率反求 δ 的放大倍數；要求各方向的標準差 ≤ 0.01 rad，就得到 N 與量測時間 T<sub>meas</sub>＝N／位元率，再得到回授頻寬 f<sub>L</sub>。擺動頻率不能超過 heater 能反應的速度（熱時間常數約 20 µs），所以 T<sub>meas</sub> 至少要涵蓋 10 個擺動週期。ε 越大量測越快，但擺動時 margin 也掉得越多，這是本步要選的取捨。7 個 heater 是用不同頻率同時擺動，各種正負組合都會出現，所以擺動的代價要取 2<sup>7</sup> 個 ±ε 組合中最差的。</p>
+<h4>4. 相位預算的分配</h4>
+<p>M1 s1 的相位容許 δ<sub>det</sub> 只有一份，要分給同時存在的幾項誤差：估計誤差（取 3 倍標準差）、追蹤落後（漂移比回授慢一點造成的落後）、快速擾動（高於回授頻寬、追不上的部分）。δ<sub>det</sub> 是固定偏差的容許量，三項可能同向，所以用<b>幅度相加</b> ≤ δ<sub>det</sub>，不用平方和（平方和只在三項互相獨立、且接受一定失敗機率時才成立）；估計誤差的 3 倍標準差在這裡當作上界使用。後兩者平分剩下的部分。追蹤落後的容許量 × 2π f<sub>L</sub> 就是可追的漂移速度；快速擾動的容許量寫進發射端的介面規格。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\paper\m1_timing\s3_tracking\track.py
+.\lab design\paper\m1_timing\s3_tracking\figs.py
+.\lab design\paper\m1_timing\concept.py</code></pre>
+<p><code>track.py</code> 對每個函數：(1) 加 20 組隨機漂移（σ 0.5 rad），比較不補償、只調 φ 的 margin；(2) 算兩種量法對 δ 的 Jacobian 秩；(3) 加 20 組漂移（σ 0.3 rad），把含雜訊的擺動量測用 Gauss-Newton 反求 δ，再只調 φ 補償，看 margin；最後掃擺動幅度 ε，得到回授頻寬與 margin 損失的取捨。約 30 秒。預期輸出（節錄；「盲量」指只看平均功率，「擾動」指加上 heater 擺動）：</p>
+<pre><code>XOR2：漂移 σ 0.5 rad 時 margin 最差 -2.62（判錯 4/20） → 只調 φ 後 1.0000；分辨 2 個相位：盲量秩 1、擾動秩 2（只用 o2、o4：2）；…估計後補償 margin 最差 0.9937；7 個同時擺動時 margin 0.9749
+擺動幅度 0.0062 rad（同時擺動損失 ≤ 3%）；heater 7958 Hz、擺動 1989 Hz；量測 358 ms → 回授 0.44 Hz（只用 o2、o4：0.27 Hz）
+相位預算：估計 3σ 0.030＋追蹤落後 0.035＋快速擾動 0.035（幅度相加 0.099 ≤ 0.099）；容許斜率 0.096 rad/s（1 m 光纖每分鐘 0.1 K 約 0.073 rad/s）</code></pre>
+<p>自己動手：把 <code>dither_keep</code> 從 0.97 改成 0.95（允許擺動多占去 5% margin），看擺動幅度與回授頻寬怎麼變。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/paper/m1/s3_track.png" alt="左：漂移前後與補償後的 margin；右：盲量與擾動能分辨的相位數"><figcaption>圖 M1-5　左：每個函數 20 組漂移（σ 0.5 rad）。不補償時（紅）有一部分低於 0，即判錯；只調 7 個 φ（藍）全部回到 1；用擺動量測估計漂移再補償（▼，最差的一組），也都在 0.99 以上。右：要分辨的相位數（二輸入函數只有 x1、x2 會影響判讀）與兩種量法的 Jacobian 秩：只看平均功率最多分辨 1 個，加上擺動就全部分辨得出。</figcaption></figure>
+<table>
+<tr><th>函數</th><th>不補償：判錯組數</th><th>只調 φ</th><th>能分辨（只看平均功率／加擺動）</th><th>估計誤差最大</th><th>估計後補償</th></tr>
+<tr><td>AND2</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['AND2']['n_wrong_before']" data-fmt="{:d}">3</span>/20</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['AND2']['comp_after_min']*100" data-fmt="{:.1f}">100.0</span>%</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['AND2']['rank_blind']" data-fmt="{:d}">1</span>／<span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['AND2']['rank_dither']" data-fmt="{:d}">2</span>（共 2）</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['AND2']['est_err_max']" data-fmt="{:.3f}">0.019</span> rad</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['AND2']['comp_est_min']*100" data-fmt="{:.1f}">99.9</span>%</td></tr>
+<tr><td>OR2</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['OR2']['n_wrong_before']" data-fmt="{:d}">3</span>/20</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['OR2']['comp_after_min']*100" data-fmt="{:.1f}">100.0</span>%</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['OR2']['rank_blind']" data-fmt="{:d}">1</span>／<span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['OR2']['rank_dither']" data-fmt="{:d}">2</span>（共 2）</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['OR2']['est_err_max']" data-fmt="{:.3f}">0.010</span> rad</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['OR2']['comp_est_min']*100" data-fmt="{:.1f}">100.0</span>%</td></tr>
+<tr><td>XOR2</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['XOR2']['n_wrong_before']" data-fmt="{:d}">4</span>/20</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['XOR2']['comp_after_min']*100" data-fmt="{:.1f}">100.0</span>%</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['XOR2']['rank_blind']" data-fmt="{:d}">1</span>／<span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['XOR2']['rank_dither']" data-fmt="{:d}">2</span>（共 2）</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['XOR2']['est_err_max']" data-fmt="{:.3f}">0.011</span> rad</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['XOR2']['comp_est_min']*100" data-fmt="{:.1f}">99.4</span>%</td></tr>
+<tr><td>AND4</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['AND4']['n_wrong_before']" data-fmt="{:d}">6</span>/20</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['AND4']['comp_after_min']*100" data-fmt="{:.1f}">100.0</span>%</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['AND4']['rank_blind']" data-fmt="{:d}">1</span>／<span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['AND4']['rank_dither']" data-fmt="{:d}">4</span>（共 4）</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['AND4']['est_err_max']" data-fmt="{:.3f}">0.026</span> rad</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['AND4']['comp_est_min']*100" data-fmt="{:.1f}">99.5</span>%</td></tr>
+<tr><td>OR4</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['OR4']['n_wrong_before']" data-fmt="{:d}">2</span>/20</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['OR4']['comp_after_min']*100" data-fmt="{:.1f}">100.0</span>%</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['OR4']['rank_blind']" data-fmt="{:d}">1</span>／<span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['OR4']['rank_dither']" data-fmt="{:d}">4</span>（共 4）</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['OR4']['est_err_max']" data-fmt="{:.3f}">0.021</span> rad</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['functions']['OR4']['comp_est_min']*100" data-fmt="{:.1f}">100.0</span>%</td></tr>
+</table>
+
+<figure><img src="figures/paper/m1/s3_dither.png" alt="擺動幅度與回授頻寬、擺動時 margin 損失的取捨"><figcaption>圖 M1-6　擺動幅度 ε 的取捨。藍線：回授頻寬（ε 越大，同樣的雜訊下平均時間越短，頻寬隨 ε² 上升；右上平台是至少 10 個擺動週期的限制）。紅虛線：7 個 heater 同時擺動時，最差函數的 margin 損失。選損失 ≤ 3% 的最大幅度 ε＝<span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['dither_rad']" data-fmt="{:.4f}">0.0062</span> rad：回授頻寬 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['loop_bw_hz']" data-fmt="{:.2f}">0.44</span> Hz。</figcaption></figure>
+<table>
+<tr><th>項目</th><th>結果</th></tr>
+<tr><td>擺動頻率</td><td>約 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['dither_hz']" data-fmt="{:.0f}">1989</span> Hz（heater 頻寬 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['heater_bw_hz']" data-fmt="{:.0f}">7958</span> Hz 的 1/4）</td></tr>
+<tr><td>每次量測</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['t_meas_ms']" data-fmt="{:.0f}">358</span> ms（約 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['bits_needed']/1e9" data-fmt="{:.1f}">3.6</span>×10<sup>9</sup> 個位元，資料照常傳送）</td></tr>
+<tr><td>回授頻寬</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['loop_bw_hz']" data-fmt="{:.2f}">0.44</span> Hz（5 個輸出都有偵測器；只用判讀埠 o2、o4 時 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['loop_bw_readout_only_hz']" data-fmt="{:.2f}">0.27</span> Hz）</td></tr>
+<tr><td>相位預算分配</td><td>估計誤差 3σ <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['phase_alloc']['est_3sigma_rad']" data-fmt="{:.3f}">0.030</span>、追蹤落後 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['phase_alloc']['lag_rad']" data-fmt="{:.3f}">0.035</span>、快速擾動 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['phase_alloc']['fast_rad']" data-fmt="{:.3f}">0.035</span> rad（幅度相加 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['phase_alloc']['sum_rad']" data-fmt="{:.3f}">0.099</span> ＝ δ<sub>det</sub>）</td></tr>
+<tr><td>可追的漂移速度</td><td><span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['ramp_rate_allow_rad_s']" data-fmt="{:.3f}">0.096</span> rad/s（追蹤落後的容許量 × 2π f<sub>L</sub>）；1 m 光纖在溫度每分鐘變 0.1 K 時約 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['fiber_ramp_rad_s']" data-fmt="{:g}">0.073</span> rad/s，餘裕約 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['ramp_rate_allow_rad_s']/d['fiber_ramp_rad_s']" data-fmt="{:.1f}">1.3</span> 倍。只用判讀埠 o2、o4 時為 <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['phase_alloc']['lag_rad']*2*3.141592653589793*d['loop_bw_readout_only_hz']" data-fmt="{:.3f}">0.059</span> rad/s，<b>追不上</b>這個漂移，所以 5 個輸出都要有監測偵測器</td></tr>
+</table>
+<p>結論：在宣告的模型與假設下，慢的熱漂移可由晶片上的 heater 追蹤。晶片上不需要新元件，也不需要中斷資料。但餘裕只有約 1.3 倍，片外也要為 5 個輸出都接偵測器；高於回授頻寬（不到 1 Hz）的相位擾動（振動、氣流）追不上，要靠發射端把光纖固定、縮短，使這部分 ≤ <span class="num" data-json="design/paper/m1_timing/s3_tracking/out/tracking.json" data-expr="d['phase_alloc']['fast_rad']" data-fmt="{:.3f}">0.035</span> rad。這些頻寬與速率都是一階估計（單極點回授、固定的 heater 時間常數），不是迴路設計的結果。這一項寫進 M1 s5 的輸入介面規格。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>以為量得到功率就量得到相位</b>：在最佳相位上，功率對相位的一階變化是 0，量平均功率只看得到二次方的變化，分不出方向。</li>
+<li><b>擺動越大越好</b>：擺動也是相位誤差，會直接占去 margin；要在回授速度與 margin 之間取捨。</li>
+<li><b>忽略資料本身的雜訊</b>：主要雜訊不是接收端，而是隨機資料造成的功率起伏；所以平均時間由資料決定，與接收端好壞關係不大。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：二輸入函數為什麼只要追 2 個相位？</summary>
+<p>AND2、OR2、XOR2 的相位讓 x3、x4 的光不進判讀埠 o2、o4，它們的相位怎麼漂都不影響判讀，也不必追。表中 x3、x4 漂移時 margin 不變、平均功率也不變。</p></details>
+<details class="quiz"><summary>自我檢查 2：為什麼擺動的代價要看 7 個 heater 同時擺動，而不是一次只擺一個？</summary>
+<p>7 個 heater 用不同頻率同時擺動，量測期間各種正負組合都會出現；判讀要在每一個時刻都對，所以要看最差的組合。只看單一 heater 會把代價低估約 3 倍，例如 ε＝0.03 rad 時 XOR2 單一的損失 3.4%、同時的最差 10.6%。</p></details>
+<details class="quiz"><summary>自我檢查 3：為什麼估計後補償的 margin 不是 100%？</summary>
+<p>估計有雜訊（誤差約 0.01–0.02 rad），補償用的是估計值不是真值，剩下的相位誤差讓 margin 少一點；XOR2 的 margin 本來最小、對相位最敏感，所以掉得最多（約 0.6%）。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>輸入</td><td>課程 M1 s5 的相位設定檔（5 個函數）；課程 M2 s1 的輸入相位容許；M1 s1 的接收端雜訊與功率</td></tr>
+<tr><td>模型</td><td>含 MMI 損耗（每顆 0.33 dB，課程 M2 s3）的 B7，R＝3；相位是此模型下重新校正的相位（<code>model.py</code>，margin 與課程 M2 s3 的重新校正結果相同，最小 0.289，XOR2）；隨機資料以 16 組輸入等機率平均；漂移以 R 為基準，二輸入函數只計 x1、x2</td></tr>
+<tr><td>補償</td><td>只調 7 個外相位 φ，從原相位出發以 SLSQP 最大化 margin</td></tr>
+<tr><td>量測</td><td>平均功率 5 個＋擺動斜率 35 個（5 個輸出都要有偵測器；另算只用 o2、o4）；P̄ 與斜率都加雜訊；Jacobian 秩的門檻 1e-6 P<sub>u</sub>/rad；Gauss-Newton 由 0 出發反求 δ</td></tr>
+<tr><td>雜訊與頻寬</td><td>每個位元的功率起伏（資料圖樣）與接收端雜訊合成；估計誤差目標：各方向標準差 0.01 rad（資料需隨機）；擺動幅度取 7 個同時擺動損失 ≤ 3% 的最大值；heater 熱時間常數 20 µs（典型 10–40 µs），擺動頻率取 heater 頻寬的 1/4，量測至少 10 個擺動週期</td></tr>
+<tr><td>範圍</td><td>同步偵測與回授運算在片外進行，本研究沒有設計這部分電路；回授只做一階估計；heater 熱串擾、相位到 2π 時的重設、快速擾動的頻譜未建模</td></tr>
+</table>
+<div class="auto-code" data-files="design/paper/m1_timing/s3_tracking/track.py design/paper/m1_timing/s3_tracking/figs.py design/paper/m1_timing/concept.py"></div>
+<div class="auto-history" data-file="design/paper/m1_timing/s3_tracking/HISTORY.md"></div>
+</section>

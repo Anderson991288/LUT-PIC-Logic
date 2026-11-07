@@ -1,0 +1,498 @@
+{
+ "variants": {
+  "D0": "草稿設定",
+  "edge": "邊緣改為 10–90% 30 ps（論文 M1）",
+  "const_guard": "固定護欄（時變護欄的最大值）",
+  "seq3": "情境改為 B(16,3) 序列（論文 M1）",
+  "m1_phase": "0.33 dB／MMI 的相位與模型（論文 M1）",
+  "dt1": "時間格點 1 ps",
+  "shot": "加入 shot 雜訊"
+ },
+ "half_box_ps": 6.6,
+ "t_req_ps": 23.0,
+ "n_random": 768,
+ "seed": 3300,
+ "results": {
+  "D0": {
+   "AND4": {
+    "aligned": 50.0,
+    "m_static": 0.8289,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.0,
+    "box_min": 37.0,
+    "box_each_min": 47.5,
+    "box_center": 41.5,
+    "worst_delay": [
+     -6.6,
+     -6.6,
+     6.6,
+     6.6
+    ],
+    "n_points": 41
+   },
+   "MAJ4": {
+    "aligned": 54.0,
+    "m_static": 0.8101,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.1,
+    "box_min": 40.5,
+    "box_each_min": 47.0,
+    "box_center": 40.5,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     6.6,
+     -6.6
+    ],
+    "n_points": 41
+   },
+   "XOR2": {
+    "aligned": 66.0,
+    "m_static": 0.239,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.1,
+    "box_min": 53.0,
+    "box_each_min": 53.0,
+    "box_center": 53.0,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     -6.6,
+     -6.6
+    ],
+    "n_points": 41
+   }
+  },
+  "edge": {
+   "AND4": {
+    "aligned": 45.0,
+    "m_static": 0.8289,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.1,
+    "box_min": 32.0,
+    "box_each_min": 42.5,
+    "box_center": 37.0,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     -6.6,
+     6.6
+    ],
+    "n_points": 41
+   },
+   "MAJ4": {
+    "aligned": 49.5,
+    "m_static": 0.8101,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.1,
+    "box_min": 36.5,
+    "box_each_min": 44.0,
+    "box_center": 36.5,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     -6.6,
+     6.6
+    ],
+    "n_points": 41
+   },
+   "XOR2": {
+    "aligned": 63.0,
+    "m_static": 0.239,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.1,
+    "box_min": 49.5,
+    "box_each_min": 49.5,
+    "box_center": 49.5,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     -6.6,
+     -6.6
+    ],
+    "n_points": 41
+   }
+  },
+  "const_guard": {
+   "AND4": {
+    "aligned": 45.0,
+    "m_static": 0.8289,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.1,
+    "box_min": 31.0,
+    "box_each_min": 41.5,
+    "box_center": 35.5,
+    "worst_delay": [
+     -6.6,
+     -6.6,
+     6.6,
+     6.6
+    ],
+    "n_points": 41
+   },
+   "MAJ4": {
+    "aligned": 49.0,
+    "m_static": 0.8101,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.1,
+    "box_min": 36.0,
+    "box_each_min": 42.0,
+    "box_center": 36.0,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     6.6,
+     -6.6
+    ],
+    "n_points": 41
+   },
+   "XOR2": {
+    "aligned": 66.0,
+    "m_static": 0.239,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.1,
+    "box_min": 52.5,
+    "box_each_min": 52.5,
+    "box_center": 52.5,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     -6.6,
+     -6.6
+    ],
+    "n_points": 41
+   }
+  },
+  "seq3": {
+   "AND4": {
+    "aligned": 50.0,
+    "m_static": 0.8289,
+    "n_symbols": 4096,
+    "mem_ui": 1.61,
+    "time_s": 23.4,
+    "box_min": 37.0,
+    "box_each_min": 47.0,
+    "box_center": 41.0,
+    "worst_delay": [
+     -6.6,
+     -6.6,
+     6.6,
+     6.6
+    ],
+    "n_points": 41
+   },
+   "MAJ4": {
+    "aligned": 53.5,
+    "m_static": 0.8101,
+    "n_symbols": 4096,
+    "mem_ui": 1.61,
+    "time_s": 23.5,
+    "box_min": 40.5,
+    "box_each_min": 47.0,
+    "box_center": 40.5,
+    "worst_delay": [
+     -6.6,
+     -6.6,
+     6.6,
+     6.6
+    ],
+    "n_points": 41
+   },
+   "XOR2": {
+    "aligned": 66.0,
+    "m_static": 0.239,
+    "n_symbols": 4096,
+    "mem_ui": 1.61,
+    "time_s": 23.4,
+    "box_min": 53.0,
+    "box_each_min": 53.0,
+    "box_center": 53.0,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     -6.6,
+     -6.6
+    ],
+    "n_points": 41
+   }
+  },
+  "m1_phase": {
+   "AND4": {
+    "aligned": 51.0,
+    "m_static": 0.9703,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.0,
+    "box_min": 38.0,
+    "box_each_min": 47.5,
+    "box_center": 42.0,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     -6.6,
+     6.6
+    ],
+    "n_points": 41
+   },
+   "XOR2": {
+    "aligned": 72.0,
+    "m_static": 0.2887,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.0,
+    "box_min": 58.5,
+    "box_each_min": 58.5,
+    "box_center": 58.5,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     -6.6,
+     -6.6
+    ],
+    "n_points": 41
+   }
+  },
+  "dt1": {
+   "AND4": {
+    "aligned": 50.0,
+    "m_static": 0.8289,
+    "n_symbols": 1025,
+    "mem_ui": 1.62,
+    "time_s": 2.3,
+    "box_min": 36.0,
+    "box_each_min": 47.0,
+    "box_center": 41.0,
+    "worst_delay": [
+     -6.6,
+     -6.6,
+     -6.6,
+     6.6
+    ],
+    "n_points": 41
+   },
+   "MAJ4": {
+    "aligned": 53.0,
+    "m_static": 0.8101,
+    "n_symbols": 1025,
+    "mem_ui": 1.62,
+    "time_s": 2.3,
+    "box_min": 40.0,
+    "box_each_min": 46.0,
+    "box_center": 40.0,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     6.6,
+     -6.6
+    ],
+    "n_points": 41
+   },
+   "XOR2": {
+    "aligned": 66.0,
+    "m_static": 0.239,
+    "n_symbols": 1025,
+    "mem_ui": 1.62,
+    "time_s": 2.2,
+    "box_min": 52.0,
+    "box_each_min": 52.0,
+    "box_center": 52.0,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     -6.6,
+     -6.6
+    ],
+    "n_points": 41
+   }
+  },
+  "shot": {
+   "AND4": {
+    "aligned": 49.5,
+    "m_static": 0.8289,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.8,
+    "box_min": 36.0,
+    "box_each_min": 46.5,
+    "box_center": 40.5,
+    "worst_delay": [
+     -6.6,
+     -6.6,
+     6.6,
+     6.6
+    ],
+    "n_points": 41
+   },
+   "MAJ4": {
+    "aligned": 53.0,
+    "m_static": 0.8101,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.8,
+    "box_min": 39.5,
+    "box_each_min": 46.0,
+    "box_center": 39.5,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     6.6,
+     -6.6
+    ],
+    "n_points": 41
+   },
+   "XOR2": {
+    "aligned": 65.5,
+    "m_static": 0.239,
+    "n_symbols": 1025,
+    "mem_ui": 1.61,
+    "time_s": 6.8,
+    "box_min": 52.0,
+    "box_each_min": 52.0,
+    "box_center": 52.0,
+    "worst_delay": [
+     -6.6,
+     6.6,
+     -6.6,
+     -6.6
+    ],
+    "n_points": 41
+   }
+  }
+ },
+ "delta": {
+  "edge": {
+   "AND4": {
+    "aligned": -5.0,
+    "box_min": -5.0
+   },
+   "MAJ4": {
+    "aligned": -4.5,
+    "box_min": -4.0
+   },
+   "XOR2": {
+    "aligned": -3.0,
+    "box_min": -3.5
+   }
+  },
+  "const_guard": {
+   "AND4": {
+    "aligned": -5.0,
+    "box_min": -6.0
+   },
+   "MAJ4": {
+    "aligned": -5.0,
+    "box_min": -4.5
+   },
+   "XOR2": {
+    "aligned": 0.0,
+    "box_min": -0.5
+   }
+  },
+  "seq3": {
+   "AND4": {
+    "aligned": 0.0,
+    "box_min": 0.0
+   },
+   "MAJ4": {
+    "aligned": -0.5,
+    "box_min": 0.0
+   },
+   "XOR2": {
+    "aligned": 0.0,
+    "box_min": 0.0
+   }
+  },
+  "m1_phase": {
+   "AND4": {
+    "aligned": 1.0,
+    "box_min": 1.0
+   },
+   "XOR2": {
+    "aligned": 6.0,
+    "box_min": 5.5
+   }
+  },
+  "dt1": {
+   "AND4": {
+    "aligned": 0.0,
+    "box_min": -1.0
+   },
+   "MAJ4": {
+    "aligned": -1.0,
+    "box_min": -0.5
+   },
+   "XOR2": {
+    "aligned": 0.0,
+    "box_min": -1.0
+   }
+  },
+  "shot": {
+   "AND4": {
+    "aligned": -0.5,
+    "box_min": -1.0
+   },
+   "MAJ4": {
+    "aligned": -1.0,
+    "box_min": -1.0
+   },
+   "XOR2": {
+    "aligned": -0.5,
+    "box_min": -1.0
+   }
+  }
+ },
+ "compare": {
+  "AND4": {
+   "aligned": 50.0,
+   "draft_aligned": 50.5,
+   "box_min": 37.0,
+   "box_center": 41.5,
+   "box_each_min": 47.5,
+   "draft_box_min": 37.5,
+   "draft_cert": 31.5,
+   "d_aligned": -0.5,
+   "d_box": -0.5
+  },
+  "MAJ4": {
+   "aligned": 54.0,
+   "draft_aligned": 52.5,
+   "box_min": 40.5,
+   "box_center": 40.5,
+   "box_each_min": 47.0,
+   "draft_box_min": 39.5,
+   "draft_cert": 32.5,
+   "d_aligned": 1.5,
+   "d_box": 1.0
+  },
+  "XOR2": {
+   "aligned": 66.0,
+   "draft_aligned": 65.5,
+   "box_min": 53.0,
+   "box_center": 53.0,
+   "box_each_min": 53.0,
+   "draft_box_min": 52.0,
+   "draft_cert": 37.5,
+   "d_aligned": 0.5,
+   "d_box": 1.0
+  }
+ },
+ "wall_s": 166.9,
+ "workers": 1,
+ "cpu": "AMD64 Family 25 Model 33 Stepping 2, AuthenticAMD",
+ "checks": {
+  "aligned_within_3ps": true,
+  "box_within_3ps": true,
+  "box_above_cert": true,
+  "all_above_treq": true,
+  "order_same": true
+ }
+}

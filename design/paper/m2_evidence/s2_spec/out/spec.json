@@ -1,0 +1,119 @@
+{
+  "skew_spec_ps": 15,
+  "skew_allow_1db_ps": {
+    "AND2": 27.6,
+    "OR2": 26.8,
+    "XOR2": 25.5,
+    "AND4": 18.7,
+    "OR4": 18.0
+  },
+  "skew_extra_at_spec_db": {
+    "AND2": 0.271,
+    "OR2": 0.283,
+    "XOR2": 0.337,
+    "AND4": 0.672,
+    "OR4": 0.717
+  },
+  "skew_limit_function": "OR4",
+  "skew_margin_ps": 3.0,
+  "skew_margin_ratio": 1.2,
+  "ok_ratio": 1.5,
+  "er_spec_db": 26.0,
+  "er_sim_db": 25.79,
+  "joint_skew_ps": 20,
+  "ramp_all_rad_s": 0.096,
+  "ramp_readout_only_rad_s": 0.0585,
+  "fiber_ramp_rad_s": 0.073,
+  "ramp_ratio_all": 1.32,
+  "ramp_ratio_readout_only": 0.8,
+  "items": [
+    {
+      "item": "時間對齊",
+      "spec": "5 路到達時間差 ≤ 15 ps",
+      "evidence": "最小 1 dB 點 18.0 ps（OR4，名義模型、未含 MMI 偏差）；規格處 skew 額外代價最多 0.72 dB",
+      "margin": "3.0 ps（1.2 倍）",
+      "status": "餘裕小",
+      "source": "M1 s4、M2 s1"
+    },
+    {
+      "item": "相對相位（合計）",
+      "spec": "估計誤差（3σ）、追蹤落後、快速擾動幅度相加 ≤ δ_det＝0.099 rad",
+      "evidence": "估計 3σ 0.030＋落後 0.035＋快速 0.035",
+      "margin": "用滿",
+      "status": "餘裕小",
+      "source": "M1 s1、s3"
+    },
+    {
+      "item": "快速擾動",
+      "spec": "快於回授頻寬的相位擾動 ≤ 0.035 rad（發射端負責）",
+      "evidence": "振動、氣流；未量測",
+      "margin": "—",
+      "status": "未驗證",
+      "source": "M1 s3"
+    },
+    {
+      "item": "監測偵測器",
+      "spec": "5 個輸出都要有偵測器",
+      "evidence": "可追漂移：5 個 0.096、只用 o2、o4 0.059 rad/s；光纖 0.073 rad/s",
+      "margin": "1.32 倍（只用判讀埠 0.80 倍）",
+      "status": "餘裕小",
+      "source": "M1 s3"
+    },
+    {
+      "item": "資料",
+      "spec": "隨機資料（例如擾碼）",
+      "evidence": "擺動量測的雜訊估計假設各位元獨立",
+      "margin": "—",
+      "status": "假設",
+      "source": "M1 s3"
+    },
+    {
+      "item": "消光比",
+      "spec": "≥ 26 dB（晶片依殘留重新求相位）",
+      "evidence": "格點結果 26 dB（XOR2）；解析近似 25.79 dB 時 XOR 類只保留 89.8%（略低於 90%），模擬都用 25.8 dB（偏保守）；轉態時多 0.035 dB",
+      "margin": "以 margin 保留 90% 定義（規格處剛好 90%）",
+      "status": "餘裕小",
+      "source": "M1 s2、s4、M2 s5"
+    },
+    {
+      "item": "功率",
+      "spec": "每根資料光纖 ≥ -2.49 dBm、參考光纖 ≥ 7.05 dBm",
+      "evidence": "XOR2 決定；聯合驗收與分項相加差 ≤ 0.20 dB",
+      "margin": "已含各項代價（不另留餘裕）",
+      "status": "需求",
+      "source": "M1 s5"
+    }
+  ],
+  "modes": [
+    {
+      "phase": "上線前（一次）",
+      "action": "量發射端的殘留光大小與相位；以已知輸入字直接量 o2、o4 的功率差，依量到的 margin 重新求 14 個相位（靜態校正，含 MMI 等硬體偏差，M2 s4）",
+      "data": "不傳資料",
+      "status": "參考解已模擬（已知硬體、靜態最佳，M2 s4）；量測型重解（量測次數、誤差、收斂）未建模"
+    },
+    {
+      "phase": "啟動",
+      "action": "把 4 路輸入相位拉到追蹤的可用範圍內（初始對準）",
+      "data": "不傳資料或用已知字",
+      "status": "未建模"
+    },
+    {
+      "phase": "運作中（持續）",
+      "action": "7 個 heater 同時小幅擺動、同步偵測，只調 φ 追蹤漂移（動態校正）",
+      "data": "照常傳送，資料需隨機",
+      "status": "已模擬（一階回授）"
+    },
+    {
+      "phase": "異常",
+      "action": "漂移超出追蹤範圍或判讀錯誤率上升時，回到啟動",
+      "data": "中斷",
+      "status": "未建模"
+    }
+  ],
+  "checks": {
+    "skew_spec_below_all_1db": true,
+    "five_detectors_needed": true,
+    "joint_skew_covers_spec": true,
+    "er_spec_keeps_90pct": true
+  }
+}

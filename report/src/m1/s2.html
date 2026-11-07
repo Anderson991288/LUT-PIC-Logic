@@ -1,0 +1,103 @@
+<section class="step" id="m1-s2" data-milestone="M1" data-step="s2" data-title="從單顆 MZI 到 B7">
+<div class="bridge">
+<p><b>承接</b>：M1 s1 發現只靠資料光時，比大小會落在邊界，必須加入參考光 R；而要讓 R 和資料以不同比例混合，需要能調整分光比的混合單元。</p>
+<p><b>本步要回答</b>：一顆、兩顆 MZI 各能做幾種二輸入邏輯？本課程的運算單元 B7 為什麼是 7 顆 MZI、4 層？</p>
+<p><b>交給下一步</b>：B7 的固定接線（5 條波導、7 顆 MZI 的位置、R 在輸入 5、讀 o2 與 o4）與 14 個相位 θ<sub>k</sub>、φ<sub>k</sub>；下一步要回答這 14 個相位如何決定每個輸出。</p>
+<p class="terms"><b>名詞對照</b>：MZI（Mach–Zehnder interferometer，馬赫–曾德干涉儀）、內相位 θ（internal phase）、外相位 φ（external phase）、分光比（splitting ratio）、直通／交叉（bar／cross，光留在同一側的輸出／換到另一側的輸出）、margin（判讀餘量）、磚牆排列（brick-wall arrangement）、層（layer，光經過的先後順序，不是製程圖層）、B7（本課程的運算單元：7 顆 MZI 的磚牆排列）、終端（termination，不讀取的輸出）、上臂／下臂（MZI 兩顆 MMI 之間的上、下兩條路徑）、可達性（reachability，只看接線時一路輸入的光能不能流到某個輸出）、相干（coherent，各路光來自同一顆雷射，彼此的相位關係固定）</p>
+</div>
+
+<figure class="concept"><img src="figures/m1/s2_concept.png" alt="本步概念圖：由 MMI 組成 MZI，再由 7 顆 MZI 組成 B7"><figcaption><b>本步概念</b>　MMI 固定 50:50；加上 θ、φ 兩個相位就成為可調分光比的 MZI；7 顆 MZI 排成 4 層，就是本課程的運算單元 B7。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能畫出一顆 MZI 的構造並說明 θ、φ 各管什麼；能用「00 沒有光」與「可達性」兩個理由，解釋為什麼需要 R、為什麼需要多顆 MZI 與 4 層。</p>
+<div class="example">
+<p>類比：M1 s1 的混合單元像一個只能「對半分」的分水器。MZI 是兩個分水器串起來，中間加一個可調的閥門 θ：閥門轉到不同角度，水可以全部從上面出、全部從下面出，或任意比例。再在入口加一個 φ，決定兩股水相遇時是同步還是錯開。</p>
+<p>有了可調的分水器，下一個問題是「要接幾個、如何接」。就像排水管網：每一路進水（x1～x4 與 R）都必須有管路能流到兩個量測點（o2、o4），否則那一路的資料根本影響不到判讀結果。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 一顆 MZI</h4>
+<p>MZI 就是在 M1 s1 的混合單元（外相位 φ＋MMI）之後，再加一個內相位 θ 和第二顆 MMI：</p>
+<math display="block"><mrow><mi>T</mi><mo>(</mo><mi>θ</mi><mo>,</mo><mi>φ</mi><mo>)</mo><mo>=</mo><mi>H</mi><mspace width="0.15em"/><mrow><mo>[</mo><mtable><mtr><mtd><msup><mi>e</mi><mrow><mi>i</mi><mi>θ</mi></mrow></msup></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd></mtr></mtable><mo>]</mo></mrow><mi>H</mi><mspace width="0.15em"/><mrow><mo>[</mo><mtable><mtr><mtd><msup><mi>e</mi><mrow><mi>i</mi><mi>φ</mi></mrow></msup></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd></mtr></mtable><mo>]</mo></mrow><mo>=</mo><mi>i</mi><msup><mi>e</mi><mrow><mi>i</mi><mi>θ</mi><mo>/</mo><mn>2</mn></mrow></msup><mrow><mo>[</mo><mtable><mtr><mtd><msup><mi>e</mi><mrow><mi>i</mi><mi>φ</mi></mrow></msup><mi>sin</mi><mfrac><mi>θ</mi><mn>2</mn></mfrac></mtd><mtd><mi>cos</mi><mfrac><mi>θ</mi><mn>2</mn></mfrac></mtd></mtr><mtr><mtd><msup><mi>e</mi><mrow><mi>i</mi><mi>φ</mi></mrow></msup><mi>cos</mi><mfrac><mi>θ</mi><mn>2</mn></mfrac></mtd><mtd><mo>−</mo><mi>sin</mi><mfrac><mi>θ</mi><mn>2</mn></mfrac></mtd></mtr></mtable><mo>]</mo></mrow></mrow></math>
+<p>T 是 2×2 傳輸矩陣：第 a 列第 b 行是「從輸入 b 到輸出 a」的光場係數（無單位），第 1 列／行是上方埠。這裡的上、下只指位置，與 PDK 的埠名無關（PDK 的 in2、out2 才在上方，見 M0 s1）。由右往左讀就是光走的順序：先經過外相位 φ、第一顆 MMI、內相位 θ、第二顆 MMI。</p>
+<p>等號右邊的形式由矩陣相乘得到：先乘 H、內相位矩陣與 H，再用 e<sup>iθ</sup> − 1＝2i·e<sup>iθ/2</sup>·sin(θ/2)、e<sup>iθ</sup>＋1＝2·e<sup>iθ/2</sup>·cos(θ/2) 整理，最後乘上外相位矩陣。</p>
+<p>各元素的絕對值平方是功率比例：從上方輸入時，直通（上方輸出）占 sin²(θ/2)、交叉（下方輸出）占 cos²(θ/2)。所以 <b>θ 決定分光比</b>（θ＝0 全部交叉、θ＝π 全部直通、θ＝π/2 對半），<b>φ 決定兩路輸入相遇時的相對相位</b>，不改變分光比。程式中的矩陣與這個解析式的差為 <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['T_closed_err']" data-fmt="{:.0e}">4e-16</span>。</p>
+<figure><img src="figures/m1/s2_mzi.png" alt="MZI 的構造：外相位、MMI、內相位、MMI；右側為分光比隨 θ 的變化"><figcaption>圖 M1-6　一顆 MZI。綠色虛線框是 M1 s1 用過的混合單元；多加的內相位 θ 與第二顆 MMI 讓分光比可調。右：從上方輸入時，直通與交叉的功率比例隨 θ 變化，兩者相加恆為 1（無損耗）。</figcaption></figure>
+
+<h4>2. 用 margin 衡量「做得到」</h4>
+<p>二輸入函數的真值表有 4 列，每列可填 0 或 1，所以共有 2⁴＝16 種函數。對一個二輸入函數，四組輸入 i＝00、01、10、11 各有目標輸出（這裡的 i 是組別編號，不是虛數單位）。令 s<sub>i</sub>＝＋1 代表該組應判 1、s<sub>i</sub>＝−1 代表應判 0，定義：</p>
+<math display="block"><mrow><mi>m</mi><mo>=</mo><munder><mo>min</mo><mi>i</mi></munder><mspace width="0.2em"/><msub><mi>s</mi><mi>i</mi></msub><mspace width="0.1em"/><mi>Δ</mi><msub><mi>P</mi><mi>i</mi></msub></mrow></math>
+<p>m 是 margin（單位 P<sub>u</sub>）：四組輸入中「離錯誤最近」的那一組，ΔP 還有多遠才會變號。m＞0 代表四組都判對，而且越大越不怕雜訊；m ≤ 0 代表至少有一組判錯或落在邊界。本課程以 m ≥ 0.01 P<sub>u</sub> 算作「可實現」。對每個函數，程式調整所有相位，找出能達到的最大 m。</p>
+
+<h4>3. 一顆 MZI：16 種都做不到</h4>
+<p>一顆 MZI 只有 x1、x2 兩個輸入。M1 s1 已經說明：輸入 00 時沒有任何光進入，兩個輸出都是暗的，ΔP＝0 落在邊界。這和 θ、φ 如何設無關，所以 16 種函數一種都做不到，最佳化的結果也確認了這一點。</p>
+
+<h4>4. 兩顆 MZI＋R：缺兩種函數</h4>
+<p>加入 R 需要第三條波導，所以至少要兩顆 MZI：MZI-a 先混合 x1、x2，MZI-b 再把 MZI-a 的一個輸出和 R 混合（圖 M1-7）。讀取埠固定為兩個輸出，所有函數共用。本節的 o1–o3 指這個三波導結構由上而下的輸出，與後面 B7 的 o1–o5 是不同電路的編號。</p>
+<figure><img src="figures/m1/s2_two_mzi.png" alt="三條波導：x1、x2 先進 MZI-a，MZI-a 的下輸出與 R 進 MZI-b，讀取 o2 與 o3"><figcaption>圖 M1-7　兩顆 MZI＋R 的接法（R＝3）。圖中標的是固定讀取時涵蓋最多函數的一組埠：MZI-b 的兩個輸出 o2、o3。</figcaption></figure>
+<p>固定讀 o2、o3、R＝3 時，這個結構能做到 <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['two_mzi']['best_count']">14</span>／16 種，只缺 XOR 與 XNOR。這個限制是「這種接法、這組讀取埠、這個 R」三者一起造成的，換掉任何一個條件，XOR 就可能做得到：</p>
+<ul>
+<li><b>換讀取埠</b>：改讀 o1、o2 時 XOR 做得到（margin <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['two_mzi']['pairs']['o1-o2']['funcs']['0110']['margin']" data-fmt="{:.2f}">0.49</span> P<sub>u</sub>），但這組讀取埠只做得到 <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['two_mzi']['counts']['o1-o2']">8</span> 種。若允許每個函數各自換讀取埠，16 種中有 <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['two_mzi']['count_any_pair']">16</span> 種至少有一組讀取埠做得到；但沒有任何<b>一組固定</b>的讀取埠能同時涵蓋 16 種。</li>
+<li><b>降低 R</b>：仍讀 o2、o3 時，XOR 的最大 margin 隨 R 變化：R＝3、2、1 時都是 <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="max(d['two_mzi']['xor_vs_R_o2o3']['3'], d['two_mzi']['xor_vs_R_o2o3']['2'], d['two_mzi']['xor_vs_R_o2o3']['1'])" data-fmt="{:.2f}">0.00</span>（做不到）；R＝0.75 時 <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['two_mzi']['xor_vs_R_o2o3']['0.75']" data-fmt="{:.2f}">0.09</span>；R＝0.5 時 <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['two_mzi']['xor_vs_R_o2o3']['0.5']" data-fmt="{:.2f}">0.25</span>；R＝0.3 時 <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['two_mzi']['xor_vs_R_o2o3']['0.3']" data-fmt="{:.2f}">0.09</span> P<sub>u</sub>。</li>
+</ul>
+<p>為什麼 R 大時做不到？x1、x2 在遇到 R 之前，已經在 MZI-a 被合成一道光 y，之後的判讀只看得到 y。讀 MZI-b 的兩個輸出時，ΔP 裡 |y|² 項的係數和 R² 常數項綁在一起（MZI-b 的分光比同時決定兩者）：把 |y|² 項的係數記為 κ，常數項就是 −κR²。要讓 00 判 0，常數項必須是負的，所以 κ＞0。一次項的大小最多與 R 成正比，而 01、10 要判 1 時，一次項必須大過 κR²。所以 R 越大，κ 就被限制得越小。</p>
+<p>XOR 必須靠這個二次項把 11 拉回負值（M1 s3 會看到 B7 的 XOR 正是如此），R 大時二次項太弱，判讀的分界在 y 的複數平面上幾乎是一條直線。XOR 的四組輸入對應的 y 在複數平面上排成平行四邊形，要把對角的 00、11 和 01、10 分開，一條直線做不到。</p>
+<p>這也說明了 B7 真正的優勢：<b>一組固定的讀取埠、固定的 R</b>，只換相位就涵蓋全部 16 種函數。晶片的讀取埠與外部接收端的接線在製作後固定，所以這一點很重要。</p>
+
+<h4>5. B7：每一路光都要到得了兩個讀取埠</h4>
+<p>要處理四路資料，再加上 R，共需 5 條波導。B7 把 7 顆 MZI 排成磚牆：每顆只混合相鄰兩條波導，光由左到右依序經過 4 層（圖 M1-8）。R 放在最下方的第 5 條波導，讀取 o2 與 o4，o1、o3、o5 接終端。</p>
+<figure><img src="figures/m1/s2_b7.png" alt="B7 接線圖：5 條波導、7 顆 MZI 分 4 層，讀 o2 與 o4"><figcaption>圖 M1-8　B7 的實際接線。第 1 層：MZI-1 混合波導 1、2，MZI-2 混合波導 4、5；第 2 層：MZI-3 混合 2、3；第 3 層：MZI-4 混合 1、2，MZI-5 混合 3、4；第 4 層：MZI-6 混合 2、3，MZI-7 混合 4、5。沒有 MZI 的地方光直接通過。每顆 MZI 各有 θ<sub>k</sub>、φ<sub>k</sub>，共 14 個相位。</figcaption></figure>
+<p>為什麼要 4 層？判讀比較的是 o2 與 o4。一路輸入若只到得了其中一個讀取埠，它只能把那一邊變亮，無法在兩邊都和其他光干涉；對 R 更是關鍵：R 若到不了 o2，輸入全為 0 時 o2 必定是暗的，ΔP ≤ 0，那就只能判 0（和兩顆 MZI 讀 o1-o2 的情形一樣，見自我檢查 2）。所以設計原則是：每一路輸入（含 R）都要到得了兩個讀取埠。這只看接線、不看相位，稱為<b>可達性</b>：從輸入沿著 MZI 往右走，每遇到一顆 MZI，光就可能分到相鄰的波導。只取 B7 的前幾層時：</p>
+<table>
+<tr><th>只用前幾層</th><th>MZI 數</th><th>同時到得了 o2 與 o4 的輸入</th></tr>
+<tr><td>1 層</td><td><span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['reach'][0]['n_mzi']">2</span></td><td><span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="'、'.join(d['reach'][0]['both_readouts']) or '無'">無</span></td></tr>
+<tr><td>2 層</td><td><span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['reach'][1]['n_mzi']">3</span></td><td><span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="'、'.join(d['reach'][1]['both_readouts']) or '無'">無</span></td></tr>
+<tr><td>3 層</td><td><span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['reach'][2]['n_mzi']">5</span></td><td><span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="'、'.join(d['reach'][2]['both_readouts']) or '無'">x1、x2、x3</span></td></tr>
+<tr><td>4 層（B7）</td><td><span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['reach'][3]['n_mzi']">7</span></td><td><span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="'、'.join(d['reach'][3]['both_readouts']) or '無'">x1、x2、x3、x4、R</span></td></tr>
+</table>
+<p>到第 3 層為止，x4 與 R 還到不了 o2；要到第 4 層，五路輸入（含 R）才全部能影響兩個讀取埠。</p>
+<p>不只 B7 這種排法，<b>任何</b>「每顆 MZI 只混合相鄰兩條波導」的 5 條波導電路，3 層都不夠：R 從波導 5 走到 o2（波導 2）要連續換 3 次波導，只能依序經過 (4,5)、(3,4)、(2,3) 三顆，分別在第 1、2、3 層；x1 從波導 1 走到 o4（波導 4）也要依序經過 (1,2)、(2,3)、(3,4)。兩者在第 2 層分別需要 (3,4) 與 (2,3)，都用到波導 3，同一層不能放兩顆共用同一條波導的 MZI，互相衝突，所以至少要 4 層。7 顆是否為 4 層中最少的 MZI 數，不在本課程範圍。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\m1_logic\s2_b7\capability.py
+.\lab design\m1_logic\s2_b7\figs.py</code></pre>
+<p><code>capability.py</code> 對三種結構、16 種函數各做多起點最佳化（約 1 分鐘），印出每種結構可實現的函數數與可達性表；<code>figs.py</code> 畫出本步的圖。預期輸出包含：</p>
+<pre><code>A 單顆 MZI：0/16
+B 兩顆 MZI＋R：o1-o2 8/16、…、o2-o3 14/16、…；最佳 o2-o3
+C B7（x3＝x4＝0）：16/16</code></pre>
+<p>練習：在 <code>capability.json</code> 裡找 <code>two_mzi.pairs</code> 的 <code>o1-o2</code>，看看可實現的 8 種函數有什麼共同點（提示：看 00 那一欄），再對照自我檢查 2。清單裡有 XOR：換了讀取埠就做得到，代價是 00 永遠只能判 0。再看 <code>two_mzi.xor_vs_R_o2o3</code>，想想為什麼 R 變小，讀 o2、o3 也做得到 XOR。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/m1/s2_coverage.png" alt="三種結構對 16 種二輸入函數的可實現情形與 margin"><figcaption>圖 M1-9　三種結構能實現的二輸入函數（✓ 可、✗ 否）與最大 margin。一顆 MZI 全部失敗；兩顆 MZI＋R 固定讀 o2、o3、R＝3 時缺 XOR、XNOR（換讀取埠或降低 R 可以做到，但沒有一組固定讀取埠涵蓋 16 種）；B7 用一組固定讀取埠，在 x3＝x4＝0 時 16 種全部做得到。</figcaption></figure>
+<table>
+<tr><th>結構</th><th>可實現（m ≥ 0.01 P<sub>u</sub>）</th><th>說明</th></tr>
+<tr><td>一顆 MZI，無 R</td><td><span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['single']['count']">0</span>／16</td><td>00 沒有光，ΔP 恆為 0</td></tr>
+<tr><td>兩顆 MZI＋R</td><td><span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['two_mzi']['best_count']">14</span>／16（讀 <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['two_mzi']['best_pair']">o2-o3</span>）</td><td>XOR、XNOR 做不到；若讀 o1-o2 只剩 <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['two_mzi']['counts']['o1-o2']">8</span> 種</td></tr>
+<tr><td>B7，x3＝x4＝0</td><td><span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['b7_2in']['count']">16</span>／16</td><td>最難的是 XOR、XNOR，margin <span class="num" data-json="design/m1_logic/s2_b7/out/capability.json" data-expr="d['b7_2in']['funcs']['0110']['margin']" data-fmt="{:.2f}">0.49</span> P<sub>u</sub>；其他函數都在 2 P<sub>u</sub> 以上</td></tr>
+</table>
+<p><b>實際遇到的情況</b>：一開始照直覺以為「兩顆 MZI 加上 R 就什麼都做得到」，最佳化結果卻是 14／16。XOR 的 margin 恰好是 0（不是很小的正數），表示不是最佳化沒找到。初稿把它寫成「兩顆 MZI 的結構限制」；後來確認改讀 o1、o2 或降低 R 都做得到 XOR，於是補上 R 掃描，把結論改為「固定讀取埠與 R＝3 下的限制」（見 ② 第 4 點）。另外，若改用「只讀一個埠、設固定門檻」的判讀方式，兩顆 MZI 能做到更多種函數，但會失去 M1 s1 所說「雷射功率改變時判讀不變」的優點；本課程維持比大小。</p>
+<p><b>本步結論</b>：B7 在不改接線、只換相位的情況下，能做到所有二輸入函數。四輸入的情形下一步再談：B7 的判讀量仍是輸入光場的二次式，所以並非所有四輸入函數都做得到；本課程在 M1 s4 驗證需要的 AND4、OR4。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>把 θ 和 φ 的作用混淆</b>：θ 在兩顆 MMI 之間，決定分光比；φ 在第一顆 MMI 之前，只決定兩路輸入的相對相位。</li>
+<li><b>把「層」當成製程圖層</b>：這裡的層是光經過的先後順序；同一層的 MZI 可以同時存在、互不相干。</li>
+<li><b>以為 MZI 越多越好</b>：每多一顆就多兩個要控制的相位、多一段損耗；5 條波導、只混合相鄰波導時，4 層是讓每一路輸入都到得了兩個讀取埠的最少層數（② 第 5 點）。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：θ＝π/2 時，從上方輸入的光如何分配？改變 φ 會改變這個分配嗎？</summary>
+<p>sin²(π/4)＝cos²(π/4)＝0.5，兩個輸出各一半。只有一路輸入時，φ 只是整體相位，不改變分配；兩路同時輸入時，φ 才會改變它們相加或抵消的情形。</p></details>
+<details class="quiz"><summary>自我檢查 2：兩顆 MZI＋R 讀 o1-o2 時，能做到的 8 種函數，00 的輸出都是 0。為什麼？</summary>
+<p>o1 是 MZI-a 的輸出，R 從 MZI-b 才進來，永遠到不了 o1。輸入 00 時只有 R 的光，P(o1)＝0、P(o2) ≥ 0，所以 ΔP＝P(o1)−P(o2) ≤ 0，00 只能判 0。這也是可達性的例子。</p></details>
+<details class="quiz"><summary>自我檢查 3：如果把 B7 的第 4 層拿掉，R 到得了 o2 嗎？這會讓哪些函數做不到？</summary>
+<p>到不了。只到第 3 層時，R 經 MZI-2、MZI-5 只能到達波導 3、4、5。輸入 0000 時只有 R 的光，o2 是暗的，ΔP ≤ 0，所以 0000 只能判 0：凡是 0000 要輸出 1 的函數（例如 NAND、NOR、固定 1）都做不到。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>模型</td><td>理想 MZI（兩顆理想 MMI、無損耗）、相干輸入、R＝3；判讀為兩個固定埠比大小</td></tr>
+<tr><td>最佳化</td><td>SLSQP（一種可加限制條件的數值最佳化方法，從一組起始相位出發逐步改善）；因為可能停在局部最佳，每個函數從多組隨機起始相位各做一次、取最好的（多起點）。max m s.t. s<sub>i</sub>ΔP<sub>i</sub> ≥ m；單顆 12 起點、兩顆每組埠 16 起點、B7 12 起點，起點種子 700＋k；可實現門檻 m ≥ 0.01 P<sub>u</sub></td></tr>
+<tr><td>執行時間</td><td>約 1 分鐘（單執行緒）</td></tr>
+</table>
+<div class="auto-code" data-files="design/m1_logic/s2_b7/capability.py design/m1_logic/s2_b7/figs.py design/common/mzi.py"></div>
+<div class="auto-history" data-file="design/m1_logic/s2_b7/HISTORY.md"></div>
+</section>

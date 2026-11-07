@@ -1,0 +1,697 @@
+{
+  "scope": "B7 核心（不含 EC、PAD、繞線）",
+  "geometry": {
+    "pitch_um": 30.0,
+    "sbend_um": 40.0,
+    "phase_section_um": 120.0,
+    "heater_margin_um": 10.0,
+    "lead_um": 50.0,
+    "waveguide_width_um": 0.45,
+    "mmi_length_um": 82.5,
+    "mzi_length_um": 565.0,
+    "columns": 4,
+    "core_size_um": [
+      2360.0,
+      120.0
+    ],
+    "outline_um": [
+      2400.0,
+      182.0
+    ],
+    "heater_length_um": 100.0,
+    "heater_width_um": 0.9,
+    "stub_width_um": 3.0,
+    "landing_offset_um": 16.0,
+    "landing_tin_um": 10.0,
+    "landing_al_um": [
+      11.0,
+      12.0
+    ],
+    "join_err_um": 3.552713678800501e-15,
+    "arm_len_um": [
+      205.85913613632667,
+      205.85913613632667
+    ],
+    "sbend_dy_um": [
+      13.984999999999998,
+      13.985000000000003
+    ],
+    "sbend_rmin_um": 22.03925925205516,
+    "rail_vs_bypass_extra_um": 11.7183
+  },
+  "cells": {
+    "mmi": "SOI220nm_1550nm_TE_STRIP_2x2_MMI",
+    "heater": "B7_HEATER",
+    "mzi": "B7_MZI",
+    "core": "B7_CORE"
+  },
+  "ports": [
+    {
+      "port": "in0",
+      "signal": "x1",
+      "waveguide": 1,
+      "xy_um": [
+        -50.0,
+        0.0
+      ],
+      "angle": 180.0
+    },
+    {
+      "port": "out0",
+      "signal": "o1",
+      "waveguide": 1,
+      "xy_um": [
+        2310.0,
+        0.0
+      ],
+      "angle": 0.0
+    },
+    {
+      "port": "in1",
+      "signal": "x2",
+      "waveguide": 2,
+      "xy_um": [
+        -50.0,
+        -30.0
+      ],
+      "angle": 180.0
+    },
+    {
+      "port": "out1",
+      "signal": "o2",
+      "waveguide": 2,
+      "xy_um": [
+        2310.0,
+        -30.0
+      ],
+      "angle": 0.0
+    },
+    {
+      "port": "in2",
+      "signal": "x3",
+      "waveguide": 3,
+      "xy_um": [
+        -50.0,
+        -60.0
+      ],
+      "angle": 180.0
+    },
+    {
+      "port": "out2",
+      "signal": "o3",
+      "waveguide": 3,
+      "xy_um": [
+        2310.0,
+        -60.0
+      ],
+      "angle": 0.0
+    },
+    {
+      "port": "in3",
+      "signal": "x4",
+      "waveguide": 4,
+      "xy_um": [
+        -50.0,
+        -90.0
+      ],
+      "angle": 180.0
+    },
+    {
+      "port": "out3",
+      "signal": "o4",
+      "waveguide": 4,
+      "xy_um": [
+        2310.0,
+        -90.0
+      ],
+      "angle": 0.0
+    },
+    {
+      "port": "in4",
+      "signal": "R",
+      "waveguide": 5,
+      "xy_um": [
+        -50.0,
+        -120.0
+      ],
+      "angle": 180.0
+    },
+    {
+      "port": "out4",
+      "signal": "o5",
+      "waveguide": 5,
+      "xy_um": [
+        2310.0,
+        -120.0
+      ],
+      "angle": 0.0
+    }
+  ],
+  "placement": [
+    {
+      "mzi": "MZI-1",
+      "layer": 1,
+      "waveguides": [
+        1,
+        2
+      ],
+      "origin_um": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "mzi": "MZI-2",
+      "layer": 1,
+      "waveguides": [
+        4,
+        5
+      ],
+      "origin_um": [
+        0.0,
+        -90.0
+      ]
+    },
+    {
+      "mzi": "MZI-3",
+      "layer": 2,
+      "waveguides": [
+        2,
+        3
+      ],
+      "origin_um": [
+        565.0,
+        -30.0
+      ]
+    },
+    {
+      "mzi": "MZI-4",
+      "layer": 3,
+      "waveguides": [
+        1,
+        2
+      ],
+      "origin_um": [
+        1130.0,
+        0.0
+      ]
+    },
+    {
+      "mzi": "MZI-5",
+      "layer": 3,
+      "waveguides": [
+        3,
+        4
+      ],
+      "origin_um": [
+        1130.0,
+        -60.0
+      ]
+    },
+    {
+      "mzi": "MZI-6",
+      "layer": 4,
+      "waveguides": [
+        2,
+        3
+      ],
+      "origin_um": [
+        1695.0,
+        -30.0
+      ]
+    },
+    {
+      "mzi": "MZI-7",
+      "layer": 4,
+      "waveguides": [
+        4,
+        5
+      ],
+      "origin_um": [
+        1695.0,
+        -90.0
+      ]
+    }
+  ],
+  "heaters": [
+    {
+      "heater": "H02",
+      "pad": "P02",
+      "mzi": "MZI-1",
+      "kind": "phi",
+      "phase": "φ1",
+      "origin_um": [
+        10.0,
+        0.0
+      ],
+      "body_um": [
+        10.0,
+        110.0
+      ],
+      "y_um": 0.0,
+      "landings_um": [
+        [
+          10.0,
+          16.0
+        ],
+        [
+          110.0,
+          16.0
+        ]
+      ]
+    },
+    {
+      "heater": "H01",
+      "pad": "P01",
+      "mzi": "MZI-1",
+      "kind": "theta",
+      "phase": "θ1",
+      "origin_um": [
+        292.5,
+        0.0
+      ],
+      "body_um": [
+        292.5,
+        392.5
+      ],
+      "y_um": 0.0,
+      "landings_um": [
+        [
+          292.5,
+          16.0
+        ],
+        [
+          392.5,
+          16.0
+        ]
+      ]
+    },
+    {
+      "heater": "H04",
+      "pad": "P04",
+      "mzi": "MZI-2",
+      "kind": "phi",
+      "phase": "φ2",
+      "origin_um": [
+        10.0,
+        -90.0
+      ],
+      "body_um": [
+        10.0,
+        110.0
+      ],
+      "y_um": -90.0,
+      "landings_um": [
+        [
+          10.0,
+          -74.0
+        ],
+        [
+          110.0,
+          -74.0
+        ]
+      ]
+    },
+    {
+      "heater": "H03",
+      "pad": "P03",
+      "mzi": "MZI-2",
+      "kind": "theta",
+      "phase": "θ2",
+      "origin_um": [
+        292.5,
+        -90.0
+      ],
+      "body_um": [
+        292.5,
+        392.5
+      ],
+      "y_um": -90.0,
+      "landings_um": [
+        [
+          292.5,
+          -74.0
+        ],
+        [
+          392.5,
+          -74.0
+        ]
+      ]
+    },
+    {
+      "heater": "H06",
+      "pad": "P06",
+      "mzi": "MZI-3",
+      "kind": "phi",
+      "phase": "φ3",
+      "origin_um": [
+        575.0,
+        -30.0
+      ],
+      "body_um": [
+        575.0,
+        675.0
+      ],
+      "y_um": -30.0,
+      "landings_um": [
+        [
+          575.0,
+          -14.0
+        ],
+        [
+          675.0,
+          -14.0
+        ]
+      ]
+    },
+    {
+      "heater": "H05",
+      "pad": "P05",
+      "mzi": "MZI-3",
+      "kind": "theta",
+      "phase": "θ3",
+      "origin_um": [
+        857.5,
+        -30.0
+      ],
+      "body_um": [
+        857.5,
+        957.5
+      ],
+      "y_um": -30.0,
+      "landings_um": [
+        [
+          857.5,
+          -14.0
+        ],
+        [
+          957.5,
+          -14.0
+        ]
+      ]
+    },
+    {
+      "heater": "H08",
+      "pad": "P08",
+      "mzi": "MZI-4",
+      "kind": "phi",
+      "phase": "φ4",
+      "origin_um": [
+        1140.0,
+        0.0
+      ],
+      "body_um": [
+        1140.0,
+        1240.0
+      ],
+      "y_um": 0.0,
+      "landings_um": [
+        [
+          1140.0,
+          16.0
+        ],
+        [
+          1240.0,
+          16.0
+        ]
+      ]
+    },
+    {
+      "heater": "H07",
+      "pad": "P07",
+      "mzi": "MZI-4",
+      "kind": "theta",
+      "phase": "θ4",
+      "origin_um": [
+        1422.5,
+        0.0
+      ],
+      "body_um": [
+        1422.5,
+        1522.5
+      ],
+      "y_um": 0.0,
+      "landings_um": [
+        [
+          1422.5,
+          16.0
+        ],
+        [
+          1522.5,
+          16.0
+        ]
+      ]
+    },
+    {
+      "heater": "H10",
+      "pad": "P10",
+      "mzi": "MZI-5",
+      "kind": "phi",
+      "phase": "φ5",
+      "origin_um": [
+        1140.0,
+        -60.0
+      ],
+      "body_um": [
+        1140.0,
+        1240.0
+      ],
+      "y_um": -60.0,
+      "landings_um": [
+        [
+          1140.0,
+          -44.0
+        ],
+        [
+          1240.0,
+          -44.0
+        ]
+      ]
+    },
+    {
+      "heater": "H09",
+      "pad": "P09",
+      "mzi": "MZI-5",
+      "kind": "theta",
+      "phase": "θ5",
+      "origin_um": [
+        1422.5,
+        -60.0
+      ],
+      "body_um": [
+        1422.5,
+        1522.5
+      ],
+      "y_um": -60.0,
+      "landings_um": [
+        [
+          1422.5,
+          -44.0
+        ],
+        [
+          1522.5,
+          -44.0
+        ]
+      ]
+    },
+    {
+      "heater": "H12",
+      "pad": "P12",
+      "mzi": "MZI-6",
+      "kind": "phi",
+      "phase": "φ6",
+      "origin_um": [
+        1705.0,
+        -30.0
+      ],
+      "body_um": [
+        1705.0,
+        1805.0
+      ],
+      "y_um": -30.0,
+      "landings_um": [
+        [
+          1705.0,
+          -14.0
+        ],
+        [
+          1805.0,
+          -14.0
+        ]
+      ]
+    },
+    {
+      "heater": "H11",
+      "pad": "P11",
+      "mzi": "MZI-6",
+      "kind": "theta",
+      "phase": "θ6",
+      "origin_um": [
+        1987.5,
+        -30.0
+      ],
+      "body_um": [
+        1987.5,
+        2087.5
+      ],
+      "y_um": -30.0,
+      "landings_um": [
+        [
+          1987.5,
+          -14.0
+        ],
+        [
+          2087.5,
+          -14.0
+        ]
+      ]
+    },
+    {
+      "heater": "H14",
+      "pad": "P14",
+      "mzi": "MZI-7",
+      "kind": "phi",
+      "phase": "φ7",
+      "origin_um": [
+        1705.0,
+        -90.0
+      ],
+      "body_um": [
+        1705.0,
+        1805.0
+      ],
+      "y_um": -90.0,
+      "landings_um": [
+        [
+          1705.0,
+          -74.0
+        ],
+        [
+          1805.0,
+          -74.0
+        ]
+      ]
+    },
+    {
+      "heater": "H13",
+      "pad": "P13",
+      "mzi": "MZI-7",
+      "kind": "theta",
+      "phase": "θ7",
+      "origin_um": [
+        1987.5,
+        -90.0
+      ],
+      "body_um": [
+        1987.5,
+        2087.5
+      ],
+      "y_um": -90.0,
+      "landings_um": [
+        [
+          1987.5,
+          -74.0
+        ],
+        [
+          2087.5,
+          -74.0
+        ]
+      ]
+    }
+  ],
+  "bypass": [
+    {
+      "layer": 1,
+      "waveguide": 3
+    },
+    {
+      "layer": 2,
+      "waveguide": 1
+    },
+    {
+      "layer": 2,
+      "waveguide": 4
+    },
+    {
+      "layer": 2,
+      "waveguide": 5
+    },
+    {
+      "layer": 3,
+      "waveguide": 5
+    },
+    {
+      "layer": 4,
+      "waveguide": 1
+    }
+  ],
+  "readback": {
+    "n_mmi": 14,
+    "n_heater": 14,
+    "mzi_found": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        3
+      ]
+    ],
+    "mzi_match": true,
+    "every_mzi_two_mmi": true,
+    "heater_match": true,
+    "heater_unmapped": 0,
+    "ports_match": true
+  },
+  "faults": {
+    "mzi_moved": true,
+    "heater_swapped": true,
+    "port_swapped": true
+  },
+  "drc": {
+    "total": 0,
+    "counts": {},
+    "n_rules": 28,
+    "design_area_um": [
+      2400.0,
+      182.0
+    ],
+    "design_area_source": "measured",
+    "outside": 0
+  },
+  "checks": {
+    "netlist_sha": true,
+    "n_mzi": true,
+    "n_mmi": true,
+    "n_heater": true,
+    "mzi_match_netlist": true,
+    "heater_match_spec": true,
+    "ports_match_spec": true,
+    "join_err_lt_1nm": true,
+    "arms_equal": true,
+    "sbend_rmin_ok": true,
+    "drc_clean": true,
+    "faults_caught": true
+  }
+}

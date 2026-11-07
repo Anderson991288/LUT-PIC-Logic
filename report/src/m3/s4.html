@@ -1,0 +1,94 @@
+<section class="step" id="m3-s4" data-milestone="M3" data-step="s4" data-title="DRC 與連接檢查">
+<div class="bridge">
+<p><b>承接</b>：M3 s3 交出整顆晶片 <code>chip.gds</code> 與 <code>chip_info.json</code>，並在畫完時跑過一次 DRC。</p>
+<p><b>本步要回答</b>：這顆晶片能不能照平台規則製造？只看 GDS 的話，每個 heater 確實接到規格裡對應的 PAD 與地嗎？每個 EC 確實接到對的光學埠嗎？檢查本身能檢出錯誤嗎？</p>
+<p><b>交給下一步</b>：<code>drc_result.json</code>（DRC 0、只有一個外框）與 <code>connectivity.json</code>（LVS 14/14、GND 配對與 PAD 表一致、每個 heater 的串聯走線電阻、光學 10/10、故障注入 8/8）。M3 s5 把晶片、規格與這兩份檢查結果整理成交付包。</p>
+<p class="terms"><b>名詞對照</b>：LVS（layout versus schematic，佈局對原理圖：從佈局抽出電路連接，和原理圖逐條比對）、原理圖（schematic，描述元件之間應該如何連的電路圖；本課程就是規格的「heater Hn 接 Pn 與地」）、網（net，電氣上相連的一整組導體）、接點（Ti/AL 直接壓在 TiN 上、兩者重疊的地方）、雜湊（hash，把一大串資料算成一個短碼，資料有任何改變，短碼就不同）</p>
+</div>
+
+<figure class="concept"><img src="figures/m3/s4_concept.png" alt="本步概念圖：DRC、核心未改動、LVS、光學連接與故障注入"><figcaption><b>本步概念</b>　四項檢查都只看 GDS：DRC 看能不能製造；核心雜湊確認晶片裡的核心就是審查過的版本；LVS 從 Ti/AL 與 TiN 抽出電路，和原理圖逐條比；光學連接確認每個 EC 接到對的核心埠。最後用八種故障注入證明這些檢查確實能檢出錯誤。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能用平台的 DRC deck 驗證整顆晶片；能從佈局抽出電氣網並和原理圖比對（LVS）；能說明為什麼「DRC 0」不代表電路接對；會設計故障注入，證明檢查有效。</p>
+<div class="example">
+<p>類比：房子蓋好要過兩關。第一關是建築法規（DRC）：牆夠不夠厚、樓梯夠不夠寬，只看尺寸，不管房間如何用。第二關是驗收配線（LVS）：每個開關是不是確實接到它該控制的那盞燈。尺寸全合法的房子，開關照樣可能接錯；所以兩關都要過。</p>
+<p>驗收員也要被驗收：故意把一條線接錯，看驗收員會不會發現。這就是故障注入。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. DRC 與設計區</h4>
+<p>平台 deck 有 30 條規則（各層的最小線寬、最小間距、重疊；這是報告中出現的規則類別數，核心單獨跑時沒有 GDS 4、5，所以 M3 s1 顯示 28 條），另外檢查所有圖形都在設計區內。設計區由呼叫端宣告為晶片尺寸 4280×1200 µm（而不是量 GDS 99 的外框），否則就是自己驗證自己。晶片只能有一個 GDS 99，而且要剛好等於晶片外框。</p>
+<h4>2. LVS：從圖形抽出電路</h4>
+<p>這個平台的 Ti/AL 直接沉積在 TiN 上，沒有層間的介電層與導通孔（via），所以兩層重疊的地方就導通。抽取步驟：</p>
+<ol>
+<li>所有 Ti/AL 多邊形聯集，每個連通塊是一個網；以塊內的 PAD 文字標記命名（P01–P14、GN1–GN5、GS1–GS2）。</li>
+<li>所有 TiN 多邊形聯集，每個連通塊是一個 heater；以最近的「H」標記命名。</li>
+<li>每個 heater 找出和它重疊的 Ti/AL 網，就是它的兩個接點。</li>
+</ol>
+<p>原理圖（規格）是：heater Hn 一端接 Pn，另一端接地（任一個 GND PAD：GN1–GN5、GS1–GS2）。逐條比對：每個 heater 恰好兩個接點、一個是自己的訊號網、一個是地網；訊號網不能接到別的 heater；一塊 Ti/AL 不能含兩個 PAD（短路），也不能沒有 PAD（浮接）。</p>
+<h4>3. 走線電阻</h4>
+<p>走線電阻 R<sub>w</sub>＝ρL／(w·t)。ρ 是 Ti/AL 的電阻率（以鋁的 2.8×10<sup>−8</sup> Ω·m 估）、L 是走線長、w 是線寬 10 µm、t 是厚度 0.22 µm。最長的走線約 500 µm，R<sub>w</sub> 只有幾 Ω，遠小於 kΩ 級的 heater，所以驅動電壓幾乎都落在 heater 上；剩下的小偏差由校正吸收（見自我檢查 3）。heater 串聯的是訊號線加地線兩段，最長一組約 13 Ω（verify.py 逐一列出）。每條地線只帶自己 heater 的電流，兩條在 GND PAD 上才會合，晶片上沒有共用的地線電阻；共用 PAD 的兩個 heater 只經由 PAD、探針或打線的接觸電阻互相影響，估計不到 0.2%，遠小於熱串擾。</p>
+<h4>4. 光學連接</h4>
+<p>把 GDS 3（矽波導）與 GDS 5（EC 的薄矽尖端）聯集，但 MMI cell 不展開；否則所有波導都會經過 MMI 連成一塊。每個 EC 端面所在的連通塊，應該恰好含一個核心光學埠（in0–in4、out0–out4），而且 EC 的標記（例如 x1_in0）要和這個埠名、規格的訊號一致。核心內部的光路已在 M3 s2 從佈局重算過 U；本步改用雜湊確認晶片裡的核心沒有被改動。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\m3_layout\s4_verify\verify.py
+.\lab design\m3_layout\s4_verify\figs.py</code></pre>
+<p><code>verify.py</code> 依序：DRC → 外框與核心雜湊 → LVS → 光學連接 → 六種圖形／標記上的故障注入 → 寫出一份含兩種違規的 GDS，再跑一次 DRC。預期輸出：</p>
+<pre><code>DRC：30 條規則，違規 0；設計區 (4280.0, 1200.0)（declared）；外框外 0；GDS 99 1 個（等於晶片外框：True）
+核心與審查版本相同：True（多邊形 226／226）
+電氣：Ti/AL 21 網、TiN 14 塊；H04→P04/GS1、H03→GS1/P03、H06→P06/GN2、H02→P02/GN1 …；錯誤 0
+走線電阻最大 6.8 Ω；heater 串聯（訊號＋地）最大 13.0 Ω → heater 1 kΩ 時 2π 少約 0.16 rad
+GND 配對（從佈局抽出）：{'GN1': ['H01', 'H02'], …, 'GS2': ['H13', 'H14']}，與 PAD 表一致：True
+光學：10/10 個 EC 接到對的核心埠
+故障注入：{'Ti/AL 短路': True, 'Ti/AL 斷路': True, 'TiN 斷路': True, '原理圖對調': True, 'PAD 標記對調': True, 'EC 標記對調': True, 'DRC：Ti/AL 太窄': True, 'DRC：TiN 太近': True}</code></pre>
+<p>練習：打開 <code>connectivity.json</code>，找出 H13 的兩個網；再在 KLayout 打開 <code>chip_fault_drc.gds</code> 與它的 <code>_drc.lyrdb</code>，看兩個故意放進去的違規標在哪裡。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/m3/s4_nets.png" alt="從 GDS 抽出的電氣網，每個網一種顏色"><figcaption>圖 M3-10　只從 GDS 抽出的電氣網（等比例，只顯示核心與 PAD 區）。每個訊號網一種顏色、7 條地網深灰；橘色是 14 塊 TiN。每塊 TiN 一端接自己的訊號網，另一端接地網；相鄰兩個 heater 共用一個 GND PAD，北側 GN1–GN5，南側（第 4 軌的 MZI-2、MZI-7）GS1–GS2。</figcaption></figure>
+<figure><img src="figures/m3/s4_checks.png" alt="左：LVS 對照表；右：故障注入結果"><figcaption>圖 M3-11　左：LVS 對照表，14 個 heater 都恰有兩個接點，抽出的網和原理圖一致。右：八種故障注入全部被檢出；正常晶片則 DRC 0、LVS 錯誤 0、光學 10/10。</figcaption></figure>
+<table>
+<tr><th>驗收項目</th><th>結果</th></tr>
+<tr><td>DRC</td><td><span class="num" data-json="design/m3_layout/s4_verify/out/drc_result.json" data-expr="d['n_rules']" data-fmt="{:d}">30</span> 條規則，違規 <span class="num" data-json="design/m3_layout/s4_verify/out/drc_result.json" data-expr="d['total']" data-fmt="{:d}">0</span>；設計區為宣告的晶片尺寸；外框外圖形 0</td></tr>
+<tr><td>外框</td><td>GDS 99 <span class="num" data-json="design/m3_layout/s4_verify/out/drc_result.json" data-expr="d['n_gds99']" data-fmt="{:d}">1</span> 個，等於晶片外框</td></tr>
+<tr><td>核心未改動</td><td>晶片內核心與 M3 s2 審查的 <code>b7_core.gds</code> 多邊形雜湊相同（<span class="num" data-json="design/m3_layout/s4_verify/out/connectivity.json" data-expr="d['core_polygons'][0]" data-fmt="{:d}">226</span> 個多邊形）</td></tr>
+<tr><td>LVS</td><td>Ti/AL <span class="num" data-json="design/m3_layout/s4_verify/out/connectivity.json" data-expr="d['electrical']['al_nets']" data-fmt="{:d}">21</span> 網、TiN <span class="num" data-json="design/m3_layout/s4_verify/out/connectivity.json" data-expr="d['electrical']['tin_regions']" data-fmt="{:d}">14</span> 塊；14 個 heater 各兩個接點，全部與原理圖一致；錯誤 <span class="num" data-json="design/m3_layout/s4_verify/out/connectivity.json" data-expr="len(d['electrical']['errors'])" data-fmt="{:d}">0</span></td></tr>
+<tr><td>走線電阻</td><td>最大 <span class="num" data-json="design/m3_layout/s4_verify/out/connectivity.json" data-expr="d['electrical']['route_resistance_max_ohm']" data-fmt="{:.1f}">6.8</span> Ω</td></tr>
+<tr><td>光學連接</td><td><span class="num" data-json="design/m3_layout/s4_verify/out/connectivity.json" data-expr="sum(r['ok'] for r in d['optical']['ec'])" data-fmt="{:d}">10</span>/10 個 EC 接到對的核心埠，名稱與訊號一致</td></tr>
+<tr><td>故障注入</td><td><span class="num" data-json="design/m3_layout/s4_verify/out/connectivity.json" data-expr="sum(d['faults'].values())" data-fmt="{:d}">8</span>/8 種被檢出</td></tr>
+</table>
+<p><b>給量測的提醒</b>：7 個 GND PAD 在晶片上互不相連，量測時每一個都要接到驅動器的地；漏接一個，它的兩個 heater 會浮接，看起來像「heater 沒有作用」。規格需求 E2 已註明：GND PAD 分成數個時，在晶片外部共地。</p>
+<p><b>實際遇到的情況</b>：</p>
+<ul>
+<li><b>晶片裡有兩個外框</b>：第一次檢查發現 GDS 99 有兩個，一個是晶片外框，另一個是 M3 s1 核心自帶的外框（核心被整顆晶片引用時一起帶進來）。平台 deck 沒有因此報錯，但交付的晶片只能有一個設計區。修正方式是回到 M3 s1：外框只畫在給它自己做 DRC 的副本 <code>b7_core_framed.gds</code>，核心本身不帶外框；再依序重新執行 M3 s1–s3，結果不變。</li>
+<li><b>光學檢查一開始全部失敗</b>：把所有波導聯集後只得到一整塊，因為 MMI 把每條波導都連在一起。改成不展開 MMI cell 後，每個 EC 所在的那一段才和其他段分開。</li>
+<li><b>DRC 故障注入第一次未被檢出</b>：故意放的 1 µm 寬 Ti/AL 剛好落在早期版本的 GND 匯流排裡，和匯流排合成一塊，所以不是違規。移到晶片邊緣的空地後，DRC 報出「GDS 41 小於 2 µm」。故障要放在會被單獨看到的地方，否則「未檢出」不代表檢查失效。</li>
+<li><b>複查時發現兩處不一致</b>：TiN 斷路的故障注入寫「切斷 H01」，程式實際取了清單第一個（H02），改成依名稱取 H01；光學檢查原本把 EC 標記和畫圖時的變數比，改成和規格 spec.json 比。</li>
+<li>IPKISS 匯入 GDS 時會改 cell 名稱（核心變成 PCELL_1，子 cell 加上前綴），所以在晶片裡找核心時，改用「引用了 MZI cell 的那個 cell」來辨識。</li>
+</ul>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>DRC 0 就以為完成</b>：DRC 只管尺寸；heater 接錯 PAD、兩條訊號線碰在一起，DRC 都可能是 0。</li>
+<li><b>設計區用量出來的外框</b>：外框畫錯，設計區也跟著錯；設計區要用事先決定的晶片尺寸宣告。</li>
+<li><b>故障注入放錯地方</b>：故障被其他圖形吸收，檢查自然不會報錯；要確認故障在圖形上確實存在。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：如果把 P01 和 P02 兩個 PAD 的文字標記貼反，DRC 和 LVS 哪個能檢出？</summary>
+<p>DRC 檢查不出，文字標記不影響尺寸。LVS 能檢出：P01 標記所在的那塊 Ti/AL 實際接的是 H02，與原理圖「H01 接 P01」不符（故障注入「PAD 標記對調」就是這一種）。</p></details>
+<details class="quiz"><summary>自我檢查 2：TiN 斷在中間時，LVS 看到什麼？</summary>
+<p>原本一塊的 TiN 變成兩塊：一塊只接訊號網、一塊只接地網，各只有一個接點；而且兩塊都會被命名為同一個 heater，數目也對不上。</p></details>
+<details class="quiz"><summary>自我檢查 3：走線電阻對 heater 功率的影響有多大？</summary>
+<p>heater 串聯的是訊號線和地線兩段，最長一組合計約 <span class="num" data-json="design/m3_layout/s4_verify/out/connectivity.json" data-expr="d['electrical']['series_resistance_max_ohm']" data-fmt="{:.0f}">13</span> Ω。若 heater 1 kΩ，走線分到的電壓約 1.3%，heater 功率少約 2.6%；相位接近 2π 時約少 <span class="num" data-json="design/m3_layout/s4_verify/out/connectivity.json" data-expr="d['electrical']['dphi_at_2pi_rad_1kohm']" data-fmt="{:.2f}">0.16</span> rad，已超過 heater 相位誤差的容許值（σ ≤ 0.05 rad）。它是固定的比例，校正（需求 K1）量 P<sub>π</sub> 時會一起吸收；若 heater 只有幾百 Ω，比例更大，量測時要扣掉。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>輸入</td><td>M3 s3 的晶片 GDS 與資訊；M3 s1 的核心 GDS（雜湊比對）；規格（原理圖）</td></tr>
+<tr><td>DRC</td><td>KLayout，平台 deck 30 條規則；設計區宣告為 4280×1200 µm</td></tr>
+<tr><td>LVS</td><td>shapely 聯集；Ti/AL 與 TiN 重疊面積 &gt; 1e-6 µm² 視為接點；網以 PAD 文字標記命名</td></tr>
+<tr><td>光學</td><td>GDS 3＋GDS 5 聯集，MMI cell 不展開；端面點取外框內 0.05 µm</td></tr>
+<tr><td>故障注入</td><td>Ti/AL 短路（兩條北側訊號線間加 10 µm 橫條）、Ti/AL 斷路（切斷一條訊號線 20 µm）、TiN 斷路（切斷 H01 中段 4 µm）、原理圖 H01／H02 對調、PAD 標記 P01／P02 對調、EC 標記 x1／x2 對調；另寫一份 GDS 加 1 µm 寬 Ti/AL 與相距 5 µm 的 TiN</td></tr>
+</table>
+<div class="auto-code" data-files="design/m3_layout/s4_verify/verify.py design/m3_layout/s4_verify/figs.py"></div>
+<div class="auto-history" data-file="design/m3_layout/s4_verify/HISTORY.md"></div>
+</section>

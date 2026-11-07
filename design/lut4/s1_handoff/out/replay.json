@@ -1,0 +1,63 @@
+{
+  "netlist_sha256": "ece36c2a7d0a96a0353aed56c55cc953cbf89a4ca66fb6221e59d384e7a2a10a",
+  "netlist_sha_ok": true,
+  "truth_hex_consistent": true,
+  "passed": 112,
+  "total": 112,
+  "csv_max_diff": 4.996233942122785e-07,
+  "csv_target_bit_mismatch": 0,
+  "rows": 112,
+  "tamper": {
+    "a XOR4 的 θ、φ 順序交換": {
+      "passed": 104,
+      "total": 112,
+      "max_diff": 5.2913155280073525,
+      "caught": true
+    },
+    "b 改接線：MZI-7 移到波導 1、2": {
+      "passed": 59,
+      "total": 112,
+      "max_diff": 5.710266256543982,
+      "caught": true,
+      "sha_match": false
+    },
+    "c 輸入改用 E± 場向量 1−2x": {
+      "passed": 49,
+      "total": 112,
+      "max_diff": 9.313431498503391,
+      "caught": true
+    },
+    "d 讀取埠 o2、o4 對調": {
+      "passed": 30,
+      "total": 112,
+      "max_diff": 8.16149019517546,
+      "caught": true
+    },
+    "e R 改成 2.9": {
+      "passed": 112,
+      "total": 112,
+      "max_diff": 0.27643964577741453,
+      "caught": true
+    },
+    "f θ 放在下臂": {
+      "passed": 80,
+      "total": 112,
+      "max_diff": 7.954060044202043,
+      "caught": true
+    },
+    "g AND2 的相位當 XOR2": {
+      "passed": 100,
+      "total": 112,
+      "max_diff": 3.7595352502795203,
+      "caught": true
+    },
+    "h 讀取埠 o4、o3 對調": {
+      "passed": 43,
+      "total": 112,
+      "max_diff": 8.51257370858854,
+      "caught": true
+    }
+  },
+  "all_tamper_caught": true,
+  "convention": "T = a·H·diag(e^{iθ},1)·H·diag(e^{iφ},1), H=[[1,i],[i,1]]/√2；列＝輸出、第 1 列／行＝上方軌；U＝T̂7⋯T̂1；OOK 0/1；Da=P(o2)−P(o4)、Db=P(o4)−P(o3)，皆＞0 判 1"
+}

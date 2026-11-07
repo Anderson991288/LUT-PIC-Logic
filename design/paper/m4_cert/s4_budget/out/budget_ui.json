@@ -1,0 +1,150 @@
+{
+ "ui_ps": 100.0,
+ "t_req_ps": 23.0,
+ "skew_ps": 13.2,
+ "tau_skew_ps": [
+  0.0,
+  0.0,
+  13.2,
+  13.2
+ ],
+ "bw_frac": 0.7,
+ "edge_frac_ui": 0.3125,
+ "draft": {
+  "budget": {
+   "edges_isi": 43.0,
+   "noise": 5.5,
+   "skew": 2.0,
+   "window": 49.5,
+   "remaining": 26.5,
+   "slack_side": 13.25
+  },
+  "bw_range": [
+   28.5,
+   56.5
+  ],
+  "max_rate": {
+   "AND4": 15.0,
+   "MAJ4": 15.0,
+   "XOR2": 20.0
+  }
+ },
+ "functions": {
+  "AND4": {
+   "digital": {
+    "w0": 55.0,
+    "wn": 50.0,
+    "ws": 47.5,
+    "items": {
+     "edges_isi": 45.0,
+     "noise": 5.0,
+     "skew": 2.5
+    },
+    "remaining": 24.5,
+    "slack_side": 12.25
+   },
+   "analog": {
+    "w0": 55.0,
+    "wn": 50.0,
+    "ws": 47.0,
+    "items": {
+     "edges_isi": 45.0,
+     "noise": 5.0,
+     "skew": 3.0
+    },
+    "remaining": 24.0,
+    "slack_side": 12.0,
+    "w_ctr": 41.5,
+    "w_box": 37.0,
+    "w_cert": 30.5,
+    "w_cert_hist": 30.0,
+    "box_rest": 10.0,
+    "box_skew": 5.5,
+    "box_common": 4.5,
+    "cert_conservative": 6.5,
+    "remaining_cert": 7.5,
+    "slack_side_cert": 3.75
+   }
+  },
+  "MAJ4": {
+   "digital": {
+    "w0": 59.0,
+    "wn": 54.0,
+    "ws": 48.0,
+    "items": {
+     "edges_isi": 41.0,
+     "noise": 5.0,
+     "skew": 6.0
+    },
+    "remaining": 25.0,
+    "slack_side": 12.5
+   },
+   "analog": {
+    "w0": 59.0,
+    "wn": 54.0,
+    "ws": 48.0,
+    "items": {
+     "edges_isi": 41.0,
+     "noise": 5.0,
+     "skew": 6.0
+    },
+    "remaining": 25.0,
+    "slack_side": 12.5,
+    "w_ctr": 40.5,
+    "w_box": 40.5,
+    "w_cert": 33.0,
+    "w_cert_hist": 31.5,
+    "box_rest": 7.5,
+    "box_skew": 7.5,
+    "box_common": 0.0,
+    "cert_conservative": 7.5,
+    "remaining_cert": 10.0,
+    "slack_side_cert": 5.0
+   }
+  },
+  "XOR2": {
+   "digital": {
+    "w0": 97.0,
+    "wn": 66.0,
+    "ws": 66.0,
+    "items": {
+     "edges_isi": 3.0,
+     "noise": 31.0,
+     "skew": 0.0
+    },
+    "remaining": 43.0,
+    "slack_side": 21.5
+   },
+   "analog": {
+    "w0": 97.0,
+    "wn": 66.0,
+    "ws": 66.0,
+    "items": {
+     "edges_isi": 3.0,
+     "noise": 31.0,
+     "skew": 0.0
+    },
+    "remaining": 43.0,
+    "slack_side": 21.5,
+    "w_ctr": 53.0,
+    "w_box": 53.0,
+    "w_cert": 37.0,
+    "w_cert_hist": 37.0,
+    "box_rest": 13.0,
+    "box_skew": 13.0,
+    "box_common": 0.0,
+    "cert_conservative": 16.0,
+    "remaining_cert": 14.0,
+    "slack_side_cert": 7.0
+   }
+  }
+ },
+ "checks": {
+  "analog_chain": true,
+  "fine_not_worse": true,
+  "bw_detail_above_treq": true,
+  "max_rate_matches_draft": true,
+  "cert_below_detail": true
+ },
+ "time_s": 253.1
+}

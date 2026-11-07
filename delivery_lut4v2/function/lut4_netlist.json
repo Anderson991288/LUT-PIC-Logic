@@ -1,0 +1,157 @@
+{
+  "name": "Model-7a",
+  "version": "1.0",
+  "n_waveguides": 5,
+  "topology": "3142132",
+  "inputs": [
+    {
+      "index": 1,
+      "signal": "x1",
+      "layout_port": "in0",
+      "amplitude": "+1／−1（√P_u；位元 0＝+E、1＝−E）"
+    },
+    {
+      "index": 2,
+      "signal": "x2",
+      "layout_port": "in1",
+      "amplitude": "+1／−1（√P_u；位元 0＝+E、1＝−E）"
+    },
+    {
+      "index": 3,
+      "signal": "x3",
+      "layout_port": "in2",
+      "amplitude": "+1／−1（√P_u；位元 0＝+E、1＝−E）"
+    },
+    {
+      "index": 4,
+      "signal": "x4",
+      "layout_port": "in3",
+      "amplitude": "+1／−1（√P_u；位元 0＝+E、1＝−E）"
+    },
+    {
+      "index": 5,
+      "signal": "R",
+      "layout_port": "in4",
+      "amplitude": "+3（√P_u，固定，與位元 0 同相）"
+    }
+  ],
+  "outputs": [
+    {
+      "index": 1,
+      "name": "o1",
+      "layout_port": "out0",
+      "role": "監看"
+    },
+    {
+      "index": 2,
+      "name": "o2",
+      "layout_port": "out1",
+      "role": "上界（判讀）"
+    },
+    {
+      "index": 3,
+      "name": "o3",
+      "layout_port": "out2",
+      "role": "下界（判讀）"
+    },
+    {
+      "index": 4,
+      "name": "o4",
+      "layout_port": "out3",
+      "role": "中間（判讀）"
+    },
+    {
+      "index": 5,
+      "name": "o5",
+      "layout_port": "out4",
+      "role": "監看"
+    }
+  ],
+  "mzis": [
+    {
+      "name": "MZI-1",
+      "waveguides": [
+        3,
+        4
+      ],
+      "layer": 1,
+      "theta": "θ1",
+      "phi": "φ1"
+    },
+    {
+      "name": "MZI-2",
+      "waveguides": [
+        1,
+        2
+      ],
+      "layer": 1,
+      "theta": "θ2",
+      "phi": "φ2"
+    },
+    {
+      "name": "MZI-3",
+      "waveguides": [
+        4,
+        5
+      ],
+      "layer": 2,
+      "theta": "θ3",
+      "phi": "φ3"
+    },
+    {
+      "name": "MZI-4",
+      "waveguides": [
+        2,
+        3
+      ],
+      "layer": 2,
+      "theta": "θ4",
+      "phi": "φ4"
+    },
+    {
+      "name": "MZI-5",
+      "waveguides": [
+        1,
+        2
+      ],
+      "layer": 3,
+      "theta": "θ5",
+      "phi": "φ5"
+    },
+    {
+      "name": "MZI-6",
+      "waveguides": [
+        3,
+        4
+      ],
+      "layer": 3,
+      "theta": "θ6",
+      "phi": "φ6"
+    },
+    {
+      "name": "MZI-7",
+      "waveguides": [
+        2,
+        3
+      ],
+      "layer": 4,
+      "theta": "θ7",
+      "phi": "φ7"
+    }
+  ],
+  "order": "光由左到右；U＝T̂7·T̂6·…·T̂1（同一層的兩顆可交換）",
+  "mzi_convention": {
+    "matrix": "T(θ, φ)＝a·H·diag(e^{iθ}, 1)·H·diag(e^{iφ}, 1)，H＝[[1, i], [i, 1]]/√2，a＝10^(−L/20)",
+    "ports": "每顆 MZI 的第 1 列／行＝上方波導（編號較小），第 2 列／行＝下方波導",
+    "phases": "θ：兩顆 MMI 之間、上臂；φ：第一顆 MMI 之前、上臂；單位 rad"
+  },
+  "readout": {
+    "ports": [
+      "o2",
+      "o4",
+      "o3"
+    ],
+    "rule": "Da＝P(o2) − P(o4)，Db＝P(o4) − P(o3)；y＝[Da＞0] AND [Db＞0]；兩個比較器門檻都是 0"
+  },
+  "model": "每顆 MZI 0.9 dB 插入損耗、相干輸入、單一波長"
+}

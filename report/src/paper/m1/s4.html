@@ -1,0 +1,83 @@
+<section class="step" id="p-m1-s4" data-milestone="M1" data-step="s4" data-title="校正後的 10 Gb/s 取樣窗">
+<div class="bridge">
+<p><b>承接</b>：M1 s1 用「只看邊緣寬度」的一階估計，得到允許的 skew 約 18.7 ps。M1 s2、s3 完成兩種校正：消光比 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_required_db']" data-fmt="{:.1f}">25.8</span> dB 的殘留已由重新求相位吸收，輸入相位由 heater 持續追蹤。本步在<b>校正後</b>的條件下驗收時序：消光比用 M1 s2 的規格與重新求的相位，相位假設已在容許範圍內。</p>
+<p><b>本步要回答</b>：輸入每 100 ps 換一組時，轉態期間的干涉、接收端的頻寬、各路的 skew 與「0」的殘留光，實際占去多少可取樣的時間？一階估計準不準？</p>
+<p><b>交給下一步</b>：<code>window.json</code>（每個函數在不同 skew 下的功率代價）與 skew 代價曲線：skew 額外造成的代價達 1 dB 的點最小約 18 ps（OR4）。M1 s5 與論文 M2 s2 由此訂時間對齊規格（≤ 15 ps，留 3 ps 餘裕）。M1 s5 把它整合進介面規格與總功率預算。</p>
+<p class="terms"><b>名詞對照</b>：功率代價（power penalty：為了在取樣窗內維持和靜態時一樣的判讀餘裕，要多給的光功率，以 dB 表示）、符號（一個 UI 內 4 路輸入的一組值，共 16 種）、升餘弦（以餘弦曲線平滑變化的轉態形狀）、眼圖（把每個符號的波形疊在同一時間軸上的圖，中間張開的區域就是可取樣的範圍）、延遲角落（各路延遲只取範圍兩端的組合）。</p>
+</div>
+
+<figure class="concept"><img src="figures/paper/m1/s4_concept.png" alt="本步概念圖：x1–x4 的轉態各差一點時間，經 B7 干涉與接收端濾波後形成取樣窗"><figcaption><b>本步概念</b>　把輸入改成真的隨時間變化的波形，算出每個取樣時間點上最差的判讀量，再找出取樣需要的 23 ps 放在哪裡最好、剩下多少 margin。</figcaption></figure>
+
+<h3>① 問題與範例</h3>
+<p><b>學習目標</b>：能用時域模型算出干涉電路的取樣窗；能用功率代價把「時間不夠」換成「要多給多少光」；能比較一階估計與完整模型的差別。</p>
+<div class="example">
+<p>類比：拍一張五個人同時跳起的合照。每個人起跳、落地都需要時間（轉態），相機快門也需要一點時間（取樣），若有人慢半拍（skew），能拍到「五個人都在空中」的時間就變短。一階估計是直接把這些時間相減；完整計算則要看每一種跳法的組合，因為 B7 的判讀是各路光干涉的結果，某一路正在轉態時，會影響其他路的判讀。</p>
+</div>
+
+<h3>② 原理與推導</h3>
+<h4>1. 時域模型</h4>
+<p>每路輸入的光場在「0」與「1」之間以升餘弦轉態，10–90% 時間 t<sub>tx</sub>＝<span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['t_tx_ps']" data-fmt="{:g}">30</span> ps，並延遲 τ<sub>j</sub>：</p>
+<math display="block"><mrow><msub><mi>x</mi><mi>j</mi></msub><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo><msub><mi>a</mi><mn>0</mn></msub><msup><mi>e</mi><mrow><mi>i</mi><mi>ψ</mi></mrow></msup><mo>+</mo><mo>(</mo><mn>1</mn><mo>−</mo><msub><mi>a</mi><mn>0</mn></msub><msup><mi>e</mi><mrow><mi>i</mi><mi>ψ</mi></mrow></msup><mo>)</mo><mspace width="0.2em"/><msub><mi>b</mi><mi>j</mi></msub><mo>(</mo><mi>t</mi><mo>−</mo><msub><mi>τ</mi><mi>j</mi></msub><mo>)</mo><mo>,</mo><mspace width="1em"/><mi>y</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo><mi>U</mi><mi>x</mi><mo>(</mo><mi>t</mi><mo>)</mo></mrow></math>
+<p>b<sub>j</sub>(t) 是第 j 路的開關波形（0 到 1），a<sub>0</sub>、ψ 是 M1 s2 的殘留光。y＝Ux 是靜態時的寫法；高速時要把晶片內各條路徑的延遲也放進去（下面第 3 點）。判讀量 ΔP(t)＝|y<sub>2</sub>|²−|y<sub>4</sub>|² 經接收端濾波（二階 Butterworth，<span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['rx_bw_ghz']" data-fmt="{:g}">7</span> GHz）。注意 ΔP 是光場的二次式（課程 M1 s3）：一路正在轉態時，它和參考光、和其他路的干涉項同時在變，這是一階估計沒有算到的部分。</p>
+<h4>2. 動態 margin 與功率代價</h4>
+<p>在取樣時間 t（從符號起點算），把所有符號中最差的判讀量記為動態 margin：</p>
+<math display="block"><mrow><mi>m</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo><munder><mi>min</mi><mi>k</mi></munder><msub><mi>s</mi><mi>k</mi></msub><mspace width="0.2em"/><msub><mi>ΔP</mi><mtext>濾波後</mtext></msub><mo>(</mo><mi>k</mi><mspace width="0.1em"/><mtext>UI</mtext><mo>+</mo><mi>t</mi><mo>)</mo><mo>,</mo><mspace width="1em"/><msub><mi>m</mi><mtext>win</mtext></msub><mo>=</mo><munder><mi>max</mi><msub><mi>t</mi><mn>0</mn></msub></munder><munder><mi>min</mi><mrow><mi>t</mi><mo>∈</mo><mo>[</mo><msub><mi>t</mi><mn>0</mn></msub><mo>,</mo><msub><mi>t</mi><mn>0</mn></msub><mo>+</mo><msub><mi>T</mi><mtext>req</mtext></msub><mo>]</mo></mrow></munder><mi>m</mi><mo>(</mo><mi>t</mi><mo>)</mo></mrow></math>
+<p>m<sub>win</sub> 是把取樣需要的 T<sub>req</sub>＝<span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['t_req_ps']" data-fmt="{:g}">23</span> ps 放在最好的位置時，窗內最差的 margin。離散計算時窗的兩個端點都要算：0.5 ps 格點下 23 ps 窗含 47 個格點，所有可行的起點都要搜尋。判讀量與光功率成正比，所以要讓取樣窗內的 margin 回到靜態 margin m<sub>0</sub> 的水準，光功率要多給 10 log<sub>10</sub>(m<sub>0</sub>／m<sub>win</sub>) dB，這就是功率代價。它直接接到 M1 s1 的功率預算，不需要再假設雜訊門檻。</p>
+<h4>3. 路徑層級的延遲</h4>
+<p>每個輸出是多條路徑的光加起來，各路徑經過的 MZI 數目不同，延遲也不同：</p>
+<math display="block"><mrow><msub><mi>y</mi><mi>k</mi></msub><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo><msub><mi>r</mi><mi>k</mi></msub><mo>+</mo><munder><mo>∑</mo><mi>j</mi></munder><munder><mo>∑</mo><mi>p</mi></munder><msub><mi>w</mi><mrow><mi>k</mi><mi>j</mi><mi>p</mi></mrow></msub><mspace width="0.2em"/><msub><mi>x</mi><mi>j</mi></msub><mo>(</mo><mi>t</mi><mo>−</mo><msub><mi>Δt</mi><mrow><mi>k</mi><mi>j</mi><mi>p</mi></mrow></msub><mo>)</mo></mrow></math>
+<p>p 是從輸入 j 到輸出 k 的第 p 條路徑，w<sub>kjp</sub> 是它的複數權重，Δt<sub>kjp</sub> 是它的相對延遲，r<sub>k</sub> 是參考光的貢獻。實作上不必列出每條路徑：讓光場逐欄傳過 B7，同一欄裡走 MZI 的兩條軌先經 2×2 矩陣混合，再比直通多延遲一段（課程 M3 s1 的 11.72 µm，約 0.167 ps），扇入、扇出依課程 M3 s3 的長度延遲；共同延遲不影響判讀，都扣掉。輸入不變時，逐欄傳遞的結果要等於 U，程式自動核對（誤差 <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['dc_check_err']" data-fmt="{:.0e}">2e-16</span>）。載波相位不另外加，假設已由校正（M1 s3）對好，這裡只看包絡延遲（包絡是資料開關造成的振幅變化，不含光波本身的快速振盪）。</p>
+<h4>4. 資料序列與 skew 的取法</h4>
+<p>資料用 16 種輸入的 de Bruijn 序列 B(16, 3)（B(k, n) 表示 k 種符號、每一種長度 n 的組合都恰好出現一次的循環序列；這裡 16³＝4096 個符號），涵蓋所有一次轉態與前一個符號的影響。skew 範圍 S 內，會影響判讀的輸入各取延遲 0 或 S（四輸入函數 16 種、二輸入函數 4 種組合），取最差者。</p>
+
+<h3>③ 動手做</h3>
+<pre><code>.\lab design\paper\m1_timing\s4_window\window.py
+.\lab design\paper\m1_timing\s4_window\figs.py
+.\lab design\paper\m1_timing\concept.py</code></pre>
+<p><code>window.py</code> 以 0.5 ps 的時間格點模擬 4096 個符號，對 5 個函數、9 個 skew 範圍（0–40 ps）、各延遲組合、2 種消光比各算一次；另把晶片內延遲設為 0 重算一次（看路徑延遲的影響），並在代價最大的情況把格點縮為 0.25 ps 重算。約 5 分鐘。預期輸出（節錄）：</p>
+<pre><code>OR4：靜態 m0 0.942；功率代價（理想消光比）0ps 1.375、5ps 1.512、10ps 1.721、15ps 2.092、20ps 2.558、…
+skew 0 時最大代價：理想 1.375 dB、消光比 25.79 dB 1.397 dB；skew 額外代價達 1 dB：理想 18.0 ps（OR4）、消光比 18.1 ps（一階估計 18.69 ps）；消光比造成的差最多 0.035 dB
+晶片內路徑差造成的代價 {'AND2': -0.0103, …, 'OR4': 0.002}；靜態核對誤差 2.5e-16；格點 OR4 skew 20 ps：0.5 ps 2.558 dB、0.25 ps 2.545 dB</code></pre>
+<p>實際遇到的錯誤：第一次執行時，零 skew 就有 9–11 dB 的代價，四輸入函數甚至沒有取樣窗。原因是接收端濾波有延遲，眼圖被往後推到下一個符號的時間範圍，而程式只在每個符號自己的 100 ps 內找取樣點，跨過邊界時把資料對錯了符號。改成從符號起點往後找 0–200 ps 後，結果如下。</p>
+
+<h3>④ 結果與驗收</h3>
+<figure><img src="figures/paper/m1/s4_margin.png" alt="五個函數的動態 margin 隨取樣時間的變化，各路輸入同時到達與 skew 20 ps 兩種情況"><figcaption>圖 M1-7　動態 margin（以靜態 margin 為 1）隨取樣時間的變化，等於眼圖最差的那條邊界；低於 0 就有輸入組合會判錯。實線是各路輸入同時到達，虛線是 skew 20 ps 的最差組合。轉態與接收端頻寬讓頂端只剩一小段，四輸入函數（AND4、OR4）的頂端最窄；skew 讓曲線變矮、往後移。紫色區塊是 AND4 在零 skew 時最佳的 23 ps 取樣窗。</figcaption></figure>
+<figure><img src="figures/paper/m1/s4_penalty.png" alt="五個函數的功率代價與 skew 範圍的關係，以及一階估計的位置"><figcaption>圖 M1-8　功率代價與 skew 範圍的關係。各路輸入同時到達時已有 0.5–<span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['penalty0_max_ideal']" data-fmt="{:.1f}">1.4</span> dB 的代價（轉態與接收端頻寬）；skew 額外造成 1 dB 代價的點在 <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['skew_at_1db_ideal']" data-fmt="{:g}">18</span> ps（<span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['skew_at_1db_fn']" data-fmt="{}">OR4</span> 最先到），與 M1 s1 的一階估計 18.7 ps 同一量級（準則不同，見 ④）。點線是消光比 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_required_db']" data-fmt="{:.1f}">25.8</span> dB（依殘留重新求相位），和理想消光比幾乎重疊。</figcaption></figure>
+<table>
+<tr><th>函數</th><th>skew 0</th><th>skew 10 ps</th><th>skew 20 ps</th><th>skew 30 ps</th></tr>
+<tr><td>AND2</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['AND2']['ideal']['rows'][0]['penalty_db']" data-fmt="{:.2f}">0.55</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['AND2']['ideal']['rows'][2]['penalty_db']" data-fmt="{:.2f}">0.71</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['AND2']['ideal']['rows'][4]['penalty_db']" data-fmt="{:.2f}">1.06</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['AND2']['ideal']['rows'][6]['penalty_db']" data-fmt="{:.2f}">1.72</span> dB</td></tr>
+<tr><td>OR2</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['OR2']['ideal']['rows'][0]['penalty_db']" data-fmt="{:.2f}">0.59</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['OR2']['ideal']['rows'][2]['penalty_db']" data-fmt="{:.2f}">0.74</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['OR2']['ideal']['rows'][4]['penalty_db']" data-fmt="{:.2f}">1.16</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['OR2']['ideal']['rows'][6]['penalty_db']" data-fmt="{:.2f}">1.81</span> dB</td></tr>
+<tr><td>XOR2</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['XOR2']['ideal']['rows'][0]['penalty_db']" data-fmt="{:.2f}">0.61</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['XOR2']['ideal']['rows'][2]['penalty_db']" data-fmt="{:.2f}">0.76</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['XOR2']['ideal']['rows'][4]['penalty_db']" data-fmt="{:.2f}">1.21</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['XOR2']['ideal']['rows'][6]['penalty_db']" data-fmt="{:.2f}">2.00</span> dB</td></tr>
+<tr><td>AND4</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['AND4']['ideal']['rows'][0]['penalty_db']" data-fmt="{:.2f}">1.11</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['AND4']['ideal']['rows'][2]['penalty_db']" data-fmt="{:.2f}">1.45</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['AND4']['ideal']['rows'][4]['penalty_db']" data-fmt="{:.2f}">2.23</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['AND4']['ideal']['rows'][6]['penalty_db']" data-fmt="{:.2f}">4.00</span> dB</td></tr>
+<tr><td>OR4</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['OR4']['ideal']['rows'][0]['penalty_db']" data-fmt="{:.2f}">1.38</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['OR4']['ideal']['rows'][2]['penalty_db']" data-fmt="{:.2f}">1.72</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['OR4']['ideal']['rows'][4]['penalty_db']" data-fmt="{:.2f}">2.56</span> dB</td><td><span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['functions']['OR4']['ideal']['rows'][6]['penalty_db']" data-fmt="{:.2f}">4.14</span> dB</td></tr>
+</table>
+<p>三個結論：(1) 在這個模擬中，10 Gb/s 下這 5 個函數都有取樣窗；即使各路輸入同時到達，轉態與接收端頻寬已要求多給 0.5–<span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['penalty0_max_ideal']" data-fmt="{:.1f}">1.4</span> dB 的光，四輸入函數最多。(2) skew 額外代價 1 dB 的點在 <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['skew_at_1db_ideal']" data-fmt="{:g}">18</span> ps（<span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['skew_at_1db_fn']" data-fmt="{}">OR4</span>）。這個點取決於選多少 dB 當門檻：0.5 dB 在 <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['skew_at_db']['0.5']" data-fmt="{:g}">12.1</span> ps、2 dB 在 <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['skew_at_db']['2.0']" data-fmt="{:g}">25.7</span> ps；一階估計 18.7 ps 和 1 dB 的點同一量級，但兩者準則不同，不能說「驗證」了一階估計。規格應直接由「可接受多少代價」決定，本研究取 1 dB；超過約 25 ps 後代價急速上升，四輸入函數在 40 ps 時約 9 dB。(3) 消光比 <span class="num" data-json="design/paper/m1_timing/s2_interface/out/interface_v2.json" data-expr="d['er_required_db']" data-fmt="{:.1f}">25.8</span> dB 在轉態時多占去的 margin 最多 <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['er_extra_db_max']" data-fmt="{:.2f}">0.04</span> dB，M1 s2 的靜態規格已經足夠。晶片內路徑差（判讀用到的所有路徑相差 0.335 ps）以路徑層級模型直接計算，造成的代價最多 <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['chip_bound_db']" data-fmt="{:.2f}">0.01</span> dB，不影響結果（這個結論只適用於本佈局與目前的條件；設計接近驗收邊界，或路徑、相位、損耗、接收端條件改變時，要重新比較，不能直接沿用）；時間對齊的要求全部落在片外，M1 s5 的介面規格由此訂為 5 路到達時間差 ≤ 15 ps（比最小的 1 dB 點約 18 ps 少 3 ps）。skew 0 時的代價與 skew 造成的額外代價，交給 M1 s5 逐函數合成進總功率預算。</p>
+<p>兩項數值檢查：(a) 格點由 0.5 ps 縮為 0.25 ps，代價最大的情況（OR4、skew 20 ps）只差 <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['grid']['diff_db']" data-fmt="{:.2f}">−0.01</span> dB；(b) 功率代價由 margin 比值換算，前提是雜訊不隨光功率改變；M1 s1 的雜訊組成中熱雜訊加比較器雜訊占 <span class="num" data-json="design/paper/m1_timing/s4_window/out/window.json" data-expr="d['thermal_share']*100" data-fmt="{:.0f}">99</span>%，前提成立。若 shot noise 或 RIN 變成主要雜訊，這個換算會低估代價。</p>
+
+<h3>⑤ 常見錯誤與自我檢查</h3>
+<ul>
+<li><b>只在每個符號自己的 UI 內找取樣點</b>：接收端濾波有延遲，眼圖可能跨到下一個符號的時間範圍；要從符號起點往後找超過一個 UI。本步第一次就犯了這個錯。</li>
+<li><b>以為 skew 0 就沒有代價</b>：轉態與接收端頻寬本身就會讓取樣窗內的 margin 小於靜態值。</li>
+<li><b>只試一種延遲組合</b>：干涉判讀的最差情況和「哪幾路晚到」有關，要取多個組合中最差的。</li>
+</ul>
+<details class="quiz"><summary>自我檢查 1：為什麼四輸入函數的代價比二輸入大？</summary>
+<p>四輸入函數有 4 路資料同時參與干涉，任一路轉態都會改變判讀量；二輸入函數只有 x1、x2 進判讀埠。四輸入函數的動態 margin 頂端最窄（圖 M1-7），取樣需要的 23 ps 放進去時，邊緣的 margin 已經下降較多。</p></details>
+<details class="quiz"><summary>自我檢查 2：功率代價 2 dB 是什麼意思？要怎麼補？</summary>
+<p>取樣窗內最差的判讀量只有靜態時的 10<sup>−0.2</sup>≈63%。判讀量與光功率成正比，所以光功率要多給 2 dB（約 1.6 倍）才能維持和靜態時同樣的錯誤率。M1 s1 的功率預算要把這 2 dB 算進去。</p></details>
+<details class="quiz"><summary>自我檢查 3：一階估計 18.7 ps 和 1 dB 代價點 18.0 ps 很接近，是不是以後只用一階估計就好？</summary>
+<p>不行。兩者的準則不同：一階估計是「skew 用光邊緣以外的餘裕」，完整模型是「skew 額外造成多少代價」，1 dB 是選定的門檻；換成 0.5 或 2 dB，點就移到約 12 或 26 ps。一階估計只能當量級的快速檢查，它也算不出 skew 0 時的代價與四輸入函數在大 skew 時的急速惡化。</p></details>
+
+<h3>⑥ 程式與實驗條件</h3>
+<table>
+<tr><th>項目</th><th>條件</th></tr>
+<tr><td>輸入</td><td>課程 M1 s5 的相位設定檔；M1 s1 的時序假設；M1 s2 的消光比規格</td></tr>
+<tr><td>波形</td><td>10 Gb/s；光場升餘弦轉態，10–90% 30 ps；「0」為理想或 a<sub>0</sub>e<sup>iψ</sup>（25.8 dB，依殘留重新求相位，ψ 取靜態最差方向）</td></tr>
+<tr><td>接收端</td><td>二階 Butterworth 7 GHz（雙線性轉換，0.5 ps 格點）；取樣需要 23 ps（setup 10、hold 5、時脈抖動 8）</td></tr>
+<tr><td>序列</td><td>de Bruijn B(16, 3) 4096 個符號，循環；先跑一輪去掉濾波暫態</td></tr>
+<tr><td>skew</td><td>S＝0–40 ps，每 5 ps；會影響判讀的輸入各取 0 或 S，取最差的角落</td></tr>
+<tr><td>晶片內延遲</td><td>路徑層級：逐欄傳遞，MZI 軌每欄多 11.72 µm（n<sub>g</sub> 4.28），扇入、扇出依課程 M3 s3；線性內插延遲；MMI 群延遲以等效長度近似（未知）</td></tr>
+<tr><td>範圍</td><td>不含雜訊的時間變化（以功率代價表示，前提見 ④）、調變時的啁啾（chirp，調變時附帶的相位變化）、輸入相位的殘餘誤差、載波相位；延遲只取角落，不是所有組合；序列涵蓋三個符號的歷史，更長的歷史只有序列中的一種</td></tr>
+</table>
+<div class="auto-code" data-files="design/paper/m1_timing/s4_window/window.py design/paper/m1_timing/s4_window/figs.py design/paper/m1_timing/concept.py"></div>
+<div class="auto-history" data-file="design/paper/m1_timing/s4_window/HISTORY.md"></div>
+</section>

@@ -1,0 +1,1034 @@
+{
+  "gds_sha256": "c6286b4caddee6daeef4cb6b51d74b2deadd85ccb48ce12c66f3ef13bdc1809f",
+  "core_sha_match": true,
+  "core_polygons": [
+    226,
+    226
+  ],
+  "electrical": {
+    "al_nets": 21,
+    "tin_regions": 14,
+    "pads": [
+      "GN1",
+      "GN2",
+      "GN3",
+      "GN4",
+      "GN5",
+      "GN6",
+      "GS1",
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P12",
+      "P13",
+      "P14"
+    ],
+    "gnd_pads": [
+      "GN1",
+      "GN2",
+      "GN3",
+      "GN4",
+      "GN5",
+      "GN6",
+      "GS1"
+    ],
+    "channels": [
+      {
+        "heater": "H06",
+        "contacts": 2,
+        "nets": [
+          "P06",
+          "GS1"
+        ],
+        "expect": [
+          "P06",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H02",
+        "contacts": 2,
+        "nets": [
+          "P02",
+          "GN1"
+        ],
+        "expect": [
+          "P02",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H01",
+        "contacts": 2,
+        "nets": [
+          "P01",
+          "GN2"
+        ],
+        "expect": [
+          "P01",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H08",
+        "contacts": 2,
+        "nets": [
+          "P08",
+          "GN3"
+        ],
+        "expect": [
+          "P08",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H04",
+        "contacts": 2,
+        "nets": [
+          "GN1",
+          "P04"
+        ],
+        "expect": [
+          "P04",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H03",
+        "contacts": 2,
+        "nets": [
+          "GN2",
+          "P03"
+        ],
+        "expect": [
+          "P03",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H05",
+        "contacts": 2,
+        "nets": [
+          "GS1",
+          "P05"
+        ],
+        "expect": [
+          "P05",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H12",
+        "contacts": 2,
+        "nets": [
+          "P12",
+          "GN4"
+        ],
+        "expect": [
+          "P12",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H07",
+        "contacts": 2,
+        "nets": [
+          "GN3",
+          "P07"
+        ],
+        "expect": [
+          "P07",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H10",
+        "contacts": 2,
+        "nets": [
+          "GN4",
+          "P10"
+        ],
+        "expect": [
+          "P10",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H11",
+        "contacts": 2,
+        "nets": [
+          "P11",
+          "GN5"
+        ],
+        "expect": [
+          "P11",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H14",
+        "contacts": 2,
+        "nets": [
+          "P14",
+          "GN6"
+        ],
+        "expect": [
+          "P14",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H13",
+        "contacts": 2,
+        "nets": [
+          "GN6",
+          "P13"
+        ],
+        "expect": [
+          "P13",
+          "GND"
+        ],
+        "ok": true
+      },
+      {
+        "heater": "H09",
+        "contacts": 2,
+        "nets": [
+          "GN5",
+          "P09"
+        ],
+        "expect": [
+          "P09",
+          "GND"
+        ],
+        "ok": true
+      }
+    ],
+    "errors": [],
+    "gnd_network": {
+      "scope": "由幾何與假設值推算的模型值，不是寄生萃取，也不是量測",
+      "assumptions": [
+        "Ti/AL 電阻率 2.8e-8 Ω·m、厚 0.22 µm（片電阻約 0.127 Ω/□），沿用專案現有值；Ti 層、薄膜電阻率上升與溫度係數未計",
+        "heater 電阻 R_h 是假設值（平台未公開 TiN 片電阻），取 chip_info 的 0.5、1、2 kΩ，並視為不隨溫度改變",
+        "相位與 heater 功率成正比，φ＝π·P／P_π；熱串擾未計",
+        "線段以中心線長度計，轉角與 T 字接點未做二維電流修正（每個轉角約高估 0.4 □）；Ti/AL 與 TiN 的接觸電阻未計",
+        "PAD 視為等電位，線段算到 PAD 邊界（chip_info 的 length_um 含伸入 PAD 的 20 µm，本模型不計）；PAD 內電流擴散未計",
+        "訊號 PAD 為理想電壓源，每個 GND PAD 都接到理想 0 V；探針、打線、驅動器輸出阻抗與片外共地阻抗未計"
+      ],
+      "sources": [
+        "chip_info.json routes[].pts／bus、wire_width_um、gnd_wire_width_um",
+        "layout_info.json heaters[].landings_um",
+        "chip.gds GDS 41（核對）"
+      ],
+      "sheet_resistance_ohm_sq": 0.1273,
+      "n_segments": 96,
+      "n_nodes": 96,
+      "widths_um": [
+        10.0
+      ],
+      "shared_gnd_pairs": 0,
+      "sig_series_ohm": {
+        "H01": 6.445,
+        "H02": 7.628,
+        "H03": 4.903,
+        "H04": 5.594,
+        "H05": 5.549,
+        "H06": 5.447,
+        "H07": 5.493,
+        "H08": 5.271,
+        "H09": 5.742,
+        "H10": 4.91,
+        "H11": 6.048,
+        "H12": 6.222,
+        "H13": 5.59,
+        "H14": 6.164
+      },
+      "gnd_self_ohm": {
+        "H01": 6.04,
+        "H02": 6.524,
+        "H03": 4.888,
+        "H04": 5.421,
+        "H05": 5.488,
+        "H06": 5.59,
+        "H07": 5.638,
+        "H08": 5.285,
+        "H09": 5.949,
+        "H10": 4.983,
+        "H11": 7.141,
+        "H12": 6.157,
+        "H13": 5.468,
+        "H14": 6.367
+      },
+      "gnd_mutual_ohm": {
+        "GN1": {
+          "H02": {
+            "H02": 6.524,
+            "H04": 0.0
+          },
+          "H04": {
+            "H02": 0.0,
+            "H04": 5.421
+          }
+        },
+        "GN2": {
+          "H01": {
+            "H01": 6.04,
+            "H03": 0.0
+          },
+          "H03": {
+            "H01": 0.0,
+            "H03": 4.888
+          }
+        },
+        "GN3": {
+          "H07": {
+            "H07": 5.638,
+            "H08": 0.0
+          },
+          "H08": {
+            "H07": 0.0,
+            "H08": 5.285
+          }
+        },
+        "GN4": {
+          "H10": {
+            "H10": 4.983,
+            "H12": 0.0
+          },
+          "H12": {
+            "H10": 0.0,
+            "H12": 6.157
+          }
+        },
+        "GN5": {
+          "H09": {
+            "H09": 5.949,
+            "H11": 0.0
+          },
+          "H11": {
+            "H09": 0.0,
+            "H11": 7.141
+          }
+        },
+        "GN6": {
+          "H13": {
+            "H13": 5.468,
+            "H14": 0.0
+          },
+          "H14": {
+            "H13": 0.0,
+            "H14": 6.367
+          }
+        },
+        "GS1": {
+          "H05": {
+            "H05": 5.488,
+            "H06": 0.0
+          },
+          "H06": {
+            "H05": 0.0,
+            "H06": 5.59
+          }
+        }
+      },
+      "net_total_ohm": {
+        "GN1": 11.946,
+        "GN2": 10.928,
+        "GN3": 10.924,
+        "GN4": 11.14,
+        "GN5": 13.09,
+        "GN6": 11.835,
+        "GS1": 11.077,
+        "P01": 6.445,
+        "P02": 7.628,
+        "P03": 4.903,
+        "P04": 5.594,
+        "P05": 5.549,
+        "P06": 5.447,
+        "P07": 5.493,
+        "P08": 5.271,
+        "P09": 5.742,
+        "P10": 4.91,
+        "P11": 6.048,
+        "P12": 6.222,
+        "P13": 5.59,
+        "P14": 6.164
+      },
+      "gds_check": {
+        "centerline_outside_metal_um": 0.0,
+        "width_samples": 62,
+        "width_mismatch": 0,
+        "width_mismatch_rows": [],
+        "width_gds_um": [
+          10.0
+        ],
+        "metal_outside_model_um2": {
+          "P02": 26.69,
+          "P04": 21.68,
+          "GN1": 48.37,
+          "P01": 26.69,
+          "P03": 21.68,
+          "GN2": 48.37,
+          "P08": 21.68,
+          "GN3": 43.36,
+          "P07": 21.68,
+          "P12": 26.69,
+          "P10": 21.68,
+          "GN4": 48.37,
+          "P11": 26.69,
+          "P09": 21.68,
+          "GN5": 48.37,
+          "P14": 21.68,
+          "GN6": 43.36,
+          "P13": 21.68,
+          "P06": 26.69,
+          "GS1": 53.38,
+          "P05": 26.69
+        },
+        "arms_outside_pad": {
+          "GN1": 2,
+          "GN2": 2,
+          "GN3": 2,
+          "GN4": 2,
+          "GN5": 2,
+          "GN6": 2,
+          "GS1": 2,
+          "P01": 1,
+          "P02": 1,
+          "P03": 1,
+          "P04": 1,
+          "P05": 1,
+          "P06": 1,
+          "P07": 1,
+          "P08": 1,
+          "P09": 1,
+          "P10": 1,
+          "P11": 1,
+          "P12": 1,
+          "P13": 1,
+          "P14": 1
+        }
+      },
+      "by_R_heater_kohm": {
+        "0.5": {
+          "single": {
+            "condition": "只驅動一個 heater 到 2π，其他訊號 PAD 0 V；與其他 heater 的設定無關，可由單路校正吸收",
+            "dphi_2pi_rad": {
+              "H01": 0.3024,
+              "H02": 0.3411,
+              "H03": 0.239,
+              "H04": 0.268,
+              "H05": 0.2685,
+              "H06": 0.2685,
+              "H07": 0.2707,
+              "H08": 0.2571,
+              "H09": 0.2838,
+              "H10": 0.2414,
+              "H11": 0.3188,
+              "H12": 0.2999,
+              "H13": 0.269,
+              "H14": 0.3035
+            },
+            "max_rad": 0.3411,
+            "worst_heater": "H02"
+          },
+          "multi": {
+            "condition": "14 個 heater 同時 2π、無校正（同一地網全開是每個 heater 的最差條件）",
+            "dphi_2pi_rad": {
+              "H01": 0.3024,
+              "H02": 0.3411,
+              "H03": 0.239,
+              "H04": 0.268,
+              "H05": 0.2685,
+              "H06": 0.2685,
+              "H07": 0.2707,
+              "H08": 0.2571,
+              "H09": 0.2838,
+              "H10": 0.2414,
+              "H11": 0.3188,
+              "H12": 0.2999,
+              "H13": 0.269,
+              "H14": 0.3035
+            },
+            "max_rad": 0.3411,
+            "worst_heater": "H02"
+          },
+          "single_cal_residual": {
+            "condition": "先逐路校正（其他 heater 關閉時相位正確），再 14 個同時 2π；單路校正吸收不了的部分",
+            "dphi_2pi_rad": {
+              "H01": 0.0,
+              "H02": 0.0,
+              "H03": 0.0,
+              "H04": 0.0,
+              "H05": 0.0,
+              "H06": 0.0,
+              "H07": 0.0,
+              "H08": 0.0,
+              "H09": 0.0,
+              "H10": 0.0,
+              "H11": 0.0,
+              "H12": 0.0,
+              "H13": 0.0,
+              "H14": 0.0
+            },
+            "max_rad": 0.0,
+            "worst_heater": "H01",
+            "random_phase_max_rad": 0.0
+          },
+          "joint_cal": {
+            "condition": "以 A⁻¹ 同時求 14 個電壓（跨通道聯合校正）；本模型內殘差為零，須先由量測得到 A",
+            "residual_rad": 0.0,
+            "v_increase_vs_ideal_max_pct": 2.83
+          },
+          "off_diagonal_nonpositive": true,
+          "functions": {
+            "AND2": {
+              "margin_nominal": 1.1484,
+              "err_max_uncal_rad": 0.2909,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": -0.0304,
+              "margin_single_cal": 1.1484
+            },
+            "OR2": {
+              "margin_nominal": 1.1235,
+              "err_max_uncal_rad": 0.2677,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": -0.511,
+              "margin_single_cal": 1.1235
+            },
+            "XOR2": {
+              "margin_nominal": 0.7502,
+              "err_max_uncal_rad": 0.2889,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": -0.1902,
+              "margin_single_cal": 0.7502
+            },
+            "NAND2": {
+              "margin_nominal": 1.0623,
+              "err_max_uncal_rad": 0.3411,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.6259,
+              "margin_single_cal": 1.0623
+            },
+            "AND4": {
+              "margin_nominal": 0.8782,
+              "err_max_uncal_rad": 0.2974,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.4506,
+              "margin_single_cal": 0.8782
+            },
+            "XOR4": {
+              "margin_nominal": 0.0693,
+              "err_max_uncal_rad": 0.2689,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": -0.2317,
+              "margin_single_cal": 0.0693
+            },
+            "MUX": {
+              "margin_nominal": 0.7764,
+              "err_max_uncal_rad": 0.2378,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": -0.2777,
+              "margin_single_cal": 0.7764
+            }
+          },
+          "library": {
+            "n_tables": 65536,
+            "margin_nominal_min": 0.0578,
+            "err_max_uncal_rad": 0.3411,
+            "err_max_single_cal_rad": 0.0,
+            "margin_uncal_min": -3.5945,
+            "margin_single_cal_min": 0.0578,
+            "n_fail_uncal": 63969,
+            "n_fail_single_cal": 0,
+            "worst_single_cal": "0x7996"
+          }
+        },
+        "1": {
+          "single": {
+            "condition": "只驅動一個 heater 到 2π，其他訊號 PAD 0 V；與其他 heater 的設定無關，可由單路校正吸收",
+            "dphi_2pi_rad": {
+              "H01": 0.154,
+              "H02": 0.1741,
+              "H03": 0.1213,
+              "H04": 0.1362,
+              "H05": 0.1364,
+              "H06": 0.1364,
+              "H07": 0.1376,
+              "H08": 0.1306,
+              "H09": 0.1444,
+              "H10": 0.1225,
+              "H11": 0.1625,
+              "H12": 0.1527,
+              "H13": 0.1367,
+              "H14": 0.1546
+            },
+            "max_rad": 0.1741,
+            "worst_heater": "H02"
+          },
+          "multi": {
+            "condition": "14 個 heater 同時 2π、無校正（同一地網全開是每個 heater 的最差條件）",
+            "dphi_2pi_rad": {
+              "H01": 0.154,
+              "H02": 0.1741,
+              "H03": 0.1213,
+              "H04": 0.1362,
+              "H05": 0.1364,
+              "H06": 0.1364,
+              "H07": 0.1376,
+              "H08": 0.1306,
+              "H09": 0.1444,
+              "H10": 0.1225,
+              "H11": 0.1625,
+              "H12": 0.1527,
+              "H13": 0.1367,
+              "H14": 0.1546
+            },
+            "max_rad": 0.1741,
+            "worst_heater": "H02"
+          },
+          "single_cal_residual": {
+            "condition": "先逐路校正（其他 heater 關閉時相位正確），再 14 個同時 2π；單路校正吸收不了的部分",
+            "dphi_2pi_rad": {
+              "H01": 0.0,
+              "H02": 0.0,
+              "H03": 0.0,
+              "H04": 0.0,
+              "H05": 0.0,
+              "H06": 0.0,
+              "H07": 0.0,
+              "H08": 0.0,
+              "H09": 0.0,
+              "H10": 0.0,
+              "H11": 0.0,
+              "H12": 0.0,
+              "H13": 0.0,
+              "H14": 0.0
+            },
+            "max_rad": 0.0,
+            "worst_heater": "H01",
+            "random_phase_max_rad": 0.0
+          },
+          "joint_cal": {
+            "condition": "以 A⁻¹ 同時求 14 個電壓（跨通道聯合校正）；本模型內殘差為零，須先由量測得到 A",
+            "residual_rad": 0.0,
+            "v_increase_vs_ideal_max_pct": 1.42
+          },
+          "off_diagonal_nonpositive": true,
+          "functions": {
+            "AND2": {
+              "margin_nominal": 1.1484,
+              "err_max_uncal_rad": 0.1481,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.5918,
+              "margin_single_cal": 1.1484
+            },
+            "OR2": {
+              "margin_nominal": 1.1235,
+              "err_max_uncal_rad": 0.136,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.3246,
+              "margin_single_cal": 1.1235
+            },
+            "XOR2": {
+              "margin_nominal": 0.7502,
+              "err_max_uncal_rad": 0.1475,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.3138,
+              "margin_single_cal": 0.7502
+            },
+            "NAND2": {
+              "margin_nominal": 1.0623,
+              "err_max_uncal_rad": 0.1741,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.8367,
+              "margin_single_cal": 1.0623
+            },
+            "AND4": {
+              "margin_nominal": 0.8782,
+              "err_max_uncal_rad": 0.1514,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.5993,
+              "margin_single_cal": 0.8782
+            },
+            "XOR4": {
+              "margin_nominal": 0.0693,
+              "err_max_uncal_rad": 0.1369,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": -0.0549,
+              "margin_single_cal": 0.0693
+            },
+            "MUX": {
+              "margin_nominal": 0.7764,
+              "err_max_uncal_rad": 0.121,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.2166,
+              "margin_single_cal": 0.7764
+            }
+          },
+          "library": {
+            "n_tables": 65536,
+            "margin_nominal_min": 0.0578,
+            "err_max_uncal_rad": 0.1741,
+            "err_max_single_cal_rad": 0.0,
+            "margin_uncal_min": -1.6223,
+            "margin_single_cal_min": 0.0578,
+            "n_fail_uncal": 54079,
+            "n_fail_single_cal": 0,
+            "worst_single_cal": "0x7996"
+          }
+        },
+        "2": {
+          "single": {
+            "condition": "只驅動一個 heater 到 2π，其他訊號 PAD 0 V；與其他 heater 的設定無關，可由單路校正吸收",
+            "dphi_2pi_rad": {
+              "H01": 0.0777,
+              "H02": 0.088,
+              "H03": 0.0611,
+              "H04": 0.0686,
+              "H05": 0.0688,
+              "H06": 0.0688,
+              "H07": 0.0694,
+              "H08": 0.0658,
+              "H09": 0.0728,
+              "H10": 0.0617,
+              "H11": 0.0821,
+              "H12": 0.0771,
+              "H13": 0.0689,
+              "H14": 0.078
+            },
+            "max_rad": 0.088,
+            "worst_heater": "H02"
+          },
+          "multi": {
+            "condition": "14 個 heater 同時 2π、無校正（同一地網全開是每個 heater 的最差條件）",
+            "dphi_2pi_rad": {
+              "H01": 0.0777,
+              "H02": 0.088,
+              "H03": 0.0611,
+              "H04": 0.0686,
+              "H05": 0.0688,
+              "H06": 0.0688,
+              "H07": 0.0694,
+              "H08": 0.0658,
+              "H09": 0.0728,
+              "H10": 0.0617,
+              "H11": 0.0821,
+              "H12": 0.0771,
+              "H13": 0.0689,
+              "H14": 0.078
+            },
+            "max_rad": 0.088,
+            "worst_heater": "H02"
+          },
+          "single_cal_residual": {
+            "condition": "先逐路校正（其他 heater 關閉時相位正確），再 14 個同時 2π；單路校正吸收不了的部分",
+            "dphi_2pi_rad": {
+              "H01": 0.0,
+              "H02": 0.0,
+              "H03": 0.0,
+              "H04": 0.0,
+              "H05": 0.0,
+              "H06": 0.0,
+              "H07": 0.0,
+              "H08": 0.0,
+              "H09": 0.0,
+              "H10": 0.0,
+              "H11": 0.0,
+              "H12": 0.0,
+              "H13": 0.0,
+              "H14": 0.0
+            },
+            "max_rad": 0.0,
+            "worst_heater": "H01",
+            "random_phase_max_rad": 0.0
+          },
+          "joint_cal": {
+            "condition": "以 A⁻¹ 同時求 14 個電壓（跨通道聯合校正）；本模型內殘差為零，須先由量測得到 A",
+            "residual_rad": 0.0,
+            "v_increase_vs_ideal_max_pct": 0.71
+          },
+          "off_diagonal_nonpositive": true,
+          "functions": {
+            "AND2": {
+              "margin_nominal": 1.1484,
+              "err_max_uncal_rad": 0.0747,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.8993,
+              "margin_single_cal": 1.1484
+            },
+            "OR2": {
+              "margin_nominal": 1.1235,
+              "err_max_uncal_rad": 0.0686,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.7376,
+              "margin_single_cal": 1.1235
+            },
+            "XOR2": {
+              "margin_nominal": 0.7502,
+              "err_max_uncal_rad": 0.0745,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.5482,
+              "margin_single_cal": 0.7502
+            },
+            "NAND2": {
+              "margin_nominal": 1.0623,
+              "err_max_uncal_rad": 0.088,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.9549,
+              "margin_single_cal": 1.0623
+            },
+            "AND4": {
+              "margin_nominal": 0.8782,
+              "err_max_uncal_rad": 0.0764,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.7297,
+              "margin_single_cal": 0.8782
+            },
+            "XOR4": {
+              "margin_nominal": 0.0693,
+              "err_max_uncal_rad": 0.0691,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.0159,
+              "margin_single_cal": 0.0693
+            },
+            "MUX": {
+              "margin_nominal": 0.7764,
+              "err_max_uncal_rad": 0.061,
+              "err_max_single_cal_rad": 0.0,
+              "margin_uncal": 0.4994,
+              "margin_single_cal": 0.7764
+            }
+          },
+          "library": {
+            "n_tables": 65536,
+            "margin_nominal_min": 0.0578,
+            "err_max_uncal_rad": 0.088,
+            "err_max_single_cal_rad": 0.0,
+            "margin_uncal_min": -0.6901,
+            "margin_single_cal_min": 0.0578,
+            "n_fail_uncal": 24733,
+            "n_fail_single_cal": 0,
+            "worst_single_cal": "0x7996"
+          }
+        }
+      },
+      "worst": {
+        "R_h_kohm": 1,
+        "single_rad": 0.1741,
+        "multi_rad": 0.1741,
+        "residual_rad": 0.0,
+        "multi_heater": "H02",
+        "residual_heater": "H01"
+      }
+    },
+    "superseded_series_estimate": {
+      "note": "已被 gnd_network 取代，只供追溯，不可引用：線寬一律用 wire_width_um、共地出線只算給一個 heater、未解共享回流電流",
+      "legacy_route_ohm": {
+        "P02/H02": 7.88,
+        "P04/H04": 5.85,
+        "GN1/H04": 5.68,
+        "GN1/H02": 6.78,
+        "P01/H01": 6.7,
+        "P03/H03": 5.16,
+        "GN2/H03": 5.14,
+        "GN2/H01": 6.29,
+        "P08/H08": 5.53,
+        "GN3/H08": 5.54,
+        "GN3/H07": 5.89,
+        "P07/H07": 5.75,
+        "P12/H12": 6.48,
+        "P10/H10": 5.16,
+        "GN4/H10": 5.24,
+        "GN4/H12": 6.41,
+        "P11/H11": 6.3,
+        "P09/H09": 6.0,
+        "GN5/H09": 6.2,
+        "GN5/H11": 7.4,
+        "P14/H14": 6.42,
+        "GN6/H14": 6.62,
+        "GN6/H13": 5.72,
+        "P13/H13": 5.84,
+        "P06/H06": 5.7,
+        "GS1/H06": 5.84,
+        "GS1/H05": 5.74,
+        "P05/H05": 5.8
+      },
+      "legacy_series_ohm": {
+        "H02": 14.66,
+        "H04": 11.53,
+        "H01": 12.99,
+        "H03": 10.3,
+        "H08": 11.07,
+        "H07": 11.64,
+        "H12": 12.89,
+        "H10": 10.4,
+        "H11": 13.7,
+        "H09": 12.2,
+        "H14": 13.04,
+        "H13": 11.56,
+        "H06": 11.54,
+        "H05": 11.54
+      }
+    },
+    "gnd_pairing": {
+      "GN1": [
+        "H02",
+        "H04"
+      ],
+      "GN2": [
+        "H01",
+        "H03"
+      ],
+      "GN3": [
+        "H07",
+        "H08"
+      ],
+      "GN4": [
+        "H10",
+        "H12"
+      ],
+      "GN5": [
+        "H09",
+        "H11"
+      ],
+      "GN6": [
+        "H13",
+        "H14"
+      ],
+      "GS1": [
+        "H05",
+        "H06"
+      ]
+    },
+    "note": "各 GND PAD（GN1…、GS1…）在晶片上互不相連，量測時每個 GND PAD 都要接到驅動器的地"
+  },
+  "optical": {
+    "ec": [
+      {
+        "ec": "x1_in0",
+        "side": "W",
+        "core_port": [
+          "in0"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "o1_out0",
+        "side": "E",
+        "core_port": [
+          "out0"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "x2_in1",
+        "side": "W",
+        "core_port": [
+          "in1"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "o2_out1",
+        "side": "E",
+        "core_port": [
+          "out1"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "x3_in2",
+        "side": "W",
+        "core_port": [
+          "in2"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "o3_out2",
+        "side": "E",
+        "core_port": [
+          "out2"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "x4_in3",
+        "side": "W",
+        "core_port": [
+          "in3"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "o4_out3",
+        "side": "E",
+        "core_port": [
+          "out3"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "R_in4",
+        "side": "W",
+        "core_port": [
+          "in4"
+        ],
+        "ok": true
+      },
+      {
+        "ec": "o5_out4",
+        "side": "E",
+        "core_port": [
+          "out4"
+        ],
+        "ok": true
+      }
+    ],
+    "errors": []
+  },
+  "faults": {
+    "Ti/AL 短路": true,
+    "Ti/AL 斷路": true,
+    "TiN 斷路": true,
+    "原理圖對調": true,
+    "PAD 標記對調": true,
+    "EC 標記對調": true,
+    "DRC：Ti/AL 太窄": true,
+    "DRC：TiN 太近": true
+  },
+  "checks": {
+    "drc_clean": true,
+    "one_gds99": true,
+    "core_unchanged": true,
+    "n_al_nets": true,
+    "n_heaters": true,
+    "lvs_clean": true,
+    "every_heater_two_contacts": true,
+    "optical_clean": true,
+    "gnd_pairing": true,
+    "gnd_model_matches_gds": true,
+    "faults_caught": true
+  }
+}
