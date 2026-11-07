@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 450" width="960" height="450" role="img" aria-label="晶片內與晶片外的元件分工">
+  <title>晶片內與晶片外的元件分工</title>
+  <defs>
+    <marker id="l" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L9 5L1 9" fill="none" stroke="#2563eb" stroke-width="1.8"/></marker>
+    <marker id="e" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L9 5L1 9" fill="none" stroke="#b45309" stroke-width="1.8"/></marker>
+  </defs>
+  <style>text{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;fill:#1e293b}.h{font-size:16px;font-weight:600}.s{font-size:13px;fill:#475569}.b{font-size:13px}.t{font-size:15px;font-weight:600;fill:#475569}.w{stroke:#2563eb;stroke-width:2.5;fill:none}.c{stroke:#b45309;stroke-width:2;stroke-dasharray:5 4;fill:none}.off{fill:#f1f5f9;stroke:#94a3b8}.rx{fill:#dcfce7;stroke:#16a34a}.ec{fill:#c7d2fe;stroke:#6366f1}</style>
+  <rect width="960" height="450" fill="#ffffff"/>
+
+  <!-- 晶片：虛線框 -->
+  <rect x="250" y="72" width="290" height="320" rx="12" fill="#eef2ff" stroke="#6366f1" stroke-dasharray="6 5"/>
+  <text class="t" x="395" y="380" text-anchor="middle">光子晶片（晶片內）</text>
+
+  <!-- 晶片外：光源與資料 -->
+  <text class="t" x="125" y="92" text-anchor="middle">晶片外：光源與資料</text>
+  <text class="s" x="145" y="124" text-anchor="middle">資料 x1～x4</text>
+  <line class="c" x1="145" y1="131" x2="145" y2="153" marker-end="url(#e)"/>
+  <rect class="off" x="12" y="220" width="46" height="60" rx="8"/>
+  <text class="b" x="35" y="255" text-anchor="middle">雷射</text>
+  <path class="w" d="M58 250H66M92 170H99M92 210H99M92 250H99M92 290H99M92 330H250"/>
+  <rect class="off" x="66" y="156" width="26" height="188" rx="6"/>
+  <text class="b" x="79" y="237" text-anchor="middle">耦</text>
+  <text class="b" x="79" y="255" text-anchor="middle">合</text>
+  <text class="b" x="79" y="273" text-anchor="middle">器</text>
+  <g class="off"><rect x="100" y="155" width="90" height="30" rx="6"/><rect x="100" y="195" width="90" height="30" rx="6"/><rect x="100" y="235" width="90" height="30" rx="6"/><rect x="100" y="275" width="90" height="30" rx="6"/></g>
+  <text class="b" x="145" y="175" text-anchor="middle">調變器 x1</text>
+  <text class="b" x="145" y="215" text-anchor="middle">調變器 x2</text>
+  <text class="b" x="145" y="255" text-anchor="middle">調變器 x3</text>
+  <text class="b" x="145" y="295" text-anchor="middle">調變器 x4</text>
+  <text class="s" x="145" y="323" text-anchor="middle">參考光</text>
+  <path class="w" d="M190 170H250M190 210H250M190 250H250M190 290H250"/>
+  <text class="s" x="220" y="160" text-anchor="middle">光纖</text>
+
+  <!-- 晶片內 -->
+  <g class="ec"><rect x="250" y="162" width="22" height="16" rx="2"/><rect x="250" y="202" width="22" height="16" rx="2"/><rect x="250" y="242" width="22" height="16" rx="2"/><rect x="250" y="282" width="22" height="16" rx="2"/><rect x="250" y="322" width="22" height="16" rx="2"/><rect x="518" y="162" width="22" height="16" rx="2"/><rect x="518" y="202" width="22" height="16" rx="2"/><rect x="518" y="242" width="22" height="16" rx="2"/><rect x="518" y="282" width="22" height="16" rx="2"/><rect x="518" y="322" width="22" height="16" rx="2"/></g>
+  <path class="w" d="M272 170H324M272 210H324M272 250H324M272 290H324M272 330H324M466 170H518M466 210H518M466 250H518M466 290H518M466 330H518"/>
+  <rect x="324" y="150" width="142" height="200" rx="10" fill="#e0e7ff" stroke="#6366f1"/>
+  <text class="h" x="395" y="226" text-anchor="middle">7 個 MZI</text>
+  <text class="s" x="395" y="248" text-anchor="middle">分光與合光</text>
+  <text class="h" x="395" y="284" text-anchor="middle">14 個 heater</text>
+  <text class="s" x="395" y="306" text-anchor="middle">調整光的相位</text>
+  <text class="s" x="298" y="146" text-anchor="middle">波導</text>
+  <text class="s" x="492" y="146" text-anchor="middle">波導</text>
+  <text class="s" x="256" y="358" text-anchor="start">邊緣耦合器</text>
+  <text class="s" x="534" y="358" text-anchor="end">邊緣耦合器</text>
+  <g font-size="12"><text class="s" x="298" y="165" text-anchor="middle">x1</text><text class="s" x="298" y="205" text-anchor="middle">x2</text><text class="s" x="298" y="245" text-anchor="middle">x3</text><text class="s" x="298" y="285" text-anchor="middle">x4</text><text class="s" x="298" y="325" text-anchor="middle">參考</text><text class="s" x="492" y="165" text-anchor="middle">o1</text><text class="s" x="492" y="205" text-anchor="middle">o2</text><text class="s" x="492" y="245" text-anchor="middle">o3</text><text class="s" x="492" y="285" text-anchor="middle">o4</text><text class="s" x="492" y="325" text-anchor="middle">o5</text></g>
+
+  <!-- heater 的電氣路徑 -->
+  <rect class="off" x="300" y="14" width="190" height="36" rx="8"/>
+  <text class="b" x="395" y="37" text-anchor="middle">heater 驅動電路（晶片外）</text>
+  <line class="c" x1="395" y1="50" x2="395" y2="80" marker-end="url(#e)"/>
+  <g fill="#fde68a" stroke="#b45309"><rect x="341" y="82" width="12" height="12"/><rect x="359" y="82" width="12" height="12"/><rect x="377" y="82" width="12" height="12"/><rect x="395" y="82" width="12" height="12"/><rect x="413" y="82" width="12" height="12"/><rect x="431" y="82" width="12" height="12"/></g>
+  <path class="c" d="M347 94V150M365 94V150M383 94V150M401 94V150M419 94V150M437 94V150"/>
+  <text class="s" x="296" y="93" text-anchor="middle">電氣接點</text>
+  <text class="s" x="490" y="125" text-anchor="middle">金屬線路</text>
+
+  <!-- 晶片外：判讀 -->
+  <text class="t" x="765" y="92" text-anchor="middle">晶片外：判讀</text>
+  <path class="w" d="M540 170H584M540 330H584M540 210H584" marker-end="url(#l)"/>
+  <path class="w" d="M540 250H556L572 290H584" marker-end="url(#l)"/>
+  <path class="w" d="M540 290H556L572 250H584" marker-end="url(#l)"/>
+  <text class="s" x="590" y="175" text-anchor="start">o1 監看</text>
+  <text class="s" x="590" y="335" text-anchor="start">o5 監看</text>
+  <g class="rx"><rect x="586" y="194" width="130" height="32" rx="6"/><rect x="586" y="234" width="130" height="32" rx="6"/><rect x="586" y="274" width="130" height="32" rx="6"/></g>
+  <text class="b" x="651" y="215" text-anchor="middle">o2 光偵測器＋放大器</text>
+  <text class="b" x="651" y="255" text-anchor="middle">o4 光偵測器＋放大器</text>
+  <text class="b" x="651" y="295" text-anchor="middle">o3 光偵測器＋放大器</text>
+  <path class="c" d="M716 210H736" marker-end="url(#e)"/>
+  <path class="c" d="M716 290H736" marker-end="url(#e)"/>
+  <path class="c" d="M716 250H726V226H736" marker-end="url(#e)"/>
+  <path class="c" d="M726 250V274H736" marker-end="url(#e)"/>
+  <g class="rx"><rect x="738" y="186" width="84" height="50" rx="6"/><rect x="738" y="264" width="84" height="50" rx="6"/></g>
+  <text class="b" x="780" y="206" text-anchor="middle">比較器 A</text>
+  <text class="s" x="780" y="225" text-anchor="middle">o2 ＞ o4？</text>
+  <text class="b" x="780" y="284" text-anchor="middle">比較器 B</text>
+  <text class="s" x="780" y="303" text-anchor="middle">o4 ＞ o3？</text>
+  <path class="c" d="M822 211H840" marker-end="url(#e)"/>
+  <path class="c" d="M822 289H840" marker-end="url(#e)"/>
+  <rect class="rx" x="842" y="196" width="102" height="108" rx="8"/>
+  <text class="h" x="893" y="240" text-anchor="middle">AND 電路</text>
+  <text class="s" x="893" y="264" text-anchor="middle">輸出 0 或 1</text>
+
+  <!-- 圖例 -->
+  <line class="w" x1="300" y1="426" x2="344" y2="426"/>
+  <text class="s" x="352" y="431">光（波導與光纖）</text>
+  <line class="c" x1="500" y1="426" x2="544" y2="426"/>
+  <text class="s" x="552" y="431">電訊號</text>
+</svg>

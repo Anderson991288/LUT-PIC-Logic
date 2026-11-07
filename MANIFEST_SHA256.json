@@ -1,5 +1,5 @@
 {
- "count": 636,
+ "count": 637,
  "files": [
   {
    "path": ".gitignore",
@@ -2242,6 +2242,11 @@
    "sha256": "f4b72dcefac838fd89deb33de4cbf6ec20e6e5088a10fd4037efd9e4fdbf10d5"
   },
   {
+   "path": "docs/img/chip-boundary.svg",
+   "bytes": 7906,
+   "sha256": "88d7f6b4c43660b8221edd075308dac116d2f5f2b62299d2cbbf66868e59915a"
+  },
+  {
    "path": "docs/img/design-flow.svg",
    "bytes": 1982,
    "sha256": "a9dd7384b86312613894752bee4842ffd58508c0e4b4035670e00a6409601aa2"
@@ -2938,8 +2943,8 @@
   },
   {
    "path": "README.md",
-   "bytes": 14132,
-   "sha256": "9197e6b4d1378791da4e839bbc53500449b3aed3cf3f6163e7af2c09ae9a76e6"
+   "bytes": 14359,
+   "sha256": "7ab1482c0c6b40efc7da1fd19d0ae9b1549ffc5bbe6838ae125eb2fabb5212f5"
   },
   {
    "path": "report/src/index/a_overview.html",
