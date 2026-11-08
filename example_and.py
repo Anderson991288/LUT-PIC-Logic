@@ -1,10 +1,11 @@
-"""完整範例：用 x1 AND x2 看一次從輸入到答案的過程。
+"""Worked example: follow x1 AND x2 from the inputs to the answer.
 
-需要的軟體：Python 3 與 numpy。
-執行方式：python example_and.py
+Requirements: Python 3 and numpy.
+Run:          python example_and.py
 
-程式讀取 OOK 版 AND2 的 14 個相位，列出 16 組輸入的 o2、o4、o3 亮度、兩個比較器的判斷與答案。
-亮度來自光路的數學模型，單位是一道資料光的功率。
+The program reads the 14 phases of AND2 for the OOK version and lists, for all 16 inputs,
+the brightness of o2, o4 and o3, the decisions of the two comparators, and the answer.
+Brightness comes from the mathematical model of the optical circuit, in units of the power of one data beam.
 """
 import json
 import sys
@@ -22,7 +23,7 @@ def main():
     setting = json.loads((V.ROOT / PHASES).read_text(encoding="utf-8"))["functions"]["AND2"]
     phases = np.array([p for pair in zip(setting["theta"], setting["phi"]) for p in pair])[None]
     power = V.output_power(phases, "OOK")[0]
-    print("x1 x2 x3 x4 |   o2    o4    o3 | 比較器 A  比較器 B | 答案")
+    print("x1 x2 x3 x4 |   o2    o4    o3 | Comp. A  Comp. B | Answer")
     matched = 0
     for row in V.ROWS:
         bits = [int(b) for b in V.BITS[:, row]]
@@ -30,8 +31,8 @@ def main():
         a, b = o2 > o4, o4 > o3
         answer = int(a and b)
         matched += answer == (bits[0] & bits[1])
-        print(f" {bits[0]}  {bits[1]}  {bits[2]}  {bits[3]} | {o2:5.2f} {o4:5.2f} {o3:5.2f} |    {'是' if a else '否'}        {'是' if b else '否'}    |  {answer}")
-    print(f"結果：{matched}／{len(V.ROWS)} 組輸入符合 x1 AND x2")
+        print(f" {bits[0]}  {bits[1]}  {bits[2]}  {bits[3]} | {o2:5.2f} {o4:5.2f} {o3:5.2f} |   {'yes' if a else 'no ':3}      {'yes' if b else 'no ':3}   |   {answer}")
+    print(f"Result: {matched}/{len(V.ROWS)} inputs match x1 AND x2")
     sys.exit(0 if matched == len(V.ROWS) else 1)
 
 

@@ -1,11 +1,12 @@
-"""親手驗證：用矩陣重新計算全部 65,536 張真值表，確認每一列都判讀正確。
+"""Check it yourself: recompute all 65,536 truth tables with matrices and confirm that every row reads correctly.
 
-需要的軟體：Python 3 與 numpy。
-執行方式：python verify_phase_bank.py
+Requirements: Python 3 and numpy.
+Run:          python verify_phase_bank.py
 
-這支程式獨立運作，只讀 design/lut4*/s0_coverage/out/merged_phases.npz 這兩份相位資料。
-程式先確認資料完整：65,536 個真值表編號各出現一次，每張表有 14 個有效的相位。
-接著用光路的數學模型算出每組輸入的光功率，比較結果與目標真值表。
+This program is self-contained. It reads only the two phase files design/lut4*/s0_coverage/out/merged_phases.npz.
+It first confirms that the data is complete: each of the 65,536 truth-table IDs appears once, and every table has 14 valid phases.
+It then uses the mathematical model of the optical circuit to compute the output power for every input combination
+and compares the result with the target truth table.
 """
 import sys
 from pathlib import Path
@@ -13,24 +14,24 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parent
-RAILS = [2, 0, 3, 1, 0, 2, 1]               # 7 顆 MZI 依序接在哪兩條光路（上方光路的編號，由 0 起算）
-LOSS = 10 ** (-0.9 / 20)                    # 每顆 MZI 損耗 0.9 dB，換算成光場的比例
-H = np.array([[1, 1j], [1j, 1]]) / np.sqrt(2)   # 50:50 分光器
-ROWS = np.arange(16)                        # 四個輸入的 16 種組合
+RAILS = [2, 0, 3, 1, 0, 2, 1]               # the pair of rails each of the 7 MZIs connects (index of the upper rail, from 0)
+LOSS = 10 ** (-0.9 / 20)                    # 0.9 dB loss per MZI, as a field amplitude ratio
+H = np.array([[1, 1j], [1j, 1]]) / np.sqrt(2)   # 50:50 splitter
+ROWS = np.arange(16)                        # the 16 combinations of four inputs
 BITS = np.stack([(ROWS >> j) & 1 for j in range(4)]).astype(float)
 TOLERANCE = 1e-8
-N_TABLES = 1 << 16                          # 四個輸入的全部真值表
-N_PHASES = 14                               # 每張真值表的相位數
+N_TABLES = 1 << 16                          # all truth tables of four inputs
+N_PHASES = 14                               # phases per truth table
 
 
 def input_fields(encoding):
-    """五條光路的輸入：x1～x4 與參考光 R＝3。"""
-    data = BITS if encoding == "OOK" else 1 - 2 * BITS      # OOK：0／1。E±：+1／−1
+    """Inputs on the five rails: x1 to x4 and the reference light R = 3."""
+    data = BITS if encoding == "OOK" else 1 - 2 * BITS      # OOK: 0 / 1.  E±: +1 / -1
     return np.vstack([data, np.full(16, 3.0)]).astype(complex)
 
 
 def output_power(phases, encoding):
-    """phases 的欄序是 θ1、φ1、…、θ7、φ7。回傳五個輸出的光功率。"""
+    """Columns of phases are θ1, φ1, ..., θ7, φ7. Returns the optical power of the five outputs."""
     n = len(phases)
     field = np.broadcast_to(input_fields(encoding), (n, 5, 16)).copy()
     for k, rail in enumerate(RAILS):
@@ -46,18 +47,18 @@ def output_power(phases, encoding):
 
 
 def bank_problems(masks, phases):
-    """列出相位資料需要修正的地方；資料完整時回傳空清單。"""
+    """List what needs fixing in the phase data; returns an empty list when the data is complete."""
     if masks.shape != (N_TABLES,):
-        return [f"真值表編號的形狀是 {masks.shape}，應為 ({N_TABLES},)"]
+        return [f"truth-table IDs have shape {masks.shape}; expected ({N_TABLES},)"]
     if phases.shape != (N_TABLES, N_PHASES):
-        return [f"相位資料的形狀是 {phases.shape}，應為 ({N_TABLES}, {N_PHASES})"]
+        return [f"phase data has shape {phases.shape}; expected ({N_TABLES}, {N_PHASES})"]
     problems = []
     if not np.issubdtype(masks.dtype, np.integer):
-        problems.append(f"真值表編號的型別是 {masks.dtype}，應為整數")
+        problems.append(f"truth-table IDs have type {masks.dtype}; expected integers")
     elif not np.array_equal(np.sort(masks), np.arange(N_TABLES)):
-        problems.append(f"真值表編號應涵蓋 0～{N_TABLES - 1}，各出現一次")
+        problems.append(f"truth-table IDs should cover 0 to {N_TABLES - 1}, each exactly once")
     if not np.isfinite(phases).all():
-        problems.append("相位資料含有 NaN 或無限大")
+        problems.append("phase data contains NaN or infinity")
     return problems
 
 
@@ -66,7 +67,7 @@ def check(name, path, encoding):
     masks, phases = bank["masks"], bank["phases"]
     problems = bank_problems(masks, phases)
     if problems:
-        print(f"{name}：資料需要修正")
+        print(f"{name}: data needs fixing")
         for problem in problems:
             print(f"  {problem}")
         return False
@@ -75,21 +76,21 @@ def check(name, path, encoding):
     for start in range(0, len(masks), 2048):
         part = slice(start, start + 2048)
         power = output_power(phases[part], encoding)
-        d_a = power[:, 1] - power[:, 3]                     # 第一個比較器：o2 比 o4 亮為正
-        d_b = power[:, 3] - power[:, 2]                     # 第二個比較器：o4 比 o3 亮為正
+        d_a = power[:, 1] - power[:, 3]                     # comparator A: positive when o2 is brighter than o4
+        d_b = power[:, 3] - power[:, 2]                     # comparator B: positive when o4 is brighter than o3
         target = ((masks[part, None] >> ROWS) & 1).astype(bool)
-        answer = (d_a > 0) & (d_b > 0)                      # 兩個比較器接 AND
+        answer = (d_a > 0) & (d_b > 0)                      # the two comparators feed an AND gate
         wrong += int((answer != target).sum())
         margin = np.where(target, np.minimum(d_a, d_b), -np.minimum(d_a, d_b))
         margins[part] = margin.min(axis=1)
     worst = margins.min()
     passed = int(((margins > TOLERANCE)).sum())
-    print(f"{name}：檢查 {len(masks):,} 張真值表、{16 * len(masks):,} 列")
-    print(f"  資料完整：{N_TABLES:,} 個編號各出現一次，每張 {N_PHASES} 個相位")
-    print(f"  判讀正確的真值表：{passed:,} 張")
-    print(f"  判讀錯誤的列數：{wrong:,}")
-    print(f"  最小 margin：{worst:.4f}（真值表 0x{int(masks[int(margins.argmin())]):04X}）")
-    print(f"  margin 中位數：{float(np.median(margins)):.4f}")
+    print(f"{name}: checking {len(masks):,} truth tables, {16 * len(masks):,} rows")
+    print(f"  Data complete: each of the {N_TABLES:,} IDs appears once, {N_PHASES} phases per table")
+    print(f"  Truth tables read correctly: {passed:,}")
+    print(f"  Rows read incorrectly: {wrong:,}")
+    print(f"  Smallest margin: {worst:.4f} (truth table 0x{int(masks[int(margins.argmin())]):04X})")
+    print(f"  Median margin: {float(np.median(margins)):.4f}")
     return wrong == 0 and passed == len(masks)
 
 
@@ -98,7 +99,7 @@ def main():
         sys.stdout.reconfigure(encoding="utf-8")
     ok = check("LUT4 OOK", "design/lut4/s0_coverage/out/merged_phases.npz", "OOK")
     ok = check("LUT4 E±", "design/lut4v2/s0_coverage/out/merged_phases.npz", "EPM") and ok
-    print("結果：全部通過" if ok else "結果：有項目需要檢查")
+    print("Result: all checks passed" if ok else "Result: some items need review")
     sys.exit(0 if ok else 1)
 
 

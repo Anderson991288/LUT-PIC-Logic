@@ -1,10 +1,10 @@
-"""反向測試：故意放入有問題的相位資料，確認 verify_phase_bank.py 都能抓到。
+"""Negative test: feed deliberately broken phase data to verify_phase_bank.py and confirm that it catches every case.
 
-需要的軟體：Python 3 與 numpy。
-執行方式：python test_verify_phase_bank.py
+Requirements: Python 3 and numpy.
+Run:          python test_verify_phase_bank.py
 
-程式會用真實的 E± 相位資料做出幾份壞資料，存在暫存資料夾，再交給驗證程式檢查。
-真實資料應該通過，每一份壞資料都應該被抓到。
+The program builds several broken data sets from the real E± phase data, saves them in a temporary folder,
+and hands each one to the verifier. The real data should pass, and every broken data set should be caught.
 """
 import contextlib
 import io
@@ -30,23 +30,23 @@ def bad_banks(masks, phases):
     with_nan = phases.copy()
     with_nan[0, 0] = np.nan
     return {
-        "同一張真值表重複 65,536 次": (np.full(V.N_TABLES, masks[one]), np.tile(phases[one], (V.N_TABLES, 1))),
-        "只有一張真值表": (masks[one:one + 1], phases[one:one + 1]),
-        "只有前 1,000 張": (masks[:1000], phases[:1000]),
-        "少一張真值表": (masks[:-1], phases[:-1]),
-        "有一個編號重複": (repeated, phases),
-        "有一個編號超出範圍": (outside, phases),
-        "每張多兩個相位": (masks, np.hstack([phases, np.zeros((V.N_TABLES, 2))])),
-        "每張少一個相位": (masks, phases[:, :-1]),
-        "含有 NaN": (masks, with_nan),
-        "編號是小數": (masks.astype(float), phases),
-        "兩張表的相位互換": (masks, swapped),
+        "one truth table repeated 65,536 times": (np.full(V.N_TABLES, masks[one]), np.tile(phases[one], (V.N_TABLES, 1))),
+        "a single truth table": (masks[one:one + 1], phases[one:one + 1]),
+        "only the first 1,000 tables": (masks[:1000], phases[:1000]),
+        "one truth table missing": (masks[:-1], phases[:-1]),
+        "one ID repeated": (repeated, phases),
+        "one ID out of range": (outside, phases),
+        "two extra phases per table": (masks, np.hstack([phases, np.zeros((V.N_TABLES, 2))])),
+        "one phase missing per table": (masks, phases[:, :-1]),
+        "contains NaN": (masks, with_nan),
+        "IDs stored as decimals": (masks.astype(float), phases),
+        "phases of two tables swapped": (masks, swapped),
     }
 
 
 def verdict(path):
     with contextlib.redirect_stdout(io.StringIO()):
-        return V.check("測試", path, "EPM")
+        return V.check("test", path, "EPM")
 
 
 def main():
@@ -55,7 +55,7 @@ def main():
     bank = np.load(V.ROOT / REAL)
     masks, phases = bank["masks"], bank["phases"]
     ok = verdict(REAL)
-    print(f"{'通過' if ok else '需要檢查'}　真實資料")
+    print(f"{'Passed' if ok else 'Review'}  real data")
     caught = 0
     cases = bad_banks(masks, phases)
     with tempfile.TemporaryDirectory() as folder:
@@ -64,8 +64,8 @@ def main():
             np.savez(path, masks=m, phases=p)
             hit = not verdict(path)
             caught += hit
-            print(f"{'抓到' if hit else '需要檢查'}　{name}")
-    print(f"結果：壞資料抓到 {caught}／{len(cases)}，真實資料{'通過' if ok else '需要檢查'}")
+            print(f"{'Caught' if hit else 'Review'}  {name}")
+    print(f"Result: caught {caught}/{len(cases)} broken data sets, real data {'passed' if ok else 'needs review'}")
     sys.exit(0 if ok and caught == len(cases) else 1)
 
 

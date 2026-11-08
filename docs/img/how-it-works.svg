@@ -1,37 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 330" width="960" height="330" role="img" aria-label="光邏輯晶片的運作流程">
-  <title>光邏輯晶片的運作流程</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 330" width="1000" height="330" role="img" aria-label="How the optical logic chip works">
+  <title>How the optical logic chip works</title>
   <defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9" fill="none" stroke="#475569" stroke-width="1.6"/></marker></defs>
-  <style>text{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;fill:#1e293b}.h{font-size:17px;font-weight:600}.s{font-size:14px;fill:#475569}.w{stroke:#2563eb;stroke-width:2.5;fill:none}.t{font-size:15px;font-weight:600;fill:#475569}</style>
-  <rect width="960" height="330" fill="#ffffff"/>
-  <rect x="24" y="70" width="150" height="190" rx="10" fill="#f1f5f9" stroke="#94a3b8"/>
-  <text class="h" x="99" y="150" text-anchor="middle">① 送入資料</text>
-  <text class="s" x="99" y="176" text-anchor="middle">雷射與調變器把</text>
-  <text class="s" x="99" y="197" text-anchor="middle">0 與 1 轉成光訊號</text>
-  <path class="w" d="M174 96H262M174 130H262M174 165H262M174 200H262M174 234H262"/>
-  <text class="s" x="218" y="89" text-anchor="middle">x1</text>
-  <text class="s" x="218" y="123" text-anchor="middle">x2</text>
-  <text class="s" x="218" y="158" text-anchor="middle">x3</text>
-  <text class="s" x="218" y="193" text-anchor="middle">x4</text>
-  <text class="s" x="218" y="227" text-anchor="middle">參考光</text>
-  <rect x="264" y="40" width="250" height="250" rx="12" fill="#eef2ff" stroke="#6366f1" stroke-dasharray="6 5"/>
-  <text class="t" x="389" y="64" text-anchor="middle">光子晶片（晶片內）</text>
-  <rect x="290" y="82" width="198" height="170" rx="10" fill="#e0e7ff" stroke="#6366f1"/>
-  <text class="h" x="389" y="150" text-anchor="middle">② 光互相混合</text>
-  <text class="s" x="389" y="176" text-anchor="middle">7 個 MZI 分光與合光</text>
-  <text class="s" x="389" y="197" text-anchor="middle">14 個 heater 決定功能</text>
-  <line x1="514" y1="165" x2="580" y2="165" stroke="#475569" stroke-width="2" marker-end="url(#a)"/>
-  <rect x="584" y="70" width="184" height="190" rx="10" fill="#dcfce7" stroke="#16a34a"/>
-  <text class="h" x="676" y="112" text-anchor="middle">③ 比較亮度</text>
-  <text class="s" x="676" y="142" text-anchor="middle">光偵測器量出亮度</text>
-  <text class="s" x="676" y="176" text-anchor="middle">比較器 A：o2 ＞ o4？</text>
-  <text class="s" x="676" y="202" text-anchor="middle">比較器 B：o4 ＞ o3？</text>
-  <line x1="768" y1="165" x2="800" y2="165" stroke="#475569" stroke-width="2" marker-end="url(#a)"/>
-  <rect x="804" y="70" width="136" height="190" rx="10" fill="#dcfce7" stroke="#16a34a"/>
-  <text class="h" x="872" y="112" text-anchor="middle">④ AND 電路</text>
-  <text class="s" x="872" y="146" text-anchor="middle">兩個都回答是</text>
-  <text class="s" x="872" y="168" text-anchor="middle">輸出 1</text>
-  <text class="s" x="872" y="202" text-anchor="middle">其他情況</text>
-  <text class="s" x="872" y="224" text-anchor="middle">輸出 0</text>
-  <text class="t" x="99" y="56" text-anchor="middle">晶片外</text>
-  <text class="t" x="762" y="56" text-anchor="middle">晶片外</text>
+  <style>text{font-family:"Segoe UI","Helvetica Neue",Arial,"Noto Sans",sans-serif;fill:#1e293b}.h{font-size:16px;font-weight:600}.s{font-size:13px;fill:#475569}.w{stroke:#2563eb;stroke-width:2.5;fill:none}.t{font-size:15px;font-weight:600;fill:#475569}</style>
+  <rect width="1000" height="330" fill="#ffffff"/>
+  <rect x="20" y="70" width="172" height="190" rx="10" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text class="h" x="106" y="150" text-anchor="middle">① Send data</text>
+  <text class="s" x="106" y="176" text-anchor="middle">A laser and modulators</text>
+  <text class="s" x="106" y="197" text-anchor="middle">turn 0 and 1 into light</text>
+  <path class="w" d="M192 96H272M192 130H272M192 165H272M192 200H272M192 234H272"/>
+  <text class="s" x="232" y="89" text-anchor="middle">x1</text>
+  <text class="s" x="232" y="123" text-anchor="middle">x2</text>
+  <text class="s" x="232" y="158" text-anchor="middle">x3</text>
+  <text class="s" x="232" y="193" text-anchor="middle">x4</text>
+  <text class="s" x="232" y="227" text-anchor="middle">reference</text>
+  <rect x="274" y="40" width="252" height="250" rx="12" fill="#eef2ff" stroke="#6366f1" stroke-dasharray="6 5"/>
+  <text class="t" x="400" y="64" text-anchor="middle">Photonic chip (on-chip)</text>
+  <rect x="296" y="82" width="208" height="170" rx="10" fill="#e0e7ff" stroke="#6366f1"/>
+  <text class="h" x="400" y="150" text-anchor="middle">② Light mixes</text>
+  <text class="s" x="400" y="176" text-anchor="middle">7 MZIs split and combine</text>
+  <text class="s" x="400" y="197" text-anchor="middle">14 heaters set the function</text>
+  <line x1="526" y1="165" x2="590" y2="165" stroke="#475569" stroke-width="2" marker-end="url(#a)"/>
+  <rect x="594" y="70" width="210" height="190" rx="10" fill="#dcfce7" stroke="#16a34a"/>
+  <text class="h" x="699" y="112" text-anchor="middle">③ Compare brightness</text>
+  <text class="s" x="699" y="142" text-anchor="middle">Photodetectors read the light</text>
+  <text class="s" x="699" y="176" text-anchor="middle">Comparator A: o2 &gt; o4?</text>
+  <text class="s" x="699" y="202" text-anchor="middle">Comparator B: o4 &gt; o3?</text>
+  <line x1="804" y1="165" x2="836" y2="165" stroke="#475569" stroke-width="2" marker-end="url(#a)"/>
+  <rect x="840" y="70" width="142" height="190" rx="10" fill="#dcfce7" stroke="#16a34a"/>
+  <text class="h" x="911" y="112" text-anchor="middle">④ AND gate</text>
+  <text class="s" x="911" y="146" text-anchor="middle">Both say yes</text>
+  <text class="s" x="911" y="168" text-anchor="middle">→ output 1</text>
+  <text class="s" x="911" y="202" text-anchor="middle">Otherwise</text>
+  <text class="s" x="911" y="224" text-anchor="middle">→ output 0</text>
+  <text class="t" x="106" y="56" text-anchor="middle">Off-chip</text>
+  <text class="t" x="788" y="56" text-anchor="middle">Off-chip</text>
 </svg>

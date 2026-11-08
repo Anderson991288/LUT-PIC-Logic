@@ -1,254 +1,257 @@
-# LUT-PIC-Logic：用光計算的可程式化邏輯晶片
+# Programmable Silicon Photonic 4-input LUT Design
 
-本專案設計一顆用光做邏輯運算的晶片。調整晶片上的 14 個 heater（微型加熱元件），同一顆晶片就能切換成 65,536 種邏輯功能中的任何一種。
+This project designs a silicon photonic chip that performs logic operations with light. By tuning 14 heaters (tiny heating elements) on the chip, the same chip can switch to any one of 65,536 logic functions.
 
-專案內容涵蓋原理、電腦模擬、晶片 layout（晶片的實際圖形）與檢查結果。目前的成果來自電腦模擬與設計檢查，下一階段是晶片製造與實際量測。
+The project covers the principle, computer simulation, the chip layout (the actual shapes on the chip) and the check results. The current results come from computer simulation and design checks. The next stage is chip fabrication and measurement.
 
-## 專案目的
+## Purpose
 
-### 用光來計算
+### Computing with light
 
-手機和電腦裡的晶片用電流計算。本專案探索另一種方式：用光計算。
+The chips in phones and computers compute with electric current. This project explores another approach: computing with light.
 
-光可以想像成水面上的波。兩道波步調一致時，會合成更大的波。兩道波步調相反時，會互相抵消。本專案讓多道光在晶片上相遇，再比較哪個出口比較亮，由亮度得出答案。
+Think of light as waves on water. When two waves move in step, they add up to a bigger wave. When two waves move in opposite steps, they cancel each other. This project lets several beams of light meet on the chip and then compares which outputs are brighter. The brightness gives the answer.
 
-![光邏輯晶片的運作流程](docs/img/how-it-works.svg)
+![How the optical logic chip works](docs/img/how-it-works.svg)
 
-1. **送入資料（晶片外）：** 雷射發出光，耦合器把光分成五路。四路經過調變器，把四個輸入 x1～x4 轉成光訊號，第五路作為參考光。五道光經由光纖進入晶片。
-2. **光互相混合（晶片內）：** 光經過 7 個 MZI。MZI 是一種把光分開再合起來的小元件。
-3. **比較亮度（晶片外）：** 晶片有 o1～o5 五個光出口，判讀時使用 o2、o3、o4。光偵測器量出這三個出口的亮度。比較器 A 判斷 o2 是否比 o4 亮，比較器 B 判斷 o4 是否比 o3 亮。
-4. **輸出答案（晶片外）：** AND 電路合併兩個比較器的結果。兩個比較器都回答「是」時，答案是 1；其他情況的答案是 0。
+1. **Send data (off-chip):** A laser emits light, and a coupler splits it into five paths. Four paths pass through modulators, which turn the four inputs x1–x4 into light signals. The fifth path serves as the reference light. The five beams enter the chip through optical fibers.
+2. **Light mixes (on-chip):** The light passes through 7 MZIs. An MZI is a small component that splits light into two paths and then combines them again.
+3. **Compare brightness (off-chip):** The chip has five light outputs, o1–o5, and the readout uses o2, o3 and o4. Photodetectors measure the brightness of these three outputs. Comparator A checks whether o2 is brighter than o4, and comparator B checks whether o4 is brighter than o3.
+4. **Output the answer (off-chip):** An AND gate combines the results of the two comparators. When both comparators answer "yes", the answer is 1. In every other case, the answer is 0.
 
-晶片上的 14 個 heater 會微調光的步調。步調改變後，光的混合方式跟著改變，晶片的邏輯功能也隨之改變。
+The 14 heaters on the chip fine-tune the phase of the light, that is, the timing of each wave. When the timing changes, the way the light mixes changes, and the logic function of the chip changes with it.
 
-### 晶片內與晶片外
+### On-chip and off-chip
 
-整套系統由光子晶片和晶片外的設備組成。本專案設計的是光子晶片。
+The complete system consists of the photonic chip and off-chip equipment. This project designs the photonic chip.
 
-![晶片內與晶片外的元件分工](docs/img/chip-boundary.svg)
+![What sits on the chip and what sits off the chip](docs/img/chip-boundary.svg)
 
-虛線框內是光子晶片，框外是晶片外的設備。藍色實線是光，橘色虛線是電訊號。光從左側進入晶片，再從右側離開；heater 的控制訊號從上方經過電氣接點進入晶片。o4 同時接到兩個比較器，所以圖中把 o4 畫在 o2 和 o3 中間。
+The dashed frame is the photonic chip, and everything outside it is off-chip equipment. Solid blue lines carry light, and dashed orange lines carry electrical signals. Light enters the chip on the left and leaves on the right. The heater control signals enter from the top through the electrical pads. o4 feeds both comparators, so the figure draws o4 between o2 and o3.
 
-| 位置 | 包含的元件 |
+| Location | Components |
 |---|---|
-| 光子晶片內 | 10 個邊緣耦合器（光的出入口）、波導、7 個 MZI、14 個 heater、金屬線路與電氣接點 |
-| 晶片外 | 雷射、耦合器、資料調變器、heater 驅動電路、光偵測器、放大器、兩個比較器、AND 電路 |
+| On the photonic chip | 10 edge couplers (where light enters and leaves), waveguides, 7 MZIs, 14 heaters, metal lines and electrical pads |
+| Off-chip | Laser, coupler, data modulators, heater driver, photodetectors, amplifiers, two comparators, AND gate |
 
-晶片外的設備在本專案以數學模型與規格表示。
+In this project, the off-chip equipment is represented by mathematical models and specifications.
 
-### 什麼是邏輯運算
+### What is a logic operation
 
-邏輯運算把幾個 0 或 1 的輸入，變成一個 0 或 1 的答案。例如 AND 代表「全部輸入都是 1 時，答案才是 1」。電腦的各種計算都由這類運算組成。
+A logic operation turns several inputs, each 0 or 1, into one answer that is 0 or 1. For example, AND means "the answer is 1 only when every input is 1." Every computation in a computer is built from operations like this.
 
-### 什麼是 LUT4
+### What is a LUT4
 
-LUT 是 look-up table 的縮寫，意思是查表。4 代表四個輸入。
+LUT stands for look-up table. The 4 means four inputs.
 
-四個輸入共有 16 種組合。為每一種組合指定一個答案，就得到一張答案表，這張表稱為真值表。每個答案有 0 和 1 兩種選擇，所以真值表一共有 2¹⁶＝65,536 張。
+Four inputs have 16 combinations. Assigning an answer to each combination gives an answer table, called a truth table. Each answer can be 0 or 1, so there are 2¹⁶ = 65,536 truth tables in total.
 
-LUT4 晶片就像一本可以換內容的答案本。調整 14 個 heater，就等於換上另一張答案表。
+A LUT4 chip works like an answer book whose pages can be swapped. Tuning the 14 heaters is like loading a different answer table.
 
-![LUT4 查表的概念](docs/img/lookup-table.svg)
+![The idea of a LUT4 lookup](docs/img/lookup-table.svg)
 
-### 兩種送資料的方式
+### Two ways to send data
 
-本專案設計了兩個版本。兩版使用相同的光路，各用一種方式表示資料。
+This project designs two versions. Both use the same optical circuit, and each represents data in its own way.
 
-| 版本 | 比喻 | 資料 0 | 資料 1 |
+| Version | Analogy | Data 0 | Data 1 |
 |---|---|---|---|
-| OOK | 手電筒的開關 | 關燈 | 開燈 |
-| E± | 持續發光的波，用波的方向表示資料 | 波朝上起步（E＋） | 波朝下起步（E−） |
+| OOK (on-off keying) | A flashlight switch | Light off | Light on |
+| E± | A wave that keeps shining, with the data carried by the wave's direction | Wave starts upward (E+) | Wave starts downward (E−) |
 
-E 代表光波，E＋ 和 E− 是 E± 版的兩種光。兩者亮度相同，相位相差 180°，也就是波形上下翻轉，負號代表這次翻轉。
+E stands for the light wave, and E+ and E− are the two kinds of light in the E± version. They have the same brightness and a phase difference of 180°, which means the waveform is flipped upside down. The minus sign marks this flip.
 
-單獨量一道光時，E＋ 和 E− 的亮度一樣。兩者的差別在光相遇時顯現：E＋ 和參考光互相加強的位置，E− 會和參考光互相抵消。所以 E± 版的答案同樣來自混合後的亮度。
+Measured alone, E+ and E− have the same brightness. The difference appears when beams meet: where E+ reinforces the reference light, E− cancels it. So the E± version also reads its answer from the brightness after mixing.
 
-### 資料輸入與功能設定
+### Data inputs and function settings
 
-晶片用到兩種輸入，用途各自獨立。
+The chip uses two kinds of input, and each has its own role.
 
-| 項目 | 代表的意思 | 改變的時機 |
+| Item | Meaning | When it changes |
 |---|---|---|
-| x1～x4 | 這一次要計算的資料 | 每次計算都可以更換 |
-| 14 個 heater | 晶片要做哪一種邏輯 | 切換邏輯功能時調整 |
+| x1–x4 | The data for this calculation | Can change with every calculation |
+| 14 heaters | Which logic function the chip performs | Adjusted when switching functions |
 
-晶片外的光偵測器、比較器和 AND 電路維持固定。切換邏輯功能時，只需要調整 14 個 heater。
+The off-chip photodetectors, comparators and AND gate stay fixed. Switching the logic function only requires tuning the 14 heaters.
 
-### 完整範例：x1 AND x2
+### Worked example: x1 AND x2
 
-這個範例讓 OOK 版晶片做 x1 AND x2：x1 和 x2 都是 1 時，答案才是 1。
+This example sets the OOK chip to compute x1 AND x2: the answer is 1 only when both x1 and x2 are 1.
 
-1. **設定功能：** 把 14 個 heater 調到這個功能的設定值。數值記錄在 `design/lut4/s1_handoff/out/phases.json` 的 `AND2`。
-2. **送入資料：** 下表的 x3 和 x4 都是 0，x1 和 x2 依序換成四種組合。
-3. **讀出亮度：** 光偵測器量出 o2、o4、o3。
-4. **判斷答案：** 比較器 A 判斷 o2 是否大於 o4，比較器 B 判斷 o4 是否大於 o3，AND 電路再合併兩個結果。
+1. **Set the function:** Tune the 14 heaters to the settings for this function. The values are stored under `AND2` in `design/lut4/s1_handoff/out/phases.json`.
+2. **Send data:** In the table below, x3 and x4 are both 0, and x1 and x2 go through the four combinations.
+3. **Read the brightness:** Photodetectors measure o2, o4 and o3.
+4. **Decide the answer:** Comparator A checks whether o2 is greater than o4, comparator B checks whether o4 is greater than o3, and the AND gate combines the two results.
 
-| x1 | x2 | o2 | o4 | o3 | 比較器 A：o2 > o4 | 比較器 B：o4 > o3 | 答案 |
+| x1 | x2 | o2 | o4 | o3 | Comparator A: o2 > o4 | Comparator B: o4 > o3 | Answer |
 |---|---|---|---|---|---|---|---|
-| 0 | 0 | 1.24 | 1.30 | 2.50 | 否 | 否 | 0 |
-| 1 | 0 | 1.57 | 2.88 | 1.33 | 否 | 是 | 0 |
-| 0 | 1 | 2.77 | 0.76 | 1.91 | 是 | 否 | 0 |
-| 1 | 1 | 3.24 | 2.06 | 0.91 | 是 | 是 | 1 |
+| 0 | 0 | 1.24 | 1.30 | 2.50 | no | no | 0 |
+| 1 | 0 | 1.57 | 2.88 | 1.33 | no | yes | 0 |
+| 0 | 1 | 2.77 | 0.76 | 1.91 | yes | no | 0 |
+| 1 | 1 | 3.24 | 2.06 | 0.91 | yes | yes | 1 |
 
-亮度來自電腦模擬，單位是一道資料光的功率。兩個比較器都回答「是」的只有最後一列，答案正好是 x1 AND x2。
+The brightness values come from computer simulation, in units of the power of one data beam. Only the last row has both comparators answering "yes", and that matches x1 AND x2 exactly.
 
-AND 這個名稱在這裡出現兩次：x1 AND x2 是這次用 heater 設定的邏輯功能，AND 電路是接收端固定的元件，負責合併兩個比較器的結果。
+The name AND appears twice here. x1 AND x2 is the logic function set by the heaters this time. The AND gate is a fixed part of the receiver that combines the two comparator results.
 
-下面的指令會列出全部 16 組輸入：
+The command below lists all 16 inputs:
 
 ```bash
 python example_and.py
 ```
 
-## 成果
+## Results
 
-下表是兩個版本的設計與模擬結果。
+The table below shows the design and simulation results of the two versions.
 
-| 項目 | OOK | E± | 說明 |
+| Item | OOK | E± | Meaning |
 |---|---|---|---|
-| 可實現的真值表 | 65,536 張 | 65,536 張 | 全部答案表都做得出來 |
-| 重新驗算 | 1,048,576 列全部正確 | 1,048,576 列全部正確 | 用另一支程式逐列重算 |
-| 最小 margin | 0.0578 | 0.235 | 最難的那張表的安全距離 |
-| margin 中位數 | 0.232 | 0.620 | 一般情況的安全距離 |
-| 晶片尺寸 | 4.28 × 1.2 mm | 4.28 × 1.2 mm | 約一粒米的大小 |
-| 電氣接點 | 21 個 | 19 個 | 用來控制 heater |
-| 電氣連線檢查 | 14／14 | 14／14 | 14 個 heater 都接對 |
-| 光學連線檢查 | 10／10 | 10／10 | 10 個光接口都接對 |
-| 故障測試 | 8／8 檢出 | 8／8 檢出 | 故意放入的錯誤全部被抓到 |
+| Achievable truth tables | 65,536 | 65,536 | Every answer table can be built |
+| Independent recheck | All 1,048,576 rows correct | All 1,048,576 rows correct | A separate program recomputes every row |
+| Smallest margin | 0.0578 | 0.235 | Safety distance of the hardest table |
+| Median margin | 0.232 | 0.620 | Safety distance in a typical case |
+| Chip size | 4.28 × 1.2 mm | 4.28 × 1.2 mm | About the size of a grain of rice |
+| Electrical pads | 21 | 19 | Used to control the heaters |
+| Electrical connection check | 14/14 | 14/14 | All 14 heaters connect correctly |
+| Optical connection check | 10/10 | 10/10 | All 10 optical ports connect correctly |
+| Fault test | 8/8 detected | 8/8 detected | Every deliberately inserted error is caught |
 
-**margin** 是判讀時的安全距離。比較兩道光的亮度時，亮度差距越大，判讀越穩定，也越能承受誤差。margin 的單位是一道資料光的功率。
+**Margin** is the safety distance in the readout. When two beams are compared, a larger brightness difference gives a more stable readout that tolerates more error. Margin is measured in units of the power of one data beam.
 
-專案也包含較小的 B7 單元。B7 是 LUT4 的基礎，5 種邏輯共 80 列全部判讀正確。
+The project also includes a smaller unit called B7. B7 is the basis of the LUT4, and all 80 rows of its 5 logic functions read correctly.
 
-OOK 版晶片的 layout 如下。左側是 5 個光入口，右側是 5 個光出口，綠色線路連到控制 heater 的電氣接點。
+The layout of the OOK chip is shown below. The 5 light inputs are on the left, the 5 light outputs are on the right, and the green lines connect to the electrical pads that control the heaters.
 
-![LUT4 OOK 晶片 layout](figures/lut4/s3_chip.png)
+![LUT4 OOK chip layout](docs/img/lut4-ook-layout.png)
 
-## 從想法到晶片圖檔
+## From idea to chip layout file
 
-每個版本都走過下面五個步驟。
+Each version went through the five steps below.
 
-![從想法到晶片圖檔的五個步驟](docs/img/design-flow.svg)
+![Five steps from idea to chip layout file](docs/img/design-flow.svg)
 
-## 目前階段與下一步
+## Current stage and next steps
 
-**已完成：** 全部 65,536 張真值表的相位計算與驗算、電路模擬、晶片 layout、連線檢查、設計資料彙整。
+**Completed:** phase calculation and recheck for all 65,536 truth tables, circuit simulation, chip layout, connection checks and the design data packages.
 
-**下一步：**
+**Next steps:**
 
-1. **E± 版的地線：** E± 版有多個 heater 共用一條地線，電流會互相影響。模型估算顯示，heater 阻值為 1 kΩ 且逐路校正時，有 4,721 張真值表需要進一步處理。下一步是調整地線 layout，或導入同時校正全部 heater 的方法。OOK 版的地線各自連到接點，模型中的共用電阻為 0。
-2. **正式製程簽核：** 下一步是把晶片圖檔送交平台，由平台執行完整的設計規則檢查與簽核。
-3. **晶片製造與量測：** 製造實際晶片，再用量測結果驗證模型。
-4. **PTF2 分析：** 這份分析探討單次判讀能做到的上限。其中一張表的部分欄位，重建後得到另一組數字。專案保留原始數字，重建結果放在 `design/ptf2/out/ptf2_table8_fixed.json`，摘要記錄在 `ACCEPTANCE.md`。
+1. **Ground lines of the E± version:** In the E± version, several heaters share a ground line, so their currents affect each other. A model estimate shows that with 1 kΩ heaters and per-heater calibration, 4,721 truth tables need further work. The next step is to adjust the ground layout or to adopt a method that calibrates all heaters together. In the OOK version, each ground line runs to its own pad, and the shared resistance in the model is 0.
+2. **Formal process sign-off:** Submit the chip layout file to the platform, which runs the full design rule check and sign-off.
+3. **Fabrication and measurement:** Fabricate the chip, then verify the model with measured results.
+4. **PTF2 analysis:** This analysis explores the upper limit of what a single readout can achieve. Rebuilding some columns of one of its tables gives a different set of numbers. The project keeps the original numbers. The rebuilt results are in `design/ptf2/out/ptf2_table8_fixed.json`, and a summary is in `ACCEPTANCE.md`.
 
-逐項驗收狀態請看 [ACCEPTANCE.md](ACCEPTANCE.md)。
+For the item-by-item acceptance status, see [ACCEPTANCE.md](ACCEPTANCE.md) (in Traditional Chinese).
 
-## 親手驗證
+## Check it yourself
 
-下面的步驟可以在自己的電腦重新驗算全部真值表，只需要 Python 與 numpy，約幾秒鐘完成。
+The steps below recheck every truth table on your own computer. They need only Python and numpy and finish in a few seconds.
 
 ```bash
 pip install numpy
 python verify_phase_bank.py
 ```
 
-程式會先確認資料完整，也就是 65,536 個真值表編號各出現一次，每張表有 14 個有效的相位。接著用光路的數學模型重新計算每一列。結果應該如下：
+The program first confirms that the data is complete: each of the 65,536 truth-table IDs appears once, and every table has 14 valid phases. It then recomputes every row with the mathematical model of the optical circuit. The output should be:
 
 ```text
-LUT4 OOK：檢查 65,536 張真值表、1,048,576 列
-  資料完整：65,536 個編號各出現一次，每張 14 個相位
-  判讀正確的真值表：65,536 張
-  判讀錯誤的列數：0
-  最小 margin：0.0578（真值表 0x7996）
-  margin 中位數：0.2321
-LUT4 E±：檢查 65,536 張真值表、1,048,576 列
-  資料完整：65,536 個編號各出現一次，每張 14 個相位
-  判讀正確的真值表：65,536 張
-  判讀錯誤的列數：0
-  最小 margin：0.2350（真值表 0x967A）
-  margin 中位數：0.6204
-結果：全部通過
+LUT4 OOK: checking 65,536 truth tables, 1,048,576 rows
+  Data complete: each of the 65,536 IDs appears once, 14 phases per table
+  Truth tables read correctly: 65,536
+  Rows read incorrectly: 0
+  Smallest margin: 0.0578 (truth table 0x7996)
+  Median margin: 0.2321
+LUT4 E±: checking 65,536 truth tables, 1,048,576 rows
+  Data complete: each of the 65,536 IDs appears once, 14 phases per table
+  Truth tables read correctly: 65,536
+  Rows read incorrectly: 0
+  Smallest margin: 0.2350 (truth table 0x967A)
+  Median margin: 0.6204
+Result: all checks passed
 ```
 
-下面的小程式會故意做出 11 份有問題的資料，例如重複的真值表、缺少的真值表與格式錯誤的相位，確認驗證程式都能抓到：
+The small program below deliberately builds 11 broken data sets, such as repeated truth tables, missing truth tables and malformed phases, and confirms that the verifier catches every one of them:
 
 ```bash
 python test_verify_phase_bank.py
 ```
 
-最後一行應該是 `結果：壞資料抓到 11／11，真實資料通過`。
+The last line should be `Result: caught 11/11 broken data sets, real data passed`.
 
-## 指令與所需檔案
+## Commands and required files
 
-下表列出各指令需要的軟體與檔案，以及用本專案公開內容實際執行的結果。第一次使用時，建議從前三列開始，這三列只需要 Python 與 numpy。
+The table lists the software and files each command needs, along with the result of running it on the public contents of this repository. If this is your first time, start with the first three rows, which need only Python and numpy.
 
-| 指令 | 需要的軟體 | 需要的檔案 | 實際執行結果 |
+| Command | Software | Files | Result |
 |---|---|---|---|
-| `python verify_phase_bank.py` | Python、numpy | 本專案已收錄 | 完整執行，全部通過 |
-| `python test_verify_phase_bank.py` | Python、numpy | 本專案已收錄 | 完整執行，11 份壞資料全部抓到 |
-| `python example_and.py` | Python、numpy | 本專案已收錄 | 完整執行，16 組輸入全部相符 |
-| `.\lab.cmd design\lut4\s9_system\system.py` | IPKISS 的 Python | 本專案已收錄 | 完整執行，約兩分鐘。E± 版把路徑的 `lut4` 換成 `lut4v2` |
-| `python check_delivery.py` | Python、numpy | GDS 與 `drc_result.json`（保留在作者本機） | 部分完成，說明見下方 |
-| `.\lab.cmd design\lut4v2\s0_coverage\replay_full.py` | IPKISS 的 Python | `reference/coverage_margins.npy`（保留在作者本機） | 執行到讀取這份檔案時停止 |
-| `.\lab.cmd design\lut4v2\build_study.py` | IPKISS 的 Python | `commercial.json`（保留在作者本機） | 執行到讀取這份檔案時停止 |
-| `.\lab.cmd tools\build_report.py` | IPKISS 的 Python | `PLAN.md`（保留在作者本機） | 執行到讀取這份檔案時停止 |
-| `.\lab.cmd design\lut4v2\s5_chip\chip.py` | IPKISS、CORNERSTONE PDK、KLayout | 平台規則檔（保留在作者本機） | 產生晶片圖檔後，執行到規則檢查時停止 |
-| `.\lab.cmd design\lut4v2\s6_verify\verify.py` | IPKISS 的 Python、KLayout | GDS 與平台規則檔（保留在作者本機） | 執行到需要這些檔案時停止 |
+| `python verify_phase_bank.py` | Python, numpy | Included in this repository | Runs to completion; all checks pass |
+| `python test_verify_phase_bank.py` | Python, numpy | Included in this repository | Runs to completion; all 11 broken data sets are caught |
+| `python example_and.py` | Python, numpy | Included in this repository | Runs to completion; all 16 inputs match |
+| `.\lab.cmd design\lut4\s9_system\system.py` | IPKISS Python | Included in this repository | Runs to completion in about two minutes. For E±, change `lut4` to `lut4v2` in the path |
+| `python check_delivery.py` | Python, numpy | GDS and `drc_result.json` (kept on the author's computer) | Completes part of the checks; see the note below |
+| `.\lab.cmd design\lut4v2\s0_coverage\replay_full.py` | IPKISS Python | `reference/coverage_margins.npy` (kept on the author's computer) | Runs up to the step that reads this file |
+| `.\lab.cmd design\lut4v2\build_study.py` | IPKISS Python | `commercial.json` (kept on the author's computer) | Runs up to the step that reads this file |
+| `.\lab.cmd tools\build_report.py` | IPKISS Python | `PLAN.md` (kept on the author's computer) | Runs up to the step that reads this file |
+| `.\lab.cmd design\lut4v2\s5_chip\chip.py` | IPKISS, CORNERSTONE PDK, KLayout | Platform rule file (kept on the author's computer) | Generates the chip layout file and runs up to the rule check |
+| `.\lab.cmd design\lut4v2\s6_verify\verify.py` | IPKISS Python, KLayout | GDS and platform rule file (kept on the author's computer) | Runs up to the step that needs these files |
 
-**`lab.cmd`：** 這是 Windows 的指令，請在專案根目錄執行，它預設使用 IPKISS 的 Python。Python 裝在其他位置時，可以用環境變數 `LAB_PYTHON` 指定。
+**`lab.cmd`:** This is a Windows command. Run it from the repository root. It uses the IPKISS Python by default. If Python is installed in another location, set the environment variable `LAB_PYTHON` to its path.
 
-**`check_delivery.py`：** 請先進入 `delivery/`、`delivery_lut4/` 或 `delivery_lut4v2/`，再執行這個指令。真值表重算等項目會通過，LUT4 兩版是 112／112，B7 是 80／80。需要 GDS 的項目會顯示未通過，所以最後一行會提示有未通過項目。這是公開內容的預期結果。
+**`check_delivery.py`:** First go into `delivery/`, `delivery_lut4/` or `delivery_lut4v2/`, then run this command. Items such as the truth-table recomputation pass: 112/112 for both LUT4 versions and 80/80 for B7. Items that need the GDS are reported as failed, so the last line reports failed items. This is the expected result for the public contents.
 
-## 資料夾導覽
+## Folder guide
 
-| 位置 | 內容 |
+| Location | Contents |
 |---|---|
-| `verify_phase_bank.py` | 親手驗證用的小程式 |
-| `test_verify_phase_bank.py` | 確認驗證程式抓得到錯誤資料的反向測試 |
-| `example_and.py` | 列出 x1 AND x2 範例的全部 16 組輸入 |
-| `ACCEPTANCE.md` | 逐項驗收狀態 |
-| `design/lut4/` | LUT4 OOK 的程式與結果 |
-| `design/lut4v2/` | LUT4 E± 的程式與結果 |
-| `design/m1_logic/`、`m2_circuit/`、`m3_layout/` | B7 的邏輯、電路與 layout |
-| `design/paper/` | 時序研究的程式與結果 |
-| `design/ptf2/` | 單次判讀上限的分析 |
-| `delivery/`、`delivery_lut4/`、`delivery_lut4v2/` | 三份完整的設計資料 |
-| `figures/` | 全部圖片 |
-| `report/src/` | 教材的來源片段 |
-| `MANIFEST_SHA256.json` | 每個檔案的雜湊值，用來確認檔案完整 |
+| `verify_phase_bank.py` | Small program for checking the results yourself |
+| `test_verify_phase_bank.py` | Negative test confirming that the verifier catches broken data |
+| `example_and.py` | Lists all 16 inputs of the x1 AND x2 example |
+| `ACCEPTANCE.md` | Item-by-item acceptance status |
+| `design/lut4/` | Programs and results for LUT4 OOK |
+| `design/lut4v2/` | Programs and results for LUT4 E± |
+| `design/m1_logic/`, `m2_circuit/`, `m3_layout/` | Logic, circuit and layout of B7 |
+| `design/paper/` | Programs and results of the timing study |
+| `design/ptf2/` | Analysis of the single-readout upper limit |
+| `delivery/`, `delivery_lut4/`, `delivery_lut4v2/` | Three complete design data packages |
+| `docs/img/` | Figures used on this page |
+| `figures/` | All project figures |
+| `report/src/` | Source fragments of the teaching material |
+| `MANIFEST_SHA256.json` | Hash of every file, for confirming file integrity |
 
-## 本專案收錄的範圍
+## What this repository includes
 
-本專案收錄程式、結果資料、圖片與教材來源。下列檔案保留在作者本機：
+This repository includes programs, result data, figures and teaching-material sources. The following files stay on the author's computer:
 
-- 平台提供的設計規則檔，以及由它衍生的規則與檢查報告。
-- 晶片圖檔（GDS），其中含有平台的元件圖形。
-- 商用工具 Virtuoso 與 Calibre 的紀錄與畫面。
-- 參考課程的原始教材與核對資料。
-- 網頁成品（HTML）與開發過程的工作紀錄。
+- The design rule files provided by the platform, plus the rules and check reports derived from them.
+- Chip layout files (GDS), which contain the platform's component geometry.
+- Logs and screenshots from the commercial tools Virtuoso and Calibre.
+- Original teaching materials and comparison data from the reference course.
+- Finished web pages (HTML) and working notes from development.
 
-各指令需要的軟體與檔案，請看[指令與所需檔案](#指令與所需檔案)。
+For the software and files each command needs, see [Commands and required files](#commands-and-required-files).
 
-## 名詞表
+**Language:** This page, its figures and the three small programs in the repository root are in English. The comments in the design programs, the data notes, the labels in `figures/` and `ACCEPTANCE.md` are in Traditional Chinese.
 
-| 名詞 | 意思 |
+## Glossary
+
+| Term | Meaning |
 |---|---|
-| 光子晶片（PIC） | 用光傳遞與處理訊號的晶片 |
-| 波導 | 晶片上讓光前進的細小通道，作用像光的電線 |
-| MZI | 把光分成兩路再合起來的元件，可以調整光的混合比例 |
-| 相位 | 光波的步調，決定兩道光相遇時互相加強或抵消 |
-| heater | 晶片上的微型加熱元件，用溫度微調光的相位 |
-| 參考光 | 一道固定的光，提供比較的基準 |
-| 耦合器 | 把一道光分成多道光的元件 |
-| 調變器 | 把資料寫進光訊號的元件 |
-| 邊緣耦合器 | 晶片邊緣讓光進出的接口 |
-| E＋、E− | E± 版的兩種光，亮度相同，相位相差 180° |
-| 光偵測器 | 把光的亮度轉成電訊號 |
-| 比較器 | 判斷兩個電訊號誰比較大 |
-| 真值表 | 列出每一種輸入對應哪個答案的表 |
-| margin | 判讀時的安全距離，越大越穩定 |
-| layout | 晶片的實際圖形，工廠依這份圖形製造 |
-| GDS | 交給工廠製造晶片用的圖檔格式 |
-| DRC | 設計規則檢查，用製程規則比對 layout 的圖形 |
-| LVS | 確認實際 layout 的連線與設計相符 |
-| 簽核 | 製造前由平台確認設計可以送廠 |
+| Photonic chip (PIC) | A chip that carries and processes signals with light |
+| Waveguide | A tiny channel on the chip that guides light, like a wire for light |
+| MZI | Mach–Zehnder interferometer: splits light into two paths and combines them again, with an adjustable mixing ratio |
+| Phase | The timing of a light wave, which decides whether two beams reinforce or cancel when they meet |
+| Heater | A tiny heating element on the chip that fine-tunes the phase of light through temperature |
+| Reference light | A fixed beam that provides the basis for comparison |
+| Coupler | A component that splits one beam of light into several beams |
+| Modulator | A component that writes data into a light signal |
+| Edge coupler | A port at the edge of the chip where light enters or leaves |
+| E+, E− | The two kinds of light in the E± version, with the same brightness and a phase difference of 180° |
+| Photodetector | Converts the brightness of light into an electrical signal |
+| Comparator | Decides which of two electrical signals is larger |
+| Truth table | A table listing the answer for every input combination |
+| Margin | The safety distance in the readout; a larger margin gives a more stable readout |
+| Layout | The actual shapes on the chip, which the foundry uses for fabrication |
+| GDS | The file format sent to the foundry for chip fabrication |
+| DRC | Design rule check: compares the layout shapes with the process rules |
+| LVS | Layout versus schematic: confirms that the connections in the layout match the design |
+| Sign-off | The platform's confirmation, before fabrication, that the design is ready for the foundry |

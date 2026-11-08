@@ -1,5 +1,5 @@
 {
- "count": 637,
+ "count": 638,
  "files": [
   {
    "path": ".gitignore",
@@ -2243,28 +2243,33 @@
   },
   {
    "path": "docs/img/chip-boundary.svg",
-   "bytes": 7906,
-   "sha256": "88d7f6b4c43660b8221edd075308dac116d2f5f2b62299d2cbbf66868e59915a"
+   "bytes": 7935,
+   "sha256": "24813e9060756c7d026b80283f4fde9dcd44114a1fff142ab12c33108e464c67"
   },
   {
    "path": "docs/img/design-flow.svg",
-   "bytes": 1982,
-   "sha256": "a9dd7384b86312613894752bee4842ffd58508c0e4b4035670e00a6409601aa2"
+   "bytes": 1981,
+   "sha256": "22d218e1df36fc6cc753ef5bec92ebd92b6ed63a3bec6bbef3a3e725f0fde811"
   },
   {
    "path": "docs/img/how-it-works.svg",
-   "bytes": 3291,
-   "sha256": "7b429534d5bbde26d4d145555c93467cabda1e5077dc88c0cdec7fbda34e424c"
+   "bytes": 3255,
+   "sha256": "6a73bd393b62f4fc6093ebb0f35f7c16193cbe004aaa847167cadb42b4008543"
   },
   {
    "path": "docs/img/lookup-table.svg",
-   "bytes": 2165,
-   "sha256": "ccaee18b400c3437cd0367a96d83c9ddcad62b4981908cbe784406b855d9c986"
+   "bytes": 2148,
+   "sha256": "071451e2087febd03a40c9681e5b3523331e3e8d90cef09cc48edd730cbfd47f"
+  },
+  {
+   "path": "docs/img/lut4-ook-layout.png",
+   "bytes": 200480,
+   "sha256": "45b109b936cd355f81c1eb65def1bc528e4eb670c0c889216b34000394d70eb9"
   },
   {
    "path": "example_and.py",
-   "bytes": 1536,
-   "sha256": "45a153aa21e5accdac000def956e5fa864626c9164faef8f61ce1f72e2722507"
+   "bytes": 1558,
+   "sha256": "5eb7b40b4e8663eb8564260c9c29245fb1b7b473fc1634d782b6151b951237a7"
   },
   {
    "path": "figures/lut4/s1_core.png",
@@ -2943,8 +2948,8 @@
   },
   {
    "path": "README.md",
-   "bytes": 14359,
-   "sha256": "7ab1482c0c6b40efc7da1fd19d0ae9b1549ffc5bbe6838ae125eb2fabb5212f5"
+   "bytes": 16950,
+   "sha256": "2f6cb69b4bc66cf81be893b15c95f2a2878b1a00608cbe6d0904ee63adbce8e5"
   },
   {
    "path": "report/src/index/a_overview.html",
@@ -3148,8 +3153,8 @@
   },
   {
    "path": "test_verify_phase_bank.py",
-   "bytes": 2700,
-   "sha256": "e5dbfb74b5786910a5378c3d0c079796e14a941ec1dfeed1f0bed1e07adcfc9c"
+   "bytes": 2675,
+   "sha256": "76db47a86212b5ae5203d67a3f0ab323199c63773f02a5320ce613a5aa8cad30"
   },
   {
    "path": "tools/build_page.py",
@@ -3183,8 +3188,8 @@
   },
   {
    "path": "verify_phase_bank.py",
-   "bytes": 5092,
-   "sha256": "2f70d9e53ba8f7c8f10a1766708a86c62288874adc7550b4a5ac361f0b605c11"
+   "bytes": 5158,
+   "sha256": "4edfe90b49711a402899391216a9cf9aaf847955eb0fbcd76c97b356fc2ebbb1"
   }
  ]
 }
